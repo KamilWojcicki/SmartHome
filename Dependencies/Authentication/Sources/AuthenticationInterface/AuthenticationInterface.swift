@@ -46,12 +46,11 @@ public protocol AuthenticationManagerInterface {
     func getProviders() throws -> [AuthProviderOption]
     func getAuthenticatedUser() throws -> Bool
     func createUser(email: String, password: String) async throws
-    @discardableResult
-    func signInUser(email: String, password: String) async throws -> User
+    func signInUser(email: String, password: String) async throws
     func resetPassword(email: String) async throws
     func updatePassword(email: String, password: String, newPassword: String) async throws
     func isUserRegistered(email: String) async throws -> Bool
-    func deleteAccount(email: String, password: String) async throws
+    func deleteAccount() async throws
     func signIn(credential: AuthCredential) async throws -> User
     func signInWithGoogle() async throws -> User
     func signInWithFacebook() async throws -> User

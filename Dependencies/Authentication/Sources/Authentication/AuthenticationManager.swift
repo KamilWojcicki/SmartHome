@@ -32,12 +32,14 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     private var loginEventHandler: ((Bool) -> Void)?
     private let auth = Auth.auth()
     
-    //private var userHandler: ((AuthenticationInterface.User?) -> Void)?
-    //    lazy var userUpdates: AsyncStream<AuthenticationInterface.User?> = {
-    //        AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
-    //            userHandler = { continuation.yield($0) }
-    //        }
-    //    }()
+    
+    #warning("Not finished yet")
+//    private var userHandler: ((AuthenticationInterface.User?) -> Void)?
+//        lazy var userUpdates: AsyncStream<AuthenticationInterface.User?> = {
+//            AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
+//                userHandler = { continuation.yield($0) }
+//            }
+//        }()
     
     private var user: AuthenticationInterface.User? {
         didSet {
@@ -67,11 +69,11 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             throw AuthErrorHandler.signUpError
         }
     }
-    @discardableResult
-    func signInUser(email: String, password: String) async throws -> AuthenticationInterface.User {
+    
+    func signInUser(email: String, password: String) async throws {
         do {
             let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password).user
-            return User(from: authDataResult)
+            self.user = User(from: authDataResult)
         } catch {
             throw AuthErrorHandler.signInError
         }
@@ -102,8 +104,11 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func deleteAccount(email: String, password: String) async throws {
-        
+    func deleteAccount() async throws {
+        guard let user = auth.currentUser else {
+            throw AuthErrorHandler.deleteUserError
+        }
+        try await user.delete()
     }
     
     // MARK: PROVIDERS

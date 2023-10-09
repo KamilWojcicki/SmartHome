@@ -59,8 +59,8 @@
 		E766E2AC2ACBE9B700EC06A5 /* SmartHome */ = {
 			isa = PBXGroup;
 			children = (
-				E7F84A942ACD5ECB007398F3 /* MainApp */,
 				E766E2AD2ACBE9B700EC06A5 /* SmartHomeApp.swift */,
+				E7F84A942ACD5ECB007398F3 /* MainApp */,
 				E766E2AF2ACBE9B700EC06A5 /* ContentView.swift */,
 				E766E2B12ACBE9B800EC06A5 /* Assets.xcassets */,
 				E7600A882ACC22F600E38CEA /* GoogleService-Info.plist */,
@@ -230,6 +230,10 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-no_warn_duplicate_libraries",
+				);
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
