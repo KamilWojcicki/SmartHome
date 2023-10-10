@@ -1,0 +1,14 @@
+input_dir: "${PROJECT_DIR}/Sources/Design/Resources"
+output_dir: "${PROJECT_DIR}/Sources/Design/Generated"
+
+ ## XCAssets
+xcassets:
+    inputs:
+        - "Icons.xcassets"
+    outputs:
+        templateName: swift5
+        params:
+            enumName: "Icons"
+            publicAccess: true
+            forceProvidesNamespaces: false
+        output: "Icons.swift"
