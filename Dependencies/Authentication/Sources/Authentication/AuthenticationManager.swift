@@ -142,6 +142,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     func signIn(credential: AuthCredential) async throws -> AuthenticationInterface.User {
         do {
             let authDataResult = try await Auth.auth().signIn(with: credential)
+            self.user = User(from: authDataResult.user)
             return User(from: authDataResult.user)
         } catch {
             throw AuthErrorHandler.signInWithCredentialError

@@ -8,18 +8,22 @@
 import Foundation
 import FBSDKLoginKit
 
-struct FacebookSignInResultModel {
+public struct FacebookSignInResultModel {
     let accessToken: String
+    
+    public init(accessToken: String) {
+        self.accessToken = accessToken
+    }
 }
 
-final class SignInFacebookHelper {
-    @MainActor
+public final class SignInFacebookHelper {
     
+    @MainActor
     func signIn() async throws -> FacebookSignInResultModel {
 
         let manager = LoginManager()
         let loginResult = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<FacebookSignInResultModel, Error>) in
-            manager.logIn(permissions: ["public_profile"], from: nil) { result, error in
+            manager.logIn(permissions: ["public_profile", "email"], from: nil) { result, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let result = result, !result.isCancelled {
@@ -32,7 +36,6 @@ final class SignInFacebookHelper {
                 }
             }
         }
-
         return loginResult
     }
 }
