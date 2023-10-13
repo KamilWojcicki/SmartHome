@@ -42,6 +42,7 @@ public struct SegmentedControl: View {
                 Text(title(for: item))
                     .tint(isSelected ? Colors.white : Colors.black)
                     .font(.headline)
+                    
             }
             .frame(height: 65)
             .frame(maxWidth: .infinity)
