@@ -10,34 +10,41 @@ import Design
 
 
 public struct SocialMediaButton: View {
-    @StateObject private var viewModel = SocialMediaButtonViewModel()
-    private var type: viewModel.buttonType
-    private var action: () -> Void
+    public enum buttonType {
+        case apple
+        case google
+        case facebook
+    }
     
-    private var button: (image: ImageAsset, action: () async throws -> Void, error: error.localizedDescription) {
+    @StateObject private var viewModel = SocialMediaButtonViewModel()
+    private var type: buttonType
+    
+    private var image: ImageAsset {
         switch type {
-        case .apple:            return (Icons.appleLogo,         viewModel.signInWithGoogle())
-        case .google:           return (Icons.google,            viewModel.signInWithFacebook())
-        case .facebook:         return (Icons.facebook,          action)
+        case .apple:
+            return Icons.appleLogo
+        case .google:           
+            return Icons.google
+        case .facebook:         
+            return Icons.facebook
         }
     }
     
-    public init(type: viewModel.buttonType, action: @escaping () -> Void) {
+    public init(type: buttonType) {
         self.type = type
-        self.action = action
     }
     
     public var body: some View {
         Button {
             Task {
                 do {
-                    try await button.action()
+                    try await viewModel.buttonTapped(type)
                 } catch {
                     print(error)
                 }
             }
         } label: {
-            Image(asset: button.image)
+            Image(asset: image)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 30, height: 30)
@@ -54,5 +61,5 @@ public struct SocialMediaButton: View {
     }
 }
 #Preview {
-    SocialMediaButton(type: .google, action: { })
+    SocialMediaButton(type: .google)
 }

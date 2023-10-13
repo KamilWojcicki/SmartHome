@@ -15,14 +15,25 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Animation"),
-        .package(path: "../Design")
+        .package(path: "../Design"),
+        .package(path: "../Authentication")
     ],
     targets: [
         .target(
             name: "Components",
             dependencies: [
-                .product(name: "Animation", package: "Animation"),
-                .product(name: "Design", package: "Design")
+                .product(
+                    name: "Animation",
+                    package: "Animation"
+                ),
+                .product(
+                    name: "Design",
+                    package: "Design"
+                ),
+                .product(
+                    name: "Authentication",
+                    package: "Authentication"
+                )
             ]
         )
     ]
