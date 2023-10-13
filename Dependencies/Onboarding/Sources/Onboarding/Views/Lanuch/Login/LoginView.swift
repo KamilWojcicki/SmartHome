@@ -78,13 +78,14 @@ extension LoginView {
         .sheet(isPresented: $viewModel.showSheet) {
             PasswordRecoveryView(showSheet: $viewModel.showSheet)
                 .presentationDetents([.medium])
-                .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
-                    
-                }, message: {
-                    Text(launchViewModel.error?.localizedDescription ?? "")
-                })
+//                .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
+//                    
+//                }, message: {
+//                    Text(launchViewModel.error?.localizedDescription ?? "")
+//                })
         }
 
+        
     }
     
     private var signInButton: some View {
@@ -121,9 +122,9 @@ extension LoginView {
     private var socialMediaStack: some View {
         HStack {
             
-            //SocialMediaButton(type: .google, action: {})
-            //SocialMediaButton(type: .apple, action: {})
-            //SocialMediaButton(type: .facebook, action: {})
+            SocialMediaButton(type: .google)
+            SocialMediaButton(type: .apple)
+            SocialMediaButton(type: .facebook)
         }
     }
 }

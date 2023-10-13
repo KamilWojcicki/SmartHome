@@ -10,25 +10,17 @@ import Components
 
 public struct MainLaunchView: View {
     @StateObject private var viewModel = MainLaunchViewModel()
-    
+    @State private var selectedSegment: SegmentedControlViewModel.SelectedItem = .login
     public init() { }
     
     public var body: some View {
         ZStack {
-            if viewModel.buttonSwitch {
-                LoginView()
-            } else {
-                RegisterView()
-            }
+            buildView(for: selectedSegment)
             
-            ButtonSwitch(switchButton: $viewModel.buttonSwitch)
-                .padding(30)
-        }
-        .onReceive(viewModel.$error) { error in
-            if error != nil {
-                print("Received error: \(error?.localizedDescription ?? "diupka")")
-                viewModel.showAlert.toggle()
+            SegmentedControl(selectedItem: $selectedSegment) { item in
+                selectedSegment = item
             }
+            .padding(30)
         }
         .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
             
@@ -36,6 +28,15 @@ public struct MainLaunchView: View {
             Text(viewModel.error?.localizedDescription ?? "gilgotanie")
         })
         .environmentObject(viewModel)
+    }
+    @ViewBuilder
+    private func buildView(for view: SegmentedControlViewModel.SelectedItem) -> some View {
+        switch view {
+        case .register:
+            RegisterView()
+        case .login:
+            LoginView()
+        }
     }
 }
 

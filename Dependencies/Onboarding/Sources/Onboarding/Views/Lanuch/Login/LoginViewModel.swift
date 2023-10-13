@@ -10,7 +10,7 @@ import AuthenticationInterface
 import DependencyInjection
 import OnboardingInterface
 
-@MainActor
+
 public final class LoginViewModel: ObservableObject {
     public enum authType {
         case google
@@ -31,10 +31,6 @@ public final class LoginViewModel: ObservableObject {
     private func validateField() throws {
         try Validation.validateField(email, fieldName: "email")
         try Validation.validateField(password, fieldName: "password")
-    }
-    
-    public func signInWithGoogle() {
-    
     }
     
     public func resetPassword(email: String) async throws {
