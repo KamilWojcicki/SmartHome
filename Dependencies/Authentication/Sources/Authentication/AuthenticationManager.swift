@@ -72,7 +72,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func signInUser(email: String, password: String) async throws {
         do {
-            let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password).user
+            let authDataResult = try await auth.signIn(withEmail: email, password: password).user
             self.user = User(from: authDataResult)
         } catch {
             throw AuthErrorHandler.signInError
@@ -81,14 +81,14 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func resetPassword(email: String) async throws {
         do {
-            try await Auth.auth().sendPasswordReset(withEmail: email)
+            try await auth.sendPasswordReset(withEmail: email)
         } catch {
             throw AuthErrorHandler.resetPasswordError
         }
     }
     
     func updatePassword(email: String, password: String, newPassword: String) async throws {
-        guard let user = Auth.auth().currentUser else {
+        guard let user = auth.currentUser else {
             throw AuthErrorHandler.updatePasswordError
         }
         try await user.updatePassword(to: password)
@@ -96,8 +96,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func isUserRegistered(email: String) async throws -> Bool {
         do {
-            let user = try await Auth.auth().fetchSignInMethods(forEmail: email)
-            
+            let user = try await auth.fetchSignInMethods(forEmail: email)
             return !user.isEmpty
         } catch {
             throw AuthErrorHandler.isUserRegisteredError
@@ -113,7 +112,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     // MARK: PROVIDERS
     func getProviders() throws -> [AuthenticationInterface.AuthProviderOption] {
-        guard let providerData = Auth.auth().currentUser?.providerData else {
+        guard let providerData = auth.currentUser?.providerData else {
             throw AuthErrorHandler.getProvidersError
         }
         
@@ -131,7 +130,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func signOut() throws {
         do {
-            try Auth.auth().signOut()
+            try auth.signOut()
             self.user = nil
         } catch {
             throw AuthErrorHandler.signOutError
@@ -141,7 +140,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     // MARK: Sign In with SSO
     func signIn(credential: AuthCredential) async throws -> AuthenticationInterface.User {
         do {
-            let authDataResult = try await Auth.auth().signIn(with: credential)
+            let authDataResult = try await auth.signIn(with: credential)
             self.user = User(from: authDataResult.user)
             return User(from: authDataResult.user)
         } catch {

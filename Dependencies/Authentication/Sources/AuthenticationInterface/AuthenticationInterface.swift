@@ -70,6 +70,7 @@ public enum AuthErrorHandler: LocalizedError {
     case resetPasswordError
     case updatePasswordError
     case isUserRegisteredError
+    case isEmailInUse
     case deleteUserError
     case getProvidersError
     case signOutError
@@ -93,6 +94,8 @@ public enum AuthErrorHandler: LocalizedError {
             return "There was a problem with updating user password"
         case .isUserRegisteredError:
             return "There was a problem with veryfication is user registered"
+        case .isEmailInUse:
+            return "Email is already in use! Try different email"
         case .deleteUserError:
             return "There was a problem with deleting user"
         case .getProvidersError:
