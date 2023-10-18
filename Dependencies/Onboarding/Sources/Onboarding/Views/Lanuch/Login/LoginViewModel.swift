@@ -30,21 +30,22 @@ public final class LoginViewModel: ObservableObject {
     
     private func validateField() throws {
         try Validation.validateField(email, fieldName: "email")
+        try Validation.validateEmail(email: email)
         try Validation.validateField(password, fieldName: "password")
     }
     
-    public func resetPassword(email: String) async throws {
-        
-        guard !email.isEmpty else {
-            throw ValidationError.emptyEmail
-        }
-        
-        let isRegistered = try await authenticationManager.isUserRegistered(email: email)
-        
-        guard isRegistered else {
-            throw ValidationError.wrongEmail
-        }
-        
-        try await authenticationManager.resetPassword(email: email)
-    }
+//    public func resetPassword(email: String) async throws {
+//        
+//        guard !email.isEmpty else {
+//            throw ValidationError.emptyEmail
+//        }
+//        
+//        let isRegistered = try await authenticationManager.isUserRegistered(email: email)
+//        
+//        guard isRegistered else {
+//            throw ValidationError.wrongEmail
+//        }
+//        
+//        try await authenticationManager.resetPassword(email: email)
+//    }
 }
