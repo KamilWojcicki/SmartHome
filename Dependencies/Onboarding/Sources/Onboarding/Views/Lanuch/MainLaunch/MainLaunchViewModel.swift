@@ -12,6 +12,7 @@ import Combine
 public final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
+    @Published var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
 

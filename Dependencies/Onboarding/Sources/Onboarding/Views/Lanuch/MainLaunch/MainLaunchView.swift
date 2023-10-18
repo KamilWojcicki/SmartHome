@@ -25,10 +25,11 @@ public struct MainLaunchView: View {
         .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
             
         }, message: {
-            Text(viewModel.error?.localizedDescription ?? "gilgotanie")
+            Text(viewModel.error?.localizedDescription ?? "")
         })
         .environmentObject(viewModel)
     }
+    
     @ViewBuilder
     private func buildView(for view: SegmentedControlViewModel.SelectedItem) -> some View {
         switch view {

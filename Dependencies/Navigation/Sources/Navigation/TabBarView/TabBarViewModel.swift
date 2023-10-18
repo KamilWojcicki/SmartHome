@@ -19,7 +19,7 @@ final class TabBarViewModel: ObservableObject {
     
     init() {
         self.tabs = tabCoordinator.tabs
-        self.selectedTab = tabCoordinator.selectedTab?.title
+        self.selectedTab = "home"
     }
     
     func tapped(tab: String) {

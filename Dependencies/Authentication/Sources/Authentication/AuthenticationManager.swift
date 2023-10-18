@@ -79,14 +79,6 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func resetPassword(email: String) async throws {
-        do {
-            try await auth.sendPasswordReset(withEmail: email)
-        } catch {
-            throw AuthErrorHandler.resetPasswordError
-        }
-    }
-    
     func updatePassword(email: String, password: String, newPassword: String) async throws {
         guard let user = auth.currentUser else {
             throw AuthErrorHandler.updatePasswordError
@@ -94,12 +86,11 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         try await user.updatePassword(to: password)
     }
     
-    func isUserRegistered(email: String) async throws -> Bool {
+    func resetPassword(email: String) async throws {
         do {
-            let user = try await auth.fetchSignInMethods(forEmail: email)
-            return !user.isEmpty
+            try await auth.sendPasswordReset(withEmail: email)
         } catch {
-            throw AuthErrorHandler.isUserRegisteredError
+            throw AuthErrorHandler.resetPasswordError
         }
     }
     

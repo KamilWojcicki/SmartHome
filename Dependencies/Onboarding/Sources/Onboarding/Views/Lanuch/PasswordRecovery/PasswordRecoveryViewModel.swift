@@ -6,12 +6,15 @@
 //
 
 import Foundation
+import SwiftUI
 import DependencyInjection
 import AuthenticationInterface
+import OnboardingInterface
 
 public final class PasswordRecoveryViewModel: ObservableObject {
     
     @Inject private var authenticationManager: AuthenticationManagerInterface
+    @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     @Published var email: String = ""
     
     func resetPassword() async throws {
@@ -21,5 +24,6 @@ public final class PasswordRecoveryViewModel: ObservableObject {
     
     func validation() throws {
         try Validation.validateField(email, fieldName: "email")
+        try Validation.validateEmail(email: email)
     }
 }

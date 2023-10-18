@@ -47,9 +47,8 @@ public protocol AuthenticationManagerInterface {
     func getAuthenticatedUser() throws -> Bool
     func createUser(email: String, password: String) async throws
     func signInUser(email: String, password: String) async throws
-    func resetPassword(email: String) async throws
     func updatePassword(email: String, password: String, newPassword: String) async throws
-    func isUserRegistered(email: String) async throws -> Bool
+    func resetPassword(email: String) async throws
     func deleteAccount() async throws
     func signIn(credential: AuthCredential) async throws -> User
     func signInWithGoogle() async throws -> User
@@ -61,6 +60,12 @@ public enum AuthProviderOption: String {
     case email = "password"
     case google = "google.com"
     case facebook = "facebook.com"
+}
+
+public enum ErrorState {
+    case initial
+    case success(String)
+    case failure(String)
 }
 
 public enum AuthErrorHandler: LocalizedError {

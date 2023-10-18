@@ -12,3 +12,13 @@ xcassets:
             publicAccess: true
             forceProvidesNamespaces: false
         output: "Icons.swift"
+
+## Fonts
+fonts:
+    inputs:
+        - "Fonts"
+    outputs:
+        templatePath: "Templates/FontTemplate.stencil"
+        params:
+            publicAccess: true
+        output: "Fonts.swift"
