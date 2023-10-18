@@ -10,7 +10,6 @@
 		E707C2F32AD5AA5300EDF4B5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E707C2F22AD5AA5300EDF4B5 /* GoogleService-Info.plist */; };
 		E7600A8C2ACC248900E38CEA /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = E7600A8B2ACC248900E38CEA /* Dependencies */; };
 		E766E2AE2ACBE9B700EC06A5 /* SmartHomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766E2AD2ACBE9B700EC06A5 /* SmartHomeApp.swift */; };
-		E766E2B02ACBE9B700EC06A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766E2AF2ACBE9B700EC06A5 /* ContentView.swift */; };
 		E766E2B22ACBE9B800EC06A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E766E2B12ACBE9B800EC06A5 /* Assets.xcassets */; };
 		E766E2B52ACBE9B800EC06A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E766E2B42ACBE9B800EC06A5 /* Preview Assets.xcassets */; };
 		E7F84A962ACD5EEB007398F3 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F84A952ACD5EEB007398F3 /* Assembly.swift */; };
@@ -23,7 +22,6 @@
 		E707C2F42AD5DA4900EDF4B5 /* SmartHome.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SmartHome.entitlements; sourceTree = "<group>"; };
 		E766E2AA2ACBE9B700EC06A5 /* SmartHome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartHome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E766E2AD2ACBE9B700EC06A5 /* SmartHomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartHomeApp.swift; sourceTree = "<group>"; };
-		E766E2AF2ACBE9B700EC06A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E766E2B12ACBE9B800EC06A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E766E2B42ACBE9B800EC06A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E7F84A952ACD5EEB007398F3 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
@@ -61,13 +59,12 @@
 		E766E2AC2ACBE9B700EC06A5 /* SmartHome */ = {
 			isa = PBXGroup;
 			children = (
+				E766E2AD2ACBE9B700EC06A5 /* SmartHomeApp.swift */,
 				E707C2F42AD5DA4900EDF4B5 /* SmartHome.entitlements */,
 				E707C2EF2AD59E5000EDF4B5 /* Info.plist */,
-				E766E2AD2ACBE9B700EC06A5 /* SmartHomeApp.swift */,
-				E7F84A942ACD5ECB007398F3 /* MainApp */,
-				E766E2AF2ACBE9B700EC06A5 /* ContentView.swift */,
-				E766E2B12ACBE9B800EC06A5 /* Assets.xcassets */,
 				E707C2F22AD5AA5300EDF4B5 /* GoogleService-Info.plist */,
+				E7F84A942ACD5ECB007398F3 /* MainApp */,
+				E766E2B12ACBE9B800EC06A5 /* Assets.xcassets */,
 				E766E2B32ACBE9B800EC06A5 /* Preview Content */,
 			);
 			path = SmartHome;
@@ -167,7 +164,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E766E2B02ACBE9B700EC06A5 /* ContentView.swift in Sources */,
 				E7F84A962ACD5EEB007398F3 /* Assembly.swift in Sources */,
 				E7F84A982ACD5EFC007398F3 /* AssemblyShared.swift in Sources */,
 				E766E2AE2ACBE9B700EC06A5 /* SmartHomeApp.swift in Sources */,
