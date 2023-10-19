@@ -8,10 +8,10 @@
 import SwiftUI
 import Components
 
-public struct RegisterView: View {
+struct RegisterView: View {
     @StateObject private var viewModel = RegisterViewModel()
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
-    public var body: some View {
+    var body: some View {
         ZStack {
             VStack(spacing: 20) {
                 
@@ -20,7 +20,7 @@ public struct RegisterView: View {
                 registerTextFields
                 
                 signUpButton
-
+                
                 Spacer()
             }
             .padding(.horizontal, 30)
@@ -43,7 +43,7 @@ extension RegisterView {
             Text("Register now and HAVE FUN!")
                 .font(.title)
                 .multilineTextAlignment(.center)
-        
+            
             
         }
     }

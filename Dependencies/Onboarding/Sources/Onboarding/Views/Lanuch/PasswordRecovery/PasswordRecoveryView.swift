@@ -8,16 +8,16 @@
 import SwiftUI
 import Components
 
-public struct PasswordRecoveryView: View {
+struct PasswordRecoveryView: View {
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     @StateObject private var viewModel = PasswordRecoveryViewModel()
     @Binding private var showSheet: Bool
     
-    public init(showSheet: Binding<Bool>) {
+    init(showSheet: Binding<Bool>) {
         self._showSheet = showSheet
     }
     
-    public var body: some View {
+    var body: some View {
         VStack(spacing: 40) {
             
             Text("Enter your e-mail to get a recovery password")
@@ -31,6 +31,9 @@ public struct PasswordRecoveryView: View {
             
         }
         .padding(30)
+        .alert(launchViewModel.errorMessage ?? "", isPresented: $launchViewModel.showAlert) {
+            
+        }
     }
 }
 
@@ -46,9 +49,13 @@ extension PasswordRecoveryView {
                 do {
                     try await viewModel.resetPassword()
                     print("password reset!")
+                    launchViewModel.showAlert = true
+                    launchViewModel.errorMessage = "Chuj ci w dupe"
                     showSheet.toggle()
                 } catch {
-                    self.launchViewModel.error = error
+                    self.launchViewModel.showAlert = true
+                    self.launchViewModel.errorMessage = error.localizedDescription
+                    print(error)
                 }
             }
         } label: {

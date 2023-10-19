@@ -11,7 +11,7 @@ import DependencyInjection
 import OnboardingInterface
 
 @MainActor
-public final class RegisterViewModel: ObservableObject {
+final class RegisterViewModel: ObservableObject {
     
     @Inject private var authenticationManager: AuthenticationManagerInterface
     

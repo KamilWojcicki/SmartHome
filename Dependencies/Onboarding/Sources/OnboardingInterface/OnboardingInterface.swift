@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ValidationError: Error, LocalizedError {
+enum ValidationError: Error, LocalizedError {
     case emptyField(String)
     case emptyEmail
     case wrongEmail
@@ -18,7 +18,7 @@ public enum ValidationError: Error, LocalizedError {
     case emailInUse
     case unknown(Error)
     
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .emptyField(let fieldName):
             return "Field \(fieldName) is empty!"

@@ -8,7 +8,7 @@
 import Foundation
 import OnboardingInterface
 
-public struct Validation {
+struct Validation {
     static func validateField(_ fieldValue: String, fieldName: String) throws {
         guard !fieldValue.isEmpty else {
             throw ValidationError.emptyField(fieldName)

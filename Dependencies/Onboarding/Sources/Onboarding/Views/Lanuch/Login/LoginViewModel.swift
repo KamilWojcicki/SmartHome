@@ -11,8 +11,8 @@ import DependencyInjection
 import OnboardingInterface
 
 
-public final class LoginViewModel: ObservableObject {
-    public enum authType {
+final class LoginViewModel: ObservableObject {
+    enum authType {
         case google
         case facebook
         case apple
@@ -23,7 +23,7 @@ public final class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showSheet: Bool = false
     
-    public func signIn() async throws {
+    func signIn() async throws {
         try validateField()
         try await authenticationManager.signInUser(email: email, password: password)
     }

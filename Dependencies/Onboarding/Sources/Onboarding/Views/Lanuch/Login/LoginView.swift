@@ -8,13 +8,13 @@
 import SwiftUI
 import Components
 
-public struct LoginView: View {
+struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     
-    public init() { }
+    init() { }
     
-    public var body: some View {
+    var body: some View {
         VStack(spacing: 20) {
             
             header

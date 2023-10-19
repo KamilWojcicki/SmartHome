@@ -8,8 +8,7 @@
 import Foundation
 import Combine
 
-@MainActor
-public final class MainLaunchViewModel: ObservableObject {
+final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
     @Published var errorMessage: String?

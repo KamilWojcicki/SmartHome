@@ -11,15 +11,16 @@ import DependencyInjection
 import AuthenticationInterface
 import OnboardingInterface
 
-public final class PasswordRecoveryViewModel: ObservableObject {
+final class PasswordRecoveryViewModel: ObservableObject {
     
     @Inject private var authenticationManager: AuthenticationManagerInterface
-    @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     @Published var email: String = ""
     
     func resetPassword() async throws {
         try validation()
+        print("dupa")
         try await authenticationManager.resetPassword(email: email)
+        print("dupa po")
     }
     
     func validation() throws {
