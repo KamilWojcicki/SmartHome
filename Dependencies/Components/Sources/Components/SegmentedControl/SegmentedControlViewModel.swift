@@ -13,7 +13,7 @@ public final class SegmentedControlViewModel: ObservableObject {
         case login
         
         
-        public var id: String {
+       public var id: String {
             rawValue
         }
     }
@@ -24,7 +24,7 @@ public final class SegmentedControlViewModel: ObservableObject {
     public init(selectedAction: @escaping (SelectedItem) -> Void) {
         self.selectedAction = selectedAction
     }
-    internal func select(_ item: SelectedItem) {
+    func select(_ item: SelectedItem) {
         selectedItem = item
         selectedAction(item)
     }

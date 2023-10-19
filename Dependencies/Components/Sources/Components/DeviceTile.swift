@@ -8,6 +8,7 @@
 import SwiftUI
 import Design
 
+#warning("This component will be add later")
 //public struct DeviceTile: View {
 //    
 //    @State private var weathers: [WeatherApiModel] = [

@@ -43,7 +43,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     }()
     
     func isUserAuthenticated() throws -> Bool {
-        guard let auth = auth.currentUser else {
+        guard auth.currentUser != nil else {
             throw AuthErrorHandler.getAuthenticatedUserError
         }
         return true

@@ -20,8 +20,13 @@ final class UserManager: UserManagerInterface {
     
     var signInResult: AsyncStream<Bool>
     
+    public init(user: User? = nil, signInResult: AsyncStream<Bool>) {
+        self.user = user
+        self.signInResult = signInResult
+    }
+    
     func signInAnonymously() async throws {
-        <#code#>
+        
     }
     
     
