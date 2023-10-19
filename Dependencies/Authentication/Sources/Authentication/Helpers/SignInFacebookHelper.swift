@@ -8,17 +8,16 @@
 import Foundation
 import FBSDKLoginKit
 
-public struct FacebookSignInResultModel {
+struct FacebookSignInResultModel {
     let accessToken: String
     
-    public init(accessToken: String) {
+    init(accessToken: String) {
         self.accessToken = accessToken
     }
 }
 
-public final class SignInFacebookHelper {
+final class SignInFacebookHelper {
     
-    @MainActor
     func signIn() async throws -> FacebookSignInResultModel {
 
         let manager = LoginManager()
@@ -31,8 +30,6 @@ public final class SignInFacebookHelper {
 
                     let signInResult = FacebookSignInResultModel(accessToken: accessToken)
                     continuation.resume(returning: signInResult)
-                } else {
-                    continuation.resume(throwing: NSError(domain: "Facebook", code: 0, userInfo: [NSLocalizedDescriptionKey: "Facebook login was cancelled."]))
                 }
             }
         }

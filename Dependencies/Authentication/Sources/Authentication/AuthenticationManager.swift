@@ -10,6 +10,11 @@ import FirebaseAuth
 
 
 final class AuthenticationManager: AuthenticationManagerInterface {
+    var userID: String = ""
+    private var loginEventHandler: ((Bool) -> Void)?
+    private let auth = Auth.auth()
+    private let signInGoogleHelper = SignInGoogleHelper()
+    private let signInFacebookHelper  = SignInFacebookHelper()
     
     init() {
         userStateListener()
@@ -21,29 +26,12 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             
             if let user {
                 self.userID = user.uid
-                self.isAuthenticatedUser = true
             }
         }
     }
     
-    
-    var userID: String = ""
-    var isAuthenticatedUser: Bool = false
-    private var loginEventHandler: ((Bool) -> Void)?
-    private let auth = Auth.auth()
-    
-    
-    #warning("Not finished yet")
-//    private var userHandler: ((AuthenticationInterface.User?) -> Void)?
-//        lazy var userUpdates: AsyncStream<AuthenticationInterface.User?> = {
-//            AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
-//                userHandler = { continuation.yield($0) }
-//            }
-//        }()
-    
     private var user: AuthenticationInterface.User? {
         didSet {
-            //userHandler?(user)
             loginEventHandler?(user != nil)
         }
     }
@@ -54,7 +42,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }()
     
-    func getAuthenticatedUser() throws -> Bool {
+    func isUserAuthenticated() throws -> Bool {
         guard let auth = auth.currentUser else {
             throw AuthErrorHandler.getAuthenticatedUserError
         }
@@ -72,8 +60,8 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func signInUser(email: String, password: String) async throws {
         do {
-            let authDataResult = try await auth.signIn(withEmail: email, password: password).user
-            self.user = User(from: authDataResult)
+            let user = try await auth.signIn(withEmail: email, password: password).user
+            self.user = User(from: user)
         } catch {
             throw AuthErrorHandler.signInError
         }
@@ -81,14 +69,20 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func updatePassword(email: String, password: String, newPassword: String) async throws {
         guard let user = auth.currentUser else {
+            throw AuthErrorHandler.getAuthenticatedUserError
+        }
+        do {
+            try await user.updatePassword(to: password)
+        } catch {
             throw AuthErrorHandler.updatePasswordError
         }
-        try await user.updatePassword(to: password)
     }
     
     func resetPassword(email: String) async throws {
         do {
+            print("sraka")
             try await auth.sendPasswordReset(withEmail: email)
+            print("reset password!")
         } catch {
             throw AuthErrorHandler.resetPasswordError
         }
@@ -96,27 +90,25 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func deleteAccount() async throws {
         guard let user = auth.currentUser else {
+            throw AuthErrorHandler.getAuthenticatedUserError
+        }
+        do {
+            try await user.delete()
+        } catch {
             throw AuthErrorHandler.deleteUserError
         }
-        try await user.delete()
     }
     
     // MARK: PROVIDERS
+
     func getProviders() throws -> [AuthenticationInterface.AuthProviderOption] {
-        guard let providerData = auth.currentUser?.providerData else {
-            throw AuthErrorHandler.getProvidersError
+        guard let user = auth.currentUser else {
+            throw AuthErrorHandler.getAuthenticatedUserError
         }
         
-        var providers: [AuthProviderOption] = []
-        for provider in providerData {
-            if let option = AuthProviderOption(rawValue: provider.providerID) {
-                providers.append(option)
-                print(option)
-            } else {
-                assertionFailure("Provicer option not found: \(provider.providerID)")
-            }
-        }
-        return providers
+        return user
+            .providerData
+            .compactMap { AuthenticationInterface.AuthProviderOption(rawValue: $0.providerID) }
     }
     
     func signOut() throws {
@@ -174,12 +166,12 @@ final class AuthenticationManager: AuthenticationManagerInterface {
 // MARK: CREDENTIALS
 extension AuthenticationManager {
     private func googleCredential() async throws -> AuthCredential {
-        let result = try await SignInGoogleHelper().signIn()
+        let result = try await signInGoogleHelper.signIn()
         return GoogleAuthProvider.credential(withSignInResult: result)
     }
     
     private func facebookCredential() async throws -> AuthCredential {
-        let result = try await SignInFacebookHelper().signIn()
+        let result = try await signInFacebookHelper.signIn()
         return FacebookAuthProvider.credential(withSignInResult: result)
     }
 }

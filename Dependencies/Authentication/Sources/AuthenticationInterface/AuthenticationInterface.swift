@@ -40,11 +40,10 @@ public protocol AuthenticationManagerInterface {
     var signInResult: AsyncStream<Bool> { get }
    // var userUpdates: AsyncStream<User?> { get }
     var userID: String { get }
-    var isAuthenticatedUser: Bool { get }
     
     func signInAnonymously() async throws
     func getProviders() throws -> [AuthProviderOption]
-    func getAuthenticatedUser() throws -> Bool
+    func isUserAuthenticated() throws -> Bool
     func createUser(email: String, password: String) async throws
     func signInUser(email: String, password: String) async throws
     func updatePassword(email: String, password: String, newPassword: String) async throws
