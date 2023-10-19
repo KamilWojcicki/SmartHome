@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Kamil Wójcicki on 03/10/2023.
 //
@@ -10,16 +10,16 @@ import DependencyInjection
 import Foundation
 
 @MainActor
-public final class RootViewModel: ObservableObject {
+final class RootViewModel: ObservableObject {
     @Inject private var authenticationManager: AuthenticationManagerInterface
     
     @Published private(set) var isLogIn: Bool = false
     
-    public init() {
+    init() {
         getAuthenticatedUser()
     }
     
-    internal func updateUserLoginState() async {
+    func updateUserLoginState() async {
         for try await signInResult in authenticationManager.signInResult {
             self.isLogIn = signInResult
         }
@@ -27,7 +27,7 @@ public final class RootViewModel: ObservableObject {
     
     func getAuthenticatedUser() {
         do {
-            self.isLogIn = try authenticationManager.getAuthenticatedUser()
+            self.isLogIn = try authenticationManager.isUserAuthenticated()
         } catch {
             print(error)
         }
