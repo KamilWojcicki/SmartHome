@@ -78,11 +78,11 @@ extension LoginView {
         .sheet(isPresented: $viewModel.showSheet) {
             PasswordRecoveryView(showSheet: $viewModel.showSheet)
                 .presentationDetents([.medium])
-//                .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
-//                    
-//                }, message: {
-//                    Text(launchViewModel.error?.localizedDescription ?? "")
-//                })
+                .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
+                    
+                }, message: {
+                    Text(launchViewModel.error?.localizedDescription ?? "")
+                })
         }
 
         

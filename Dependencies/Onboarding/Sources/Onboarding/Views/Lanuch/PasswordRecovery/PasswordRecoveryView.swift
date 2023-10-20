@@ -31,9 +31,6 @@ struct PasswordRecoveryView: View {
             
         }
         .padding(30)
-        .alert(launchViewModel.errorMessage ?? "", isPresented: $launchViewModel.showAlert) {
-            
-        }
     }
 }
 
@@ -49,13 +46,8 @@ extension PasswordRecoveryView {
                 do {
                     try await viewModel.resetPassword()
                     print("password reset!")
-                    launchViewModel.showAlert = true
-                    launchViewModel.errorMessage = "Chuj ci w dupe"
-                    showSheet.toggle()
                 } catch {
-                    self.launchViewModel.showAlert = true
-                    self.launchViewModel.errorMessage = error.localizedDescription
-                    print(error)
+                    self.launchViewModel.error = error
                 }
             }
         } label: {

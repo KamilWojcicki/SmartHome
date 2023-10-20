@@ -18,9 +18,7 @@ final class PasswordRecoveryViewModel: ObservableObject {
     
     func resetPassword() async throws {
         try validation()
-        print("dupa")
         try await authenticationManager.resetPassword(email: email)
-        print("dupa po")
     }
     
     func validation() throws {

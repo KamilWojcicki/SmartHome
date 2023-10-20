@@ -80,9 +80,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     
     func resetPassword(email: String) async throws {
         do {
-            print("sraka")
             try await auth.sendPasswordReset(withEmail: email)
-            print("reset password!")
         } catch {
             throw AuthErrorHandler.resetPasswordError
         }
