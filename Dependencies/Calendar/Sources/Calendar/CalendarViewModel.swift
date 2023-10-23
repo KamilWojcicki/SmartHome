@@ -8,13 +8,13 @@
 import Foundation
 import CalendarInterface
 
-public final class CalendarViewModel: ObservableObject {
+final class CalendarViewModel: ObservableObject {
     @Published var currentDay: Date = .init()
     @Published var tasks: [TaskModel] = sampleTask
     @Published var addNewTask: Bool = false
     
     
-    internal func filterTasks(for date: Date) -> [TaskModel] {
+    func filterTasks(for date: Date) -> [TaskModel] {
         let calendar = Calendar.current
         let filteredTasks = tasks.filter {
             if let hour = calendar.dateComponents([.hour], from: date).hour, let taskHour = calendar.dateComponents([.hour], from: $0.dateAdded).hour, hour == taskHour && calendar.isDate($0.dateAdded, inSameDayAs: currentDay) {

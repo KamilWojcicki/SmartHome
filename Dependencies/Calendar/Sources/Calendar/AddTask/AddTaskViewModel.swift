@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class AddTaskViewModel: ObservableObject {
+final class AddTaskViewModel: ObservableObject {
     @Published var taskName: String = ""
     @Published var taskDescription: String = ""
     @Published var taskDate: Date = .init()

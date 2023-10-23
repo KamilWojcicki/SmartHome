@@ -11,11 +11,11 @@ import Design
 import Utilities
 import CalendarInterface
 
-public struct CalendarView: View {
+struct CalendarView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
     
-    public var body: some View {
+    var body: some View {
         ScrollView(.vertical) {
             buildTimeLineView()
                 .padding(15)
