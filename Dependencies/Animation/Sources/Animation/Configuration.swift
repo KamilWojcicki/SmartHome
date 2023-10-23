@@ -34,7 +34,7 @@ public struct Configuration {
 }
 
 extension Configuration {
-    public static let loader: Self = .init(
+    public static let iot: Self = .init(
         lightMode: .init(
             filename: "animation2.json",
             bundle: .module
