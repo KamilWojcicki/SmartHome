@@ -30,6 +30,7 @@ public struct SecureField: View {
         .background(Color.white.opacity(0.8))
         .cornerRadius(15)
         .shadow(color: .black.opacity(0.2),radius: 5)
+        .textInputAutocapitalization(.never)
         .overlay {
             Image(systemName:  showPassword ? "eye" : "eye.slash")
                 .foregroundColor(Color.gray)

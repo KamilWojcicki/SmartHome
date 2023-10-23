@@ -89,6 +89,8 @@ struct Row_Previews: PreviewProvider {
             Row(symbol: "moon.stars", variant: .toggle(text: "test", binding: .constant(true)))
             
             Row(symbol: "moon.stars", variant: .language(text: "test", options: options, selectedOption: .constant(options.first ?? "")))
+            
+
         }
         
     }
