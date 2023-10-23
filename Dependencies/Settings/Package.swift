@@ -11,14 +11,41 @@ let package = Package(
     products: [
         .library(
             name: "Settings",
-            targets: ["Settings"]),
+            targets: ["Settings"]
+        ),
+        .library(
+            name: "SettingsInterface",
+            targets: ["SettingsInterface"]
+        )
     ],
     dependencies: [
-        
+        .package(path: "../Authentication"),
+        .package(path: "../Components"),
+        .package(path: "../DependencyInjection")
     ],
     targets: [
         .target(
+            name: "SettingsInterface",
+            dependencies: [
+                .product(
+                    name: "DependencyInjection",
+                    package: "DependencyInjection"
+                )
+            ]
+        ),
+        .target(
             name: "Settings",
-            dependencies: [])
+            dependencies: [
+                .product(
+                    name: "Authentication",
+                    package: "Authentication"
+                ),
+                .product(
+                    name: "Components",
+                    package: "Components"
+                ),
+                "SettingsInterface"
+            ]
+        )
     ]
 )
