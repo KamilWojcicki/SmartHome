@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?

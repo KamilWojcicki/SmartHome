@@ -11,7 +11,6 @@ import DependencyInjection
 import OnboardingInterface
 import SwiftUI
 
-
 final class LoginViewModel: ObservableObject {
     enum authType {
         case google

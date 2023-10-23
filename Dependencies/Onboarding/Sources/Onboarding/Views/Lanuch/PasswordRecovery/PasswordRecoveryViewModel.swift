@@ -9,7 +9,7 @@ import AuthenticationInterface
 import DependencyInjection
 import Foundation
 
-
+@MainActor
 final class PasswordRecoveryViewModel: ObservableObject {
     @Inject private var authenticationManager: AuthenticationManagerInterface
     @Published var email: String = ""
