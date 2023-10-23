@@ -61,12 +61,6 @@ public enum AuthProviderOption: String {
     case facebook = "facebook.com"
 }
 
-public enum ErrorState {
-    case initial
-    case success(String)
-    case failure(String)
-}
-
 public enum AuthErrorHandler: LocalizedError {
     case getAuthenticatedUserError
     case signUpError

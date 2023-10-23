@@ -82,6 +82,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         do {
             try await auth.sendPasswordReset(withEmail: email)
         } catch {
+            print("Throw an error")
             throw AuthErrorHandler.resetPasswordError
         }
     }
