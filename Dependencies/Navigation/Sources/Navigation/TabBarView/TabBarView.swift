@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Settings
 import Design
 
 public struct TabBarView: View {
@@ -22,22 +23,33 @@ public struct TabBarView: View {
         } set: {
             self.viewModel.selectedTab = $0
         }
-        
-        ZStack(alignment: .bottom) {
-            SwiftUI.TabView(selection: selectedTab) {
-                ForEach(viewModel.tabs, id: \.title) { tab in
-                    tab.rootView
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                SwiftUI.TabView(selection: selectedTab) {
+                    ForEach(viewModel.tabs, id: \.title) { tab in
+                        tab.rootView
+                    }
+                }
+                buildTabBarView()
+                    .padding(6)
+                    .background(
+                        Colors.oxfordBlue
+                            .ignoresSafeArea(edges: .bottom)
+                    )
+                    .cornerRadius(10)
+                    .shadow(color: Colors.black.opacity(0.3), radius: 10, x: 0, y: 5)
+                    .padding(.horizontal)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                       SettingsView()
+                    } label: {
+                        Image(systemName: "gear")
+                            .tint(Colors.nobel)
+                    }
                 }
             }
-            buildTabBarView()
-                .padding(6)
-                .background(
-                    Colors.oxfordBlue
-                        .ignoresSafeArea(edges: .bottom))
-                .cornerRadius(10)
-                .shadow(color: Colors.black.opacity(0.3), radius: 10, x: 0, y: 5)
-                .padding(.horizontal)
-            
         }
     }
     
