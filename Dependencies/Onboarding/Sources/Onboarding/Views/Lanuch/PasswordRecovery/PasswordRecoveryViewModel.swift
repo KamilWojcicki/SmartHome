@@ -1,18 +1,16 @@
 //
-//  PasswordRecoveryViewModel.swift
+//  PasswordRecoveryViewModel1.swift
+//  
 //
-//
-//  Created by Kamil Wójcicki on 08/10/2023.
+//  Created by Kamil Wójcicki on 20/10/2023.
 //
 
-import Foundation
-import SwiftUI
-import DependencyInjection
 import AuthenticationInterface
-import OnboardingInterface
+import DependencyInjection
+import Foundation
+
 
 final class PasswordRecoveryViewModel: ObservableObject {
-    
     @Inject private var authenticationManager: AuthenticationManagerInterface
     @Published var email: String = ""
     
@@ -21,7 +19,7 @@ final class PasswordRecoveryViewModel: ObservableObject {
         try await authenticationManager.resetPassword(email: email)
     }
     
-    func validation() throws {
+    private func validation() throws {
         try Validation.validateField(email, fieldName: "email")
         try Validation.validateEmail(email: email)
     }

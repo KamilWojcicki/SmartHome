@@ -14,20 +14,33 @@ public struct MainLaunchView: View {
     public init() { }
     
     public var body: some View {
-        ZStack {
-            buildView(for: selectedSegment)
-            
-            SegmentedControl(selectedItem: $selectedSegment) { item in
-                selectedSegment = item
+        GeometryReader { reader in
+            ZStack {
+                buildView(for: selectedSegment)
+                
+                SegmentedControl(selectedItem: $selectedSegment) { item in
+                    selectedSegment = item
+                }
+                .padding(30)
+                
+                if viewModel.showRecoveryView {
+                    PasswordRecoveryView(size: reader.size)
+                }
             }
-            .padding(30)
+            .onReceive(viewModel.$error) { error in
+                if error != nil {
+                    print("Received error: \(error?.localizedDescription ?? "unknown error")")
+                    viewModel.showAlert.toggle()
+                }
+            }
+            .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
+                
+            }, message: {
+                Text(viewModel.error?.localizedDescription ?? "")
+            })
+            .environmentObject(viewModel)
         }
-        .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
             
-        }, message: {
-            Text(viewModel.error?.localizedDescription ?? "")
-        })
-        .environmentObject(viewModel)
     }
     
     @ViewBuilder

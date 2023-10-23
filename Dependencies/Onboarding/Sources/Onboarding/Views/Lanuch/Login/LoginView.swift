@@ -15,23 +15,32 @@ struct LoginView: View {
     init() { }
     
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
             
-            header
-            
-            logintextFields
+            VStack(spacing: 20) {
                 
-            recoveryButton
-            
-            signInButton
-            
-            textWithLines
+                header
                 
-            socialMediaStack
-            
-            Spacer()
+                logintextFields
+                
+                recoveryButton
+                
+                signInButton
+                
+                textWithLines
+                
+                socialMediaStack
+                
+                Spacer()
+                
+            }
+            .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
+                
+            }, message: {
+                Text(launchViewModel.error?.localizedDescription ?? "")
+            })
+            .padding(.horizontal, 30)
         }
-        .padding(.horizontal, 30)
     }
 }
 
@@ -46,7 +55,7 @@ extension LoginView {
             Text("Hello Again!")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                
+            
             Text("Welcome back you've been missed!")
                 .font(.title)
                 .multilineTextAlignment(.center)
@@ -67,7 +76,7 @@ extension LoginView {
     private var recoveryButton: some View {
         
         Button {
-            viewModel.showSheet.toggle()
+            launchViewModel.showRecoveryViewToggle()
         } label: {
             Text("Recovery password")
                 .font(.footnote)
@@ -75,17 +84,6 @@ extension LoginView {
                 .tint(Color.black)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .sheet(isPresented: $viewModel.showSheet) {
-            PasswordRecoveryView(showSheet: $viewModel.showSheet)
-                .presentationDetents([.medium])
-                .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
-                    
-                }, message: {
-                    Text(launchViewModel.error?.localizedDescription ?? "")
-                })
-        }
-
-        
     }
     
     private var signInButton: some View {
@@ -109,7 +107,7 @@ extension LoginView {
     private var textWithLines: some View {
         HStack {
             CustomLine(startPoint: .leading, endPoint: .trailing)
-
+            
             Text("Or continue with")
                 .font(.footnote)
                 .padding(.horizontal)

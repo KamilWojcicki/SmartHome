@@ -9,6 +9,7 @@ import Foundation
 import AuthenticationInterface
 import DependencyInjection
 import OnboardingInterface
+import SwiftUI
 
 
 final class LoginViewModel: ObservableObject {
@@ -21,7 +22,6 @@ final class LoginViewModel: ObservableObject {
     @Inject private var authenticationManager: AuthenticationManagerInterface
     @Published var email: String = ""
     @Published var password: String = ""
-    @Published var showSheet: Bool = false
     
     func signIn() async throws {
         try validateField()

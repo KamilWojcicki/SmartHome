@@ -6,21 +6,19 @@
 //
 
 import Foundation
-import Combine
+import SwiftUI
 
 final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
     @Published var errorMessage: String?
+    @Published var showRecoveryView: Bool = false
     
-    private var cancellables = Set<AnyCancellable>()
-
-    init() {
-      $error
-        .receive(on: RunLoop.main)
-        .sink { [weak self] error in
-            self?.showAlert = error != nil
+    func showRecoveryViewToggle() {
+        withAnimation(.bouncy) {
+            showRecoveryView.toggle()
         }
-        .store(in: &cancellables)
     }
+    
+    
 }
