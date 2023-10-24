@@ -18,4 +18,5 @@ public final class AppDelegate: NSObject, UIApplicationDelegate {
     public func application(_ app: UIApplication, open url: URL, options:[UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         let handled: Bool = ApplicationDelegate.shared.application(app, open: url, sourceApplication: options[.sourceApplication] as? String, annotation: options[.annotation])
         return handled
-    }}
+    }
+}

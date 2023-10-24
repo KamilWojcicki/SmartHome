@@ -21,5 +21,7 @@ final class MainLaunchViewModel: ObservableObject {
         }
     }
     
-    
+    func handleError(_ error: Error) {
+        self.error = error
+    }
 }

@@ -48,6 +48,7 @@ extension HomeView {
                 
             Text("Remember about your today's tasks")
                 .font(.system(size: 20))
+                
                 .foregroundColor(Colors.black.opacity(0.6))
         }
         .frame(maxWidth: .infinity, alignment: .leading)

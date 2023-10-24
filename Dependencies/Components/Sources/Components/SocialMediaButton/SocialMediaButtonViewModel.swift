@@ -30,11 +30,11 @@ public final class SocialMediaButtonViewModel: ObservableObject {
     }
     
     private func signInWithGoogle() async throws {
-        try await authenticationManager.signInWithGoogle()
+        let _ = try await authenticationManager.signInWithGoogle()
     }
     
     private func signInWithFacebook() async throws {
-        try await authenticationManager.signInWithFacebook()
+        let _ = try await authenticationManager.signInWithFacebook()
     }
     #warning("method didn't finished yet")
     private func signInWithApple() async throws {

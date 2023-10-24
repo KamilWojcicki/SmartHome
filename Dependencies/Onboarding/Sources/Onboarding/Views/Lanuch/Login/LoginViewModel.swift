@@ -12,12 +12,6 @@ import OnboardingInterface
 import SwiftUI
 
 final class LoginViewModel: ObservableObject {
-    enum authType {
-        case google
-        case facebook
-        case apple
-    }
-    
     @Inject private var authenticationManager: AuthenticationManagerInterface
     @Published var email: String = ""
     @Published var password: String = ""

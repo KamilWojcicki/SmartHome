@@ -11,11 +11,6 @@ import SwiftUI
 import SettingsInterface
 
 public struct SettingsView: View {
-    @State private var toogle: Bool = false
-    private let languageOptions: [String] = [
-        "Polish", "English"
-    ]
-    @State private var selectedOption: String = "English"
     @StateObject private var viewModel = SettingsViewModel()
     
     public init() { }
@@ -31,7 +26,7 @@ public struct SettingsView: View {
                     symbol: "moon.stars.fill",
                     variant: .toggle(
                         text: "Dark mode",
-                        binding: $toogle
+                        binding: $viewModel.toogle
                     )
                 )
                 
@@ -39,11 +34,8 @@ public struct SettingsView: View {
                     symbol: "character.bubble.fill",
                     variant: .language(
                         text: "Language",
-                        options: [
-                            languageOption.pl.rawValue,
-                            languageOption.eng.rawValue
-                        ],
-                        selectedOption: $selectedOption
+                        options: viewModel.languageOptions,
+                        selectedOption: $viewModel.selectedOption
                     )
                 )
                 

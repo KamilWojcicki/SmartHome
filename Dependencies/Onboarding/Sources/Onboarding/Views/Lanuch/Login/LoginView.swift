@@ -12,8 +12,6 @@ struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     
-    init() { }
-    
     var body: some View {
         ZStack {
             
@@ -34,11 +32,6 @@ struct LoginView: View {
                 Spacer()
                 
             }
-            .alert(Text("Error"), isPresented: $launchViewModel.showAlert, actions: {
-                
-            }, message: {
-                Text(launchViewModel.error?.localizedDescription ?? "")
-            })
             .padding(.horizontal, 30)
         }
     }
@@ -87,7 +80,6 @@ extension LoginView {
     }
     
     private var signInButton: some View {
-        
         Button {
             Task {
                 do {
@@ -101,7 +93,6 @@ extension LoginView {
             Text("Sign In!")
                 .withMainButtonViewModifier()
         }
-        
     }
     
     private var textWithLines: some View {
@@ -119,7 +110,6 @@ extension LoginView {
     
     private var socialMediaStack: some View {
         HStack {
-            
             SocialMediaButton(type: .google)
             SocialMediaButton(type: .apple)
             SocialMediaButton(type: .facebook)

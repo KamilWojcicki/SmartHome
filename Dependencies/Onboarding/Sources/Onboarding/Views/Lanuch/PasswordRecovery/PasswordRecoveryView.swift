@@ -67,7 +67,7 @@ extension PasswordRecoveryView {
                     
                     launchViewModel.showRecoveryView.toggle()
                 } catch {
-                    self.launchViewModel.error = error
+                    self.launchViewModel.handleError(error)
                 }
             }
         } label: {

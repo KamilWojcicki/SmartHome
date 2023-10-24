@@ -26,10 +26,6 @@ final class RootViewModel: ObservableObject {
     }
     
     func getAuthenticatedUser() {
-        do {
-            self.isLogIn = try authenticationManager.isUserAuthenticated()
-        } catch {
-            print(error)
-        }
+        self.isLogIn = ((try? authenticationManager.isUserAuthenticated()) != nil)
     }
 }

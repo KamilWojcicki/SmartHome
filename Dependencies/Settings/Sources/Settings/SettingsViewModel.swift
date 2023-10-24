@@ -13,6 +13,12 @@ import SwiftUI
 final class SettingsViewModel: ObservableObject {
     @Inject private var authenticationManager: AuthenticationManagerInterface
     
+    @Published var toogle: Bool = false
+    @Published var selectedOption: String = "English"
+    let languageOptions: [String] = [
+        "English", "Polish"
+    ]
+    
     func signOut() throws {
         try authenticationManager.signOut()
     }
