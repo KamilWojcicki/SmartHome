@@ -68,7 +68,7 @@ extension RegisterView {
                     try await viewModel.signUp()
                     print("User added successfully!")
                 } catch {
-                    self.launchViewModel.error = error
+                    self.launchViewModel.handleError(error)
                 }
             }
         } label: {

@@ -30,17 +30,18 @@ public struct MainLaunchView: View {
             .onReceive(viewModel.$error) { error in
                 if error != nil {
                     print("Received error: \(error?.localizedDescription ?? "unknown error")")
-                    viewModel.showAlert.toggle()
+                    viewModel.showAlertToggle()
                 }
             }
             .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
                 
             }, message: {
                 Text(viewModel.error?.localizedDescription ?? "")
-            })
+            }
+            )
             .environmentObject(viewModel)
         }
-            
+        
     }
     
     @ViewBuilder

@@ -12,7 +12,6 @@ import SwiftUI
 final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
-    @Published var errorMessage: String?
     @Published var showRecoveryView: Bool = false
     
     func showRecoveryViewToggle() {
@@ -23,5 +22,9 @@ final class MainLaunchViewModel: ObservableObject {
     
     func handleError(_ error: Error) {
         self.error = error
+    }
+    
+    func showAlertToggle() {
+        showAlert.toggle()
     }
 }

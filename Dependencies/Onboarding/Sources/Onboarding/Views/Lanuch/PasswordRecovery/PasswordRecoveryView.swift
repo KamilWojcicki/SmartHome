@@ -65,7 +65,7 @@ extension PasswordRecoveryView {
                     try await viewModel.resetPassword()
                     print("password reset!")
                     
-                    launchViewModel.showRecoveryView.toggle()
+                    launchViewModel.showRecoveryViewToggle()
                 } catch {
                     self.launchViewModel.handleError(error)
                 }
