@@ -7,24 +7,9 @@
 
 import Foundation
 import FirebaseAuth
-import DependencyInjection
 
 
-public struct User {
-    public let id: String
-    public let isAnonymous: Bool
-    public let fullname: String?
-    public let email: String?
-    public let photoURL: String?
-    
-    public init(from authDataResult: FirebaseAuth.User) {
-        self.id = authDataResult.uid
-        self.isAnonymous = authDataResult.isAnonymous
-        self.fullname = authDataResult.displayName
-        self.email = authDataResult.email
-        self.photoURL = authDataResult.photoURL?.absoluteString
-    }
-    
+
 //    var initials: String {
 //        let formatter = PersonNameComponentsFormatter()
 //        if let components = formatter.personNameComponents(from: fullname) {
@@ -33,7 +18,7 @@ public struct User {
 //        }
 //        return ""
 //    }
-}
+
 
 //Anonymously
 public protocol AuthenticationManagerInterface {
