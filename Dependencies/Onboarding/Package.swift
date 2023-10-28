@@ -20,7 +20,8 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
-        .package(path: "../Authentication")
+        .package(path: "../Authentication"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
@@ -38,6 +39,10 @@ let package = Package(
                 .product(
                     name: "Authentication",
                     package: "Authentication"
+                ),
+                .product(
+                    name: "User",
+                    package: "User"
                 )
             ]
         )
