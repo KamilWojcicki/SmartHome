@@ -20,6 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Authentication"),
+        .package(path: "../CloudDatabase"),
         .package(path: "../DependencyInjection")
     ],
     targets: [
@@ -35,7 +36,8 @@ let package = Package(
             name: "User",
             dependencies: [
                 "DependencyInjection",
-                "UserInterface"
+                "UserInterface",
+                "CloudDatabase"
             ]
         )
     ]
