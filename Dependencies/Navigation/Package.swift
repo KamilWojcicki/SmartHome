@@ -19,7 +19,6 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Design"),
-        .package(path: "../Authentication"),
         .package(path: "../DependencyInjection"),
         .package(path: "../Settings")
     ],
@@ -34,7 +33,6 @@ let package = Package(
             name: "Navigation",
             dependencies: [
                 .product(name: "Design", package: "Design"),
-                .product(name: "Authentication", package: "Authentication"),
                 .product(name: "Settings", package: "Settings"),
                 "NavigationInterface"
             ]
