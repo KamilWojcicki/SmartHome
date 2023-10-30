@@ -20,23 +20,35 @@ import FirebaseAuth
 //    }
 
 
-//Anonymously
+public struct AuthenticationDataResult {
+    public let uid: String
+    public let providerId: String
+    public let email: String?
+    public let displayName: String?
+    
+    public init(user: User) {
+        self.uid = user.uid
+        self.providerId = user.providerID
+        self.email = user.email
+        self.displayName = user.displayName
+    }
+}
+
 public protocol AuthenticationManagerInterface {
-    var signInResult: AsyncStream<Bool> { get }
-   // var userUpdates: AsyncStream<User?> { get }
     var userID: String { get }
     
-    func signInAnonymously() async throws
+    func signInAnonymously() async throws -> AuthenticationDataResult
+    
     func getProviders() throws -> [AuthProviderOption]
     func isUserAuthenticated() throws -> Bool
+    
     func createUser(email: String, password: String) async throws
-    func signInUser(email: String, password: String) async throws
+    func signInUser(email: String, password: String) async throws -> AuthenticationDataResult
     func updatePassword(email: String, password: String, newPassword: String) async throws
     func resetPassword(email: String) async throws
     func deleteAccount() async throws
-    func signIn(credential: AuthCredential) async throws -> User
-    func signInWithGoogle() async throws -> User
-    func signInWithFacebook() async throws -> User
+    func signInWithGoogle() async throws -> AuthenticationDataResult
+    func signInWithFacebook() async throws -> AuthenticationDataResult
     func signOut() throws
 }
 

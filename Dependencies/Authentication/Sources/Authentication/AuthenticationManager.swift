@@ -11,7 +11,7 @@ import FirebaseAuth
 
 final class AuthenticationManager: AuthenticationManagerInterface {
     var userID: String = ""
-    private var loginEventHandler: ((Bool) -> Void)?
+    
     private let auth = Auth.auth()
     private let signInGoogleHelper = SignInGoogleHelper()
     private let signInFacebookHelper  = SignInFacebookHelper()
@@ -29,27 +29,15 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             }
         }
     }
-    
-    private var user: AuthenticationInterface.User? {
-        didSet {
-            loginEventHandler?(user != nil)
-        }
-    }
-    
-    lazy var signInResult: AsyncStream<Bool> = {
-        AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            loginEventHandler = { continuation.yield($0) }
-        }
-    }()
-    
+}
+// MARK: Sign In with email
+extension AuthenticationManager {
     func isUserAuthenticated() throws -> Bool {
         guard auth.currentUser != nil else {
             throw AuthErrorHandler.getAuthenticatedUserError
         }
         return true
     }
-    
-    // MARK: Sign In with email
     func createUser(email: String, password: String) async throws {
         do {
             try await auth.createUser(withEmail: email, password: password)
@@ -58,10 +46,10 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func signInUser(email: String, password: String) async throws {
+    func signInUser(email: String, password: String) async throws -> AuthenticationDataResult {
         do {
             let user = try await auth.signIn(withEmail: email, password: password).user
-            self.user = User(from: user)
+            return AuthenticationDataResult(user: user)
         } catch {
             throw AuthErrorHandler.signInError
         }
@@ -98,8 +86,17 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
+    func signOut() throws {
+        do {
+            try auth.signOut()
+        } catch {
+            throw AuthErrorHandler.signOutError
+        }
+    }
+}
+// MARK: Sign In with SSO
+extension AuthenticationManager {
     // MARK: PROVIDERS
-
     func getProviders() throws -> [AuthenticationInterface.AuthProviderOption] {
         guard let user = auth.currentUser else {
             throw AuthErrorHandler.getAuthenticatedUserError
@@ -110,27 +107,16 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             .compactMap { AuthenticationInterface.AuthProviderOption(rawValue: $0.providerID) }
     }
     
-    func signOut() throws {
+    private func signIn(credential: AuthCredential) async throws -> AuthenticationDataResult {
         do {
-            try auth.signOut()
-            self.user = nil
-        } catch {
-            throw AuthErrorHandler.signOutError
-        }
-    }
-    
-    // MARK: Sign In with SSO
-    func signIn(credential: AuthCredential) async throws -> AuthenticationInterface.User {
-        do {
-            let authDataResult = try await auth.signIn(with: credential)
-            self.user = User(from: authDataResult.user)
-            return User(from: authDataResult.user)
+            let user = try await auth.signIn(with: credential).user
+            return AuthenticationDataResult(user: user)
         } catch {
             throw AuthErrorHandler.signInWithCredentialError
         }
     }
     
-    func signInWithGoogle() async throws -> AuthenticationInterface.User {
+    func signInWithGoogle() async throws -> AuthenticationDataResult {
         do {
             let credential = try await googleCredential()
             return try await signIn(credential: credential)
@@ -139,7 +125,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func signInWithFacebook() async throws -> AuthenticationInterface.User {
+    func signInWithFacebook() async throws -> AuthenticationDataResult {
         do {
             let credential = try await facebookCredential()
             return try await signIn(credential: credential)
@@ -147,21 +133,19 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             throw AuthErrorHandler.signInWithFacebookError
         }
     }
-    
-    
-    // MARK: Sign in Anonymously
-    func signInAnonymously() async throws {
+}
+// MARK: Sign in Anonymously
+extension AuthenticationManager {
+    func signInAnonymously() async throws -> AuthenticationDataResult {
         do {
-            let authenticationDataResult = try await auth.signInAnonymously().user
-            self.user = User(from: authenticationDataResult)
+            let user = try await auth.signInAnonymously().user
+            return AuthenticationDataResult(user: user)
         } catch {
             throw AuthErrorHandler.signInAnonymouslyError
         }
         
     }
 }
-
-
 // MARK: CREDENTIALS
 extension AuthenticationManager {
     private func googleCredential() async throws -> AuthCredential {
