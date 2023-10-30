@@ -23,7 +23,9 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CloudDatabaseInterface"
+            name: "CloudDatabaseInterface",
+            dependencies: [
+            ]
         ),
         .target(
             name: "CloudDatabase",

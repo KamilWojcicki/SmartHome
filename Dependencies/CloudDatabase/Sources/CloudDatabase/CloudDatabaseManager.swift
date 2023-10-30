@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Kamil Wójcicki on 27/10/2023.
 //
@@ -90,5 +90,13 @@ extension CloudDatabaseManager {
                 
                 return DAOFactory.initializeObject(from: objectDAO)
             }
+    }
+    
+    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws {
+        let documentId = String(describing: object.id)
+        
+        try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
+            .document(documentId)
+            .delete()
     }
 }
