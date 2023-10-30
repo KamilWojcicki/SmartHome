@@ -16,7 +16,7 @@ final class MainLaunchViewModel: ObservableObject {
     @Published var showRecoveryView: Bool = false
     
     func showRecoveryViewToggle() {
-        withAnimation(.bouncy) {
+        withAnimation {
             showRecoveryView.toggle()
         }
     }

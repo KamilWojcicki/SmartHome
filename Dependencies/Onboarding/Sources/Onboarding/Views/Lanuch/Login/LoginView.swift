@@ -86,7 +86,7 @@ extension LoginView {
                     try await viewModel.signIn()
                     print("Login successfully!")
                 } catch {
-                    self.launchViewModel.error = error
+                    self.launchViewModel.handleError(error)
                 }
             }
         } label: {
