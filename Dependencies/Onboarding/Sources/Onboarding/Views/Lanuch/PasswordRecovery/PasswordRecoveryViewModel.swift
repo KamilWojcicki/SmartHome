@@ -5,18 +5,18 @@
 //  Created by Kamil Wójcicki on 20/10/2023.
 //
 
-import AuthenticationInterface
 import DependencyInjection
 import Foundation
+import UserInterface
 
 @MainActor
 final class PasswordRecoveryViewModel: ObservableObject {
-    @Inject private var authenticationManager: AuthenticationManagerInterface
+    @Inject private var userManager: UserManagerInterface
     @Published var email: String = ""
     
     func resetPassword() async throws {
         try validation()
-        try await authenticationManager.resetPassword(email: email)
+        try await userManager.resetPassword(email: email)
     }
     
     private func validation() throws {
