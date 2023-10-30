@@ -6,27 +6,18 @@
 //
 
 import Animation
-import AuthenticationInterface
 import DependencyInjection
 import Design
 import SwiftUI
 
 struct HomeView: View {
-    @Inject private var authenticationManager: AuthenticationManagerInterface
     @StateObject private var viewModel = HomeViewModel()
     var body: some View {
         VStack(spacing: 30) {
             
             welcomeTextSection
             
-            Button {
-                viewModel.signOut()
-            } label: {
-                Text("Sign out")
-            }
-            
             LottieView(animationConfiguration: .iot)
-            
             
             Spacer()
         }
