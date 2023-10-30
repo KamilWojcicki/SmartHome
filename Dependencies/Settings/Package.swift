@@ -19,9 +19,9 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Authentication"),
         .package(path: "../Components"),
-        .package(path: "../DependencyInjection")
+        .package(path: "../DependencyInjection"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
@@ -30,16 +30,16 @@ let package = Package(
                 .product(
                     name: "DependencyInjection",
                     package: "DependencyInjection"
+                ),
+                .product(
+                    name: "User",
+                    package: "User"
                 )
             ]
         ),
         .target(
             name: "Settings",
             dependencies: [
-                .product(
-                    name: "Authentication",
-                    package: "Authentication"
-                ),
                 .product(
                     name: "Components",
                     package: "Components"
