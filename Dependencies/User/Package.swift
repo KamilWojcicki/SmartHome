@@ -29,15 +29,19 @@ let package = Package(
             dependencies: [
                 .product(
                     name: "Authentication",
-                    package: "Authentication")
+                    package: "Authentication"
+                ),
+                .product(
+                    name: "CloudDatabase",
+                    package: "CloudDatabase"
+                )
             ]
         ),
         .target(
             name: "User",
             dependencies: [
                 "DependencyInjection",
-                "UserInterface",
-                "CloudDatabase"
+                "UserInterface"
             ]
         )
     ]

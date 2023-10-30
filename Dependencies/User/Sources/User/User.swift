@@ -8,7 +8,7 @@ import UserInterface
 
 public struct Dependencies {
     public static func inject() {
-        Assemblies.inject(type: UserManagerInterface, object: UserManager())
+        Assemblies.inject(type: UserManagerInterface.self, object: UserManager())
         
         Authentication.Dependencies.inject()
         CloudDatabase.Dependencies.inject()

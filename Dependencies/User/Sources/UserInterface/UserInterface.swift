@@ -37,6 +37,13 @@ public struct User: Storable, Hashable {
         self.displayName = dao.displayName
     }
     
+    public init(from authDataResult: AuthenticationDataResult) {
+        self.id = authDataResult.uid
+        self.providerId = authDataResult.providerId
+        self.email = authDataResult.email
+        self.displayName = authDataResult.displayName
+    }
+    
 }
 
 public struct UserDAO: DAOInterface {
@@ -61,10 +68,8 @@ public protocol UserManagerInterface {
     var signInResult: AsyncStream<Bool> { get }
     var userUpdates: AsyncThrowingStream<User?, Error> { get }
     
-    func getUser() async throws-> User?
-    func updateUser(user: User) async throws
+    func isUserAuthenticated() throws -> Bool
     func signOut() throws
-    
     func signUp(email: String, password: String) async throws
     func signIn(email: String, password: String) async throws
     func updatePassword(email: String, password: String, newPassword: String) async throws
@@ -72,6 +77,4 @@ public protocol UserManagerInterface {
     func deleteAccount() async throws
     func signInWithGoogle() async throws
     func signInWithFacebook() async throws
-    
-    //func signInAnonymously() async throws
 }
