@@ -29,6 +29,10 @@ final class AuthenticationManager: AuthenticationManagerInterface {
             }
         }
     }
+    
+    func getCurrentUser() throws -> User {
+        try auth.currentUser ?? { throw AuthErrorHandler.getAuthenticatedUserError }()
+    }
 }
 // MARK: Sign In with email
 extension AuthenticationManager {
@@ -38,9 +42,10 @@ extension AuthenticationManager {
         }
         return true
     }
-    func createUser(email: String, password: String) async throws {
+    func createUser(email: String, password: String) async throws -> AuthenticationDataResult {
         do {
-            try await auth.createUser(withEmail: email, password: password)
+            let user = try await auth.createUser(withEmail: email, password: password).user
+            return AuthenticationDataResult(user: user)
         } catch {
             throw AuthErrorHandler.signUpError
         }

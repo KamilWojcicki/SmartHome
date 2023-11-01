@@ -22,15 +22,45 @@ import FirebaseAuth
 
 public struct AuthenticationDataResult {
     public let uid: String
-    public let providerId: String
+    public let providerId: String?
     public let email: String?
     public let displayName: String?
+    public let photoURL: String?
+    public let isFirstLogin: Bool
     
-    public init(user: User) {
+    public init(user: User, isFirstLogin: Bool = true) {
         self.uid = user.uid
         self.providerId = user.providerID
         self.email = user.email
         self.displayName = user.displayName
+        self.photoURL = user.photoURL?.absoluteString
+        self.isFirstLogin = isFirstLogin
+    }
+    
+    public init(
+        user: User,
+        providerId: AuthProviderOption?,
+        isFirstLogin: Bool = true
+    ) {
+        self.uid = user.uid
+        self.providerId = providerId?.rawValue
+        self.email = user.email
+        self.displayName = user.displayName
+        self.photoURL = user.photoURL?.absoluteString
+        self.isFirstLogin = isFirstLogin
+    }
+    
+    public init(
+        user: User,
+        userInfo: UserInfo,
+        isFirstLogin: Bool = true
+    ) {
+        self.uid = user.providerData[0].providerID
+        self.providerId = userInfo.providerID
+        self.email = userInfo.email
+        self.displayName = userInfo.displayName
+        self.photoURL = userInfo.photoURL?.absoluteString
+        self.isFirstLogin = isFirstLogin
     }
 }
 
@@ -39,10 +69,11 @@ public protocol AuthenticationManagerInterface {
     
     func signInAnonymously() async throws -> AuthenticationDataResult
     
+    func getCurrentUser() throws -> User 
     func getProviders() throws -> [AuthProviderOption]
     func isUserAuthenticated() throws -> Bool
     
-    func createUser(email: String, password: String) async throws
+    func createUser(email: String, password: String) async throws -> AuthenticationDataResult
     func signInUser(email: String, password: String) async throws -> AuthenticationDataResult
     func updatePassword(email: String, password: String, newPassword: String) async throws
     func resetPassword(email: String) async throws
