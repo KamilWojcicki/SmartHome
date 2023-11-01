@@ -51,6 +51,7 @@ public struct TabBarView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     private func buildTabBarView() -> some View {
