@@ -17,7 +17,7 @@ struct HomeView: View {
             
             welcomeTextSection
             
-            LottieView(animationConfiguration: .iot)
+            LottieView(animationConfiguration: .iot, loopMode: .loop)
             
             Spacer()
         }
