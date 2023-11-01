@@ -92,11 +92,35 @@ extension CloudDatabaseManager {
             }
     }
     
+    func update<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object, data: [String: Any]) throws {
+        let documentId = String(describing: object.id)
+        do {
+            try collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(documentId)
+                .updateData(data)
+        } catch {
+            throw URLError(.badURL)
+        }
+    }
+    
     func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws {
         let documentId = String(describing: object.id)
         
         try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
             .document(documentId)
             .delete()
+    }
+    
+    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, object: Object) async throws -> Bool {
+        let objectId = String(describing: object.id)
+        let objectDocRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId)
+        
+        do {
+            let document = try await objectDocRef.getDocument()
+            
+            return document.exists ? false : true
+        } catch {
+            throw URLError(.badServerResponse)
+        }
     }
 }

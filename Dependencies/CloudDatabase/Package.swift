@@ -25,12 +25,6 @@ let package = Package(
         .target(
             name: "CloudDatabaseInterface",
             dependencies: [
-            ]
-        ),
-        .target(
-            name: "CloudDatabase",
-            dependencies: [
-                "CloudDatabaseInterface",
                 .product(
                     name: "DependencyInjection",
                     package: "DependencyInjection"
@@ -39,6 +33,12 @@ let package = Package(
                     name: "FirebaseSupport",
                     package: "FirebaseSupport"
                 )
+            ]
+        ),
+        .target(
+            name: "CloudDatabase",
+            dependencies: [
+                "CloudDatabaseInterface"
             ]
         )
     ]
