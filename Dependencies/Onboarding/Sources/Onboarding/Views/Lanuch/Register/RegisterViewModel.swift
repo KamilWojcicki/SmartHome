@@ -6,14 +6,12 @@
 //
 
 import Foundation
-import AuthenticationInterface
 import DependencyInjection
-import OnboardingInterface
+import UserInterface
 
 @MainActor
 final class RegisterViewModel: ObservableObject {
-    
-    @Inject private var authenticationManager: AuthenticationManagerInterface
+    @Inject private var userManager: UserManagerInterface
     
     @Published var email: String = ""
     @Published var fullname: String = ""
@@ -22,8 +20,7 @@ final class RegisterViewModel: ObservableObject {
     
     func signUp() async throws {
         try validateField()
-        try await authenticationManager.createUser(email: email, password: password)
-        try await authenticationManager.signInUser(email: email, password: password)
+        try await userManager.signUp(withEmail: email, password: password, displayName: fullname)
     }
     
     private func validateField() throws {

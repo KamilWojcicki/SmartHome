@@ -5,13 +5,13 @@
 //  Created by Kamil Wójcicki on 02/10/2023.
 //
 
-import AuthenticationInterface
 import DependencyInjection
 import Foundation
 import SwiftUI
+import UserInterface
 
 final class SettingsViewModel: ObservableObject {
-    @Inject private var authenticationManager: AuthenticationManagerInterface
+    @Inject private var userManager: UserManagerInterface
     
     @Published var toogle: Bool = false
     @Published var selectedOption: String = "English"
@@ -20,6 +20,6 @@ final class SettingsViewModel: ObservableObject {
     ]
     
     func signOut() throws {
-        try authenticationManager.signOut()
+        try userManager.signOut()
     }
 }

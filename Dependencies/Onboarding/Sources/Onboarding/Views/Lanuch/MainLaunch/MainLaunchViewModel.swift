@@ -12,10 +12,11 @@ import SwiftUI
 final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
+    @Published var errorMessage: String?
     @Published var showRecoveryView: Bool = false
     
     func showRecoveryViewToggle() {
-        withAnimation(.bouncy) {
+        withAnimation {
             showRecoveryView.toggle()
         }
     }

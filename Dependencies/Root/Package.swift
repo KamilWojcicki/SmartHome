@@ -21,9 +21,11 @@ let package = Package(
     dependencies: [
         .package(path: "../Calendar"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Devices"),
         .package(path: "../Home"),
         .package(path: "../Navigation"),
         .package(path: "../Onboarding"),
+        .package(path: "../Settings"),
         .package(path: "../Tasks")
     ],
     targets: [
@@ -40,6 +42,10 @@ let package = Package(
             dependencies: [
                 "RootInterface",
                 .product(
+                    name: "Onboarding",
+                    package: "Onboarding"
+                ),
+                .product(
                     name: "Calendar",
                     package: "Calendar"
                 ),
@@ -52,8 +58,12 @@ let package = Package(
                     package: "Navigation"
                 ),
                 .product(
-                    name: "Onboarding",
-                    package: "Onboarding"
+                    name: "Settings",
+                    package: "Settings"
+                ),
+                .product(
+                    name: "Devices",
+                    package: "Devices"
                 ),
                 .product(
                     name: "Tasks",
