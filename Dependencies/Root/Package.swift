@@ -19,9 +19,14 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../Calendar"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Devices"),
+        .package(path: "../Home"),
+        .package(path: "../Navigation"),
         .package(path: "../Onboarding"),
-        .package(path: "../SliderInfo")
+        .package(path: "../Settings"),
+        .package(path: "../Tasks")
     ],
     targets: [
         .target(
@@ -41,8 +46,28 @@ let package = Package(
                     package: "Onboarding"
                 ),
                 .product(
-                    name: "SliderInfo",
-                    package: "SliderInfo"
+                    name: "Calendar",
+                    package: "Calendar"
+                ),
+                .product(
+                    name: "Home",
+                    package: "Home"
+                ),
+                .product(
+                    name: "Navigation",
+                    package: "Navigation"
+                ),
+                .product(
+                    name: "Settings",
+                    package: "Settings"
+                ),
+                .product(
+                    name: "Devices",
+                    package: "Devices"
+                ),
+                .product(
+                    name: "Tasks",
+                    package: "Tasks"
                 )
             ]
         )
