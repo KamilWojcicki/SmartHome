@@ -11,15 +11,12 @@ import FirebaseAuth
 import Foundation
 
 public struct User: Storable, Hashable {
-    public var docRef: String?
-    public static var collection: String = "Users"
-    
     public let id: String
     public let providerId: String?
     public let email: String?
     public let displayName: String?
     public let photoURL: String?
-    public let topic: String?
+    public let topic: String
     public let isFirstLogin: Bool
     
     public init(
@@ -28,7 +25,7 @@ public struct User: Storable, Hashable {
         email: String?,
         displayName: String?,
         photoURL: String?,
-        topic: String?,
+        topic: String,
         isFirstLogin: Bool = true
     ) {
         self.id = id
@@ -37,6 +34,19 @@ public struct User: Storable, Hashable {
         self.displayName = displayName
         self.photoURL = photoURL
         self.topic = topic
+        self.isFirstLogin = isFirstLogin
+    }
+    
+    public init(
+        from authDataResult: AuthenticationDataResult,
+        isFirstLogin: Bool = true
+    ) {
+        self.id = authDataResult.uid
+        self.providerId = authDataResult.providerId
+        self.email = authDataResult.email
+        self.displayName = authDataResult.displayName
+        self.photoURL = authDataResult.photoURL
+        self.topic = ""
         self.isFirstLogin = isFirstLogin
     }
     
@@ -50,29 +60,19 @@ public struct User: Storable, Hashable {
         self.isFirstLogin = dao.isFirstLogin
     }
     
-    public init(from authDataResult: AuthenticationDataResult) {
-        self.id = authDataResult.uid
-        self.providerId = authDataResult.providerId
-        self.email = authDataResult.email
-        self.displayName = authDataResult.displayName
-        self.photoURL = authDataResult.photoURL
-        self.topic = nil
-        self.isFirstLogin = authDataResult.isFirstLogin
-    }
-    
-    public init(from user: FirebaseAuth.User, isFirstLogin: Bool = true) {
-        self.id = user.uid
-        self.providerId = user.providerID
-        self.email = user.email
-        self.displayName = user.displayName
-        self.photoURL = user.photoURL?.absoluteString
-        self.topic = nil
-        self.isFirstLogin = isFirstLogin
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case providerId
+        case email
+        case displayName
+        case photoURL
+        case topic
+        case isFirstLogin
     }
 }
 
 public struct UserDAO: DAOInterface {
-    public static var collection: String = ""
+    public static var collection: String = "Users"
     
     public var docRef: String?
     
@@ -81,7 +81,7 @@ public struct UserDAO: DAOInterface {
     public let email: String?
     public let displayName: String?
     public let photoURL: String?
-    public let topic: String?
+    public let topic: String
     public let isFirstLogin: Bool
     
     public init(from user: User) {
@@ -99,22 +99,20 @@ public protocol UserManagerInterface {
     var signInResult: AsyncStream<Bool> { get }
     var userUpdates: AsyncThrowingStream<User?, Error> { get }
     
-    func getCurrentUser() throws -> User
     func isUserAuthenticated() throws -> Bool
-    func signOut() throws
-    func signUp(email: String, password: String) async throws
-    func signIn(email: String, password: String) async throws
-    func updatePassword(email: String, password: String, newPassword: String) async throws
-    func resetPassword(email: String) async throws
     func deleteAccount() async throws
-    func signInWithGoogle() async throws
-    func signInWithFacebook() async throws
-    
-    func create<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) throws
-    func read<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws -> Object
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, objectsOfType type: Object.Type) async throws -> [Object]
-    func update<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object, data: [String: Any]) throws 
-    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws
-    func handleFirstLogin() async throws -> Bool 
+    func signOut() throws
     func checkIsFirstLogin() async throws -> Bool
+    func updateUserData(data: [String: Any]) async throws
+    func fetchUser() async throws -> User
+    
+    //Manage User
+    func signUp(withEmail email: String, password: String, displayName: String) async throws
+    func signIn(withEmail email: String, password: String) async throws
+    func updatePassword(email: String, password: String, newPassword: String) async throws
+    func resetPassword(withEmail email: String) async throws
+    
+    //SSO
+    func signInWithGoogle() async throws
+    func signInWithFacebook() async throws    
 }
