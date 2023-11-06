@@ -20,11 +20,7 @@ let package = Package(
     dependencies: [
         .package(path: "../Animation"),
         .package(path: "../Design"),
-        .package(path: "../Calendar"),
         .package(path: "../DependencyInjection"),
-        .package(path: "../Home"),
-        .package(path: "../Navigation"),
-        .package(path: "../Tasks"),
         .package(path: "../User")
     ],
     targets: [
@@ -50,24 +46,8 @@ let package = Package(
                     package: "Animation"
                 ),
                 .product(
-                    name: "Calendar",
-                    package: "Calendar"
-                ),
-                .product(
                     name: "Design",
                     package: "Design"
-                ),
-                .product(
-                    name: "Home",
-                    package: "Home"
-                ),
-                .product(
-                    name: "Navigation",
-                    package: "Navigation"
-                ),
-                .product(
-                    name: "Tasks",
-                    package: "Tasks"
                 )
             ]
         )

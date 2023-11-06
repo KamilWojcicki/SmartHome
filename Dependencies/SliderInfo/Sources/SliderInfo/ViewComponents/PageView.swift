@@ -10,8 +10,8 @@ import SliderInfoInterface
 import SwiftUI
 
 struct PageView: View {
-    let page: Page
-    @Binding var textFieldText: String
+   private let page: Page
+    @Binding private var textFieldText: String
     
     init(page: Page, textFieldText: Binding<String>) {
         self.page = page
@@ -40,6 +40,7 @@ struct PageView: View {
         VStack(spacing: 0) {
             if page.showTopicField == true {
                 TextField("Enter a TOPIC", text: $textFieldText)
+                    .textInputAutocapitalization(.never)
                 
                      Divider()
             }
