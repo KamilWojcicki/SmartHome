@@ -5,16 +5,12 @@
 //  Created by Kamil Wójcicki on 10/10/2023.
 //
 
-import Foundation
 import DependencyInjection
-import AuthenticationInterface
-
-
+import Foundation
+import UserInterface
 
 public final class SocialMediaButtonViewModel: ObservableObject {
-    
-    
-    @Inject private var authenticationManager: AuthenticationManagerInterface
+    @Inject private var userManager: UserManagerInterface
 
     @Published var error: Error?
     
@@ -30,11 +26,11 @@ public final class SocialMediaButtonViewModel: ObservableObject {
     }
     
     private func signInWithGoogle() async throws {
-        let _ = try await authenticationManager.signInWithGoogle()
+        let _ = try await userManager.signInWithGoogle()
     }
     
     private func signInWithFacebook() async throws {
-        let _ = try await authenticationManager.signInWithFacebook()
+        let _ = try await userManager.signInWithFacebook()
     }
     #warning("method didn't finished yet")
     private func signInWithApple() async throws {

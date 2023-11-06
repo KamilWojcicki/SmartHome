@@ -10,37 +10,9 @@ import FirebaseAuth
 
 
 final class AuthenticationManager: AuthenticationManagerInterface {
-    var userID: String = ""
-    private var loginEventHandler: ((Bool) -> Void)?
     private let auth = Auth.auth()
     private let signInGoogleHelper = SignInGoogleHelper()
     private let signInFacebookHelper  = SignInFacebookHelper()
-    
-    init() {
-        userStateListener()
-    }
-    
-    private func userStateListener() {
-        auth.addStateDidChangeListener { [weak self] auth, user in
-            guard let self = self else { return }
-            
-            if let user {
-                self.userID = user.uid
-            }
-        }
-    }
-    
-    private var user: AuthenticationInterface.User? {
-        didSet {
-            loginEventHandler?(user != nil)
-        }
-    }
-    
-    lazy var signInResult: AsyncStream<Bool> = {
-        AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
-            loginEventHandler = { continuation.yield($0) }
-        }
-    }()
     
     func isUserAuthenticated() throws -> Bool {
         guard auth.currentUser != nil else {
@@ -49,28 +21,53 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         return true
     }
     
-    // MARK: Sign In with email
-    func createUser(email: String, password: String) async throws {
+    func deleteAccount() async throws {
+        let user = try getCurrentUser()
+        
         do {
-            try await auth.createUser(withEmail: email, password: password)
+            try await user.delete()
+        } catch {
+            throw AuthErrorHandler.deleteUserError
+        }
+    }
+    
+    func signOut() throws {
+        do {
+            try auth.signOut()
+        } catch {
+            throw AuthErrorHandler.signOutError
+        }
+    }
+}
+
+// MARK: Sign In with email
+extension AuthenticationManager {
+    func signUp(withEmail email: String, password: String, displayName: String) async throws -> AuthenticationDataResult {
+        do {
+            let user = try await auth.createUser(withEmail: email, password: password).user
+            
+            let changeRequest = auth.currentUser?.createProfileChangeRequest()
+            changeRequest?.displayName = displayName
+            try await changeRequest?.commitChanges()
+            
+            return AuthenticationDataResult(user: user, providerID: user.providerData[0])
         } catch {
             throw AuthErrorHandler.signUpError
         }
     }
     
-    func signInUser(email: String, password: String) async throws {
+    func signIn(withEmail email: String, password: String) async throws -> AuthenticationDataResult {
         do {
             let user = try await auth.signIn(withEmail: email, password: password).user
-            self.user = User(from: user)
+            return AuthenticationDataResult(user: user, userInfo: user.providerData[0])
         } catch {
             throw AuthErrorHandler.signInError
         }
     }
     
     func updatePassword(email: String, password: String, newPassword: String) async throws {
-        guard let user = auth.currentUser else {
-            throw AuthErrorHandler.getAuthenticatedUserError
-        }
+        let user = try getCurrentUser()
+        
         do {
             try await user.updatePassword(to: password)
         } catch {
@@ -78,7 +75,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func resetPassword(email: String) async throws {
+    func resetPassword(withEmail email: String) async throws {
         do {
             try await auth.sendPasswordReset(withEmail: email)
         } catch {
@@ -87,90 +84,52 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         }
     }
     
-    func deleteAccount() async throws {
-        guard let user = auth.currentUser else {
-            throw AuthErrorHandler.getAuthenticatedUserError
-        }
-        do {
-            try await user.delete()
-        } catch {
-            throw AuthErrorHandler.deleteUserError
-        }
+    func getCurrentUser() throws -> User {
+        try auth.currentUser ?? { throw AuthErrorHandler.getAuthenticatedUserError }()
     }
-    
-    // MARK: PROVIDERS
+}
 
-    func getProviders() throws -> [AuthenticationInterface.AuthProviderOption] {
-        guard let user = auth.currentUser else {
-            throw AuthErrorHandler.getAuthenticatedUserError
-        }
-        
-        return user
-            .providerData
-            .compactMap { AuthenticationInterface.AuthProviderOption(rawValue: $0.providerID) }
-    }
-    
-    func signOut() throws {
+// MARK: Sign In with SSO
+extension AuthenticationManager {
+    func signInWithGoogle() async throws -> AuthenticationDataResult {
         do {
-            try auth.signOut()
-            self.user = nil
-        } catch {
-            throw AuthErrorHandler.signOutError
-        }
-    }
-    
-    // MARK: Sign In with SSO
-    func signIn(credential: AuthCredential) async throws -> AuthenticationInterface.User {
-        do {
-            let authDataResult = try await auth.signIn(with: credential)
-            self.user = User(from: authDataResult.user)
-            return User(from: authDataResult.user)
-        } catch {
-            throw AuthErrorHandler.signInWithCredentialError
-        }
-    }
-    
-    func signInWithGoogle() async throws -> AuthenticationInterface.User {
-        do {
-            let credential = try await googleCredential()
-            return try await signIn(credential: credential)
+            let result = try await signInGoogleHelper.signIn()
+            
+            return try await signIn(
+                credential:
+                    GoogleAuthProvider
+                    .credential(
+                        withIDToken: result.idToken,
+                        accessToken: result.accessToken
+                    )
+            )
         } catch {
             throw AuthErrorHandler.signInWithGoogleError
         }
     }
     
-    func signInWithFacebook() async throws -> AuthenticationInterface.User {
+    func signInWithFacebook() async throws -> AuthenticationDataResult {
         do {
-            let credential = try await facebookCredential()
-            return try await signIn(credential: credential)
+            let result = try await signInFacebookHelper.signIn()
+            
+            return try await signIn(
+                credential:
+                    FacebookAuthProvider
+                    .credential(
+                        withAccessToken: result.accessToken
+                    )
+            )
         } catch {
             throw AuthErrorHandler.signInWithFacebookError
         }
     }
     
-    
-    // MARK: Sign in Anonymously
-    func signInAnonymously() async throws {
+    private func signIn(credential: AuthCredential) async throws -> AuthenticationDataResult {
         do {
-            let authenticationDataResult = try await auth.signInAnonymously().user
-            self.user = User(from: authenticationDataResult)
+            let user = try await auth.signIn(with: credential).user
+            return AuthenticationDataResult(user: user, userInfo: user.providerData[0])
         } catch {
-            throw AuthErrorHandler.signInAnonymouslyError
+            throw AuthErrorHandler.signInWithCredentialError
         }
-        
-    }
-}
-
-
-// MARK: CREDENTIALS
-extension AuthenticationManager {
-    private func googleCredential() async throws -> AuthCredential {
-        let result = try await signInGoogleHelper.signIn()
-        return GoogleAuthProvider.credential(withSignInResult: result)
-    }
-    
-    private func facebookCredential() async throws -> AuthCredential {
-        let result = try await signInFacebookHelper.signIn()
-        return FacebookAuthProvider.credential(withSignInResult: result)
     }
 }

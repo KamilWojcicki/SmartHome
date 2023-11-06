@@ -44,5 +44,38 @@ extension Configuration {
             bundle: .module
         )
     )
+    
+    public static let checkmark: Self = .init(
+        lightMode: .init(
+            filename: "Checkmark",
+            bundle: .module
+        ),
+        darkMode: .init(
+            filename: "Checkmark",
+            bundle: .module
+        )
+    )
+    
+    public static let helloWorld: Self = .init(
+        lightMode: .init(
+            filename: "HelloWorld",
+            bundle: .module
+        ),
+        darkMode: .init(
+            filename: "HelloWorld",
+            bundle: .module
+        )
+    )
+    
+    public static let topic: Self = .init(
+        lightMode: .init(
+            filename: "Topic",
+            bundle: .module
+        ),
+        darkMode: .init(
+            filename: "Topic",
+            bundle: .module
+        )
+    )
 }
 

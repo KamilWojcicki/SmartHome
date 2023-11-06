@@ -42,6 +42,14 @@ let package = Package(
                     package: "firebase-ios-sdk"
                 ),
                 .product(
+                    name: "FirebaseFirestore",
+                    package: "firebase-ios-sdk"
+                ),
+                .product(
+                    name: "FirebaseFirestoreSwift",
+                    package: "firebase-ios-sdk"
+                ),
+                .product(
                     name: "GoogleSignInSwift",
                     package: "GoogleSignIn-iOS"
                 ),

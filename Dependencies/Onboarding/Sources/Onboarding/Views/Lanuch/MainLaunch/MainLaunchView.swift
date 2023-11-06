@@ -37,11 +37,9 @@ public struct MainLaunchView: View {
                 
             }, message: {
                 Text(viewModel.error?.localizedDescription ?? "")
-            }
-            )
+            })
             .environmentObject(viewModel)
         }
-        
     }
     
     @ViewBuilder

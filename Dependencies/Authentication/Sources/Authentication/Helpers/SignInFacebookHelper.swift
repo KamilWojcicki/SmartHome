@@ -17,7 +17,7 @@ struct FacebookSignInResultModel {
 }
 
 final class SignInFacebookHelper {
-    
+    @MainActor
     func signIn() async throws -> FacebookSignInResultModel {
 
         let manager = LoginManager()

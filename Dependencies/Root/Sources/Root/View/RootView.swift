@@ -17,7 +17,7 @@ public struct RootView: View {
     public var body: some View {
         ZStack {
             if viewModel.isLogIn {
-                TabBarView()
+                MainView()
             } else {
                 MainLaunchView()
             }
