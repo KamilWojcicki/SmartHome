@@ -12,7 +12,7 @@ public protocol DAOInterface: Identifiable, Codable, Equatable, Reference {
     init(from: Model)
 }
 
-public protocol Storable: Identifiable, Codable, Equatable, Reference {
+public protocol Storable: Identifiable, Codable, Equatable {
     associatedtype DAO: DAOInterface
     
     init(from: DAO)
@@ -24,12 +24,20 @@ public protocol Reference {
 }
 
 public protocol CloudDatabaseManagerInterface {
-    func create<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) throws
-    func read<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws -> Object
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, objectsOfType type: Object.Type) async throws -> [Object]
-    func update<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object, data: [String: Any]) throws
-    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws
-    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws -> Bool
+    func createInMainCollection<Object: Storable>(object: Object) throws
+    
+    func createInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) throws
+    
+    func readInMainCollection<Object: Storable>(_ documentID: String) async throws -> Object
+    func readInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, documentID: String) async throws -> Object
+    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, objectsOfType type: Object.Type) async throws -> [Object]
+    
+    func updateInMainCollection<Object: Storable>(object: Object, data: [String: Any]) async throws
+    func updateInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object, data: [String: Any]) async throws
+    
+    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws
+    
+    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool
 }
 
 public enum CloudDatabaseError: Error {

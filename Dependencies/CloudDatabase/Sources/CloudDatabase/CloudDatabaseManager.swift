@@ -29,58 +29,82 @@ fileprivate struct DAOFactory {
 }
 
 final class CloudDatabaseManager: CloudDatabaseManagerInterface {
-    
     private lazy var database = Firestore.firestore()
     
-    private func collectionReference<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, objectOfType type: Object.Type) throws -> CollectionReference {
+    private func collectionReference<ParentObject: Storable, Object: Storable>(
+        parentObject: ParentObject,
+        objectOfType type: Object.Type
+    ) throws -> CollectionReference {
+        let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
         
-        // Get the collection name from the appropriate DAO
-        let collection = Object.collection
-        
-        if let parentObject = parentObject {
-            
-            // If a parent object exists, retrieve its docRef
-            // - protocol Reference
-            
-            guard let docRef = parentObject.docRef else {
-                throw URLError(.badURL)
-            }
-            
-            // Create and return a CollectionReference with the parent object
-            return database
-                .document(docRef) //Users/userId/Tasks/taskId
-                .collection(collection) //SubTask
-        } else {
-            // Create and return a CollectionReference without a parent object
-            return database
-                .collection(collection) //Users
+        guard let docRef = parentObjectDAO.docRef else {
+            throw URLError(.badURL)
         }
+        
+        return database
+            .document(docRef) //Users/userId/Tasks/taskId
+            .collection(Object.DAO.collection) //SubTask
     }
 }
 
 extension CloudDatabaseManager {
-    func create<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, object: Object) throws {
+    //CREATE
+    func createInMainCollection<Object: Storable>(object: Object) throws {
+        let objectDAO: Object.DAO = DAOFactory.initializeDAO(from: object)
+        let objectId = String(describing: objectDAO.id)
+        
+        do {
+            try database
+                .collection(Object.DAO.collection)
+                .document(objectId)
+                .setData(from: objectDAO)
+        } catch {
+            throw CloudDatabaseError.unableToSave
+        }
+    }
+    
+    func createInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) throws {
         var objectDAO: Object.DAO = DAOFactory.initializeDAO(from: object)
-        let objectId = String(describing: object.id)
+        let objectId = String(describing: objectDAO.id)
         
         objectDAO.docRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId).path
         
-        try database
-            .document(objectDAO.docRef ?? "Unknown")
-            .setData(from: objectDAO)
+        do {
+            try database
+                .document(objectDAO.docRef ?? "")
+                .setData(from: objectDAO)
+        } catch {
+            throw CloudDatabaseError.unableToSave
+        }
     }
     
-    func read<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws -> Object {
-        let documentId = String(describing: object.id)
-        
-        let objectDAO = try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
-            .document(documentId)
-            .getDocument(as: Object.DAO.self)
-        
-        return DAOFactory.initializeObject(from: objectDAO)
+    //READ
+    func readInMainCollection<Object: Storable>(_ documentID: String) async throws -> Object {
+        do {
+            let objectDAO = try await database
+                .collection(Object.DAO.collection)
+                .document(documentID)
+                .getDocument(as: Object.DAO.self)
+            
+            return DAOFactory.initializeObject(from: objectDAO)
+        } catch {
+            throw CloudDatabaseError.unableToFind
+        }
     }
     
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, objectsOfType type: Object.Type) async throws -> [Object] {
+    func readInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, documentID: String) async throws -> Object {
+        do {
+            let objectDAO = try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(documentID)
+                .getDocument(as: Object.DAO.self)
+            
+            return DAOFactory.initializeObject(from: objectDAO)
+        } catch {
+            throw CloudDatabaseError.unableToFind
+        }
+    }
+    
+    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, objectsOfType type: Object.Type) async throws -> [Object] {
         let snapshot = try await collectionReference(parentObject: parentObject, objectOfType: type).getDocuments()
         
         return try snapshot
@@ -92,26 +116,47 @@ extension CloudDatabaseManager {
             }
     }
     
-    func update<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object, data: [String: Any]) throws {
-        let documentId = String(describing: object.id)
+    //UPDATE
+    func updateInMainCollection<Object: Storable>(object: Object, data: [String : Any]) async throws {
+        let documentID = String(describing: object.id)
+        
         do {
-            try collectionReference(parentObject: parentObject, objectOfType: Object.self)
-                .document(documentId)
+            try await database
+                .collection(Object.DAO.collection)
+                .document(documentID)
                 .updateData(data)
         } catch {
-            throw URLError(.badURL)
+            throw CloudDatabaseError.unableToUpdate
         }
     }
     
-    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws {
-        let documentId = String(describing: object.id)
+    func updateInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object, data: [String : Any]) async throws {
+        let documentID = String(describing: object.id)
         
-        try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
-            .document(documentId)
-            .delete()
+        do {
+            try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(documentID)
+                .updateData(data)
+        } catch {
+            throw CloudDatabaseError.unableToUpdate
+        }
     }
     
-    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, object: Object) async throws -> Bool {
+    //DELETE
+    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws {
+        let documentID = String(describing: object.id)
+        
+        do {
+            try await collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(documentID)
+                .delete()
+            
+        } catch {
+            throw CloudDatabaseError.unableToDelete
+        }
+    }
+    
+    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool {
         let objectId = String(describing: object.id)
         let objectDocRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId)
         
