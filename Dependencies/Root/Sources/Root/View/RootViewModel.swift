@@ -10,7 +10,7 @@ import UserInterface
 
 @MainActor
 final class RootViewModel: ObservableObject {
-    @Inject private var authenticationManager: AuthenticationManagerInterface
+    @Inject private var userManager: UserManagerInterface
     
     @Published private(set) var isLogIn: Bool = false
     
