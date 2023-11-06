@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ATSApplicationFontsPath</key>
+	<string></string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>GoogleSignIn</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.25863242663-qqe0demr6c4piu6p7au3ddpdj6tdvs03</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>FacebookSignIn</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb303999695676925</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>303999695676925</string>
+	<key>FacebookClientToken</key>
+	<string>67a41c79a2b4e0449b3013c3fb2e2406</string>
+	<key>FacebookDisplayName</key>
+	<string>SmartHome</string>
+	<key>GIDClientID</key>
+	<string>25863242663-qqe0demr6c4piu6p7au3ddpdj6tdvs03.apps.googleusercontent.com</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Poppins-Blac.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Italic.ttf</string>
+		<string>Poppins-Light.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Poppins-Thin.ttf</string>
+	</array>
+</dict>
+</plist>
