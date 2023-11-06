@@ -17,7 +17,7 @@ final class LoginViewModel: ObservableObject {
     
     func signIn() async throws {
         try validateField()
-        try await userManager.signIn(email: email, password: password)
+        try await userManager.signIn(withEmail: email, password: password)
         
     }
     

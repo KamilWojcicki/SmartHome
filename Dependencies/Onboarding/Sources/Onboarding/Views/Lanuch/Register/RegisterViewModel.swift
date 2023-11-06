@@ -21,7 +21,7 @@ final class RegisterViewModel: ObservableObject {
     
     func signUp() async throws {
         try validateField()
-        try await userManager.signUp(email: email, password: password)
+        try await userManager.signUp(withEmail: email, password: password, displayName: fullname)
     }
     
     private func validateField() throws {

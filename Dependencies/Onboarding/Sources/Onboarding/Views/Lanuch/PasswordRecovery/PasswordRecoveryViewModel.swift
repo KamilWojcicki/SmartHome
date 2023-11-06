@@ -16,7 +16,7 @@ final class PasswordRecoveryViewModel: ObservableObject {
     
     func resetPassword() async throws {
         try validation()
-        try await userManager.resetPassword(email: email)
+        try await userManager.resetPassword(withEmail: email)
     }
     
     private func validation() throws {
