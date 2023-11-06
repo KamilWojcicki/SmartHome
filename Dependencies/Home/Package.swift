@@ -21,7 +21,8 @@ let package = Package(
     dependencies: [
         .package(path: "../Components"),
         .package(path: "../Navigation"),
-        .package(path: "../User")
+        .package(path: "../User"),
+        .package(path: "../SliderInfo")
     ],
     targets: [
         .target(
@@ -44,6 +45,10 @@ let package = Package(
                 .product(
                     name: "User",
                     package: "User"
+                ),
+                .product(
+                    name: "SliderInfo",
+                    package: "SliderInfo"
                 )
             ]
         )

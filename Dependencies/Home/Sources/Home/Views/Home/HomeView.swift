@@ -34,7 +34,7 @@ extension HomeView {
     
     private var welcomeTextSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Welcome back Kamil,")
+            Text("Welcome back \(Text(viewModel.displayName)),")
                 .font(.system(size: 32))
                 
             Text("Remember about your today's tasks")
