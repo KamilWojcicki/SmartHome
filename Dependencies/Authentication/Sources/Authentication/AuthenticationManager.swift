@@ -10,7 +10,6 @@ import FirebaseAuth
 
 
 final class AuthenticationManager: AuthenticationManagerInterface {
-    
     private let auth = Auth.auth()
     private let signInGoogleHelper = SignInGoogleHelper()
     private let signInFacebookHelper  = SignInFacebookHelper()
@@ -68,6 +67,7 @@ extension AuthenticationManager {
     
     func updatePassword(email: String, password: String, newPassword: String) async throws {
         let user = try getCurrentUser()
+        
         do {
             try await user.updatePassword(to: password)
         } catch {

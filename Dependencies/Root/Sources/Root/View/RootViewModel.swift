@@ -1,7 +1,6 @@
 //
 //  RootViewModel.swift
 //
-//
 //  Created by Kamil Wójcicki on 03/10/2023.
 //
 
@@ -11,7 +10,7 @@ import UserInterface
 
 @MainActor
 final class RootViewModel: ObservableObject {
-    @Inject private var userManager: UserManagerInterface
+    @Inject private var authenticationManager: AuthenticationManagerInterface
     
     @Published private(set) var isLogIn: Bool = false
     

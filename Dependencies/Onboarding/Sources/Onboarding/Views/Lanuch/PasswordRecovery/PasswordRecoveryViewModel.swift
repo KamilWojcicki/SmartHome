@@ -12,6 +12,7 @@ import UserInterface
 @MainActor
 final class PasswordRecoveryViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
+
     @Published var email: String = ""
     
     func resetPassword() async throws {

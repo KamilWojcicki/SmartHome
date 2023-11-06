@@ -18,3 +18,4 @@ public enum AuthenticationProviderOption: String {
     case apple      = "apple.com"
     case facebook   = "facebook.com"
 }
+

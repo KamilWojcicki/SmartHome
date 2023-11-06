@@ -10,8 +10,6 @@ import Foundation
 import UserInterface
 
 public final class SocialMediaButtonViewModel: ObservableObject {
-    
-    
     @Inject private var userManager: UserManagerInterface
 
     @Published var error: Error?

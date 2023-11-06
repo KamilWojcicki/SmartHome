@@ -11,7 +11,6 @@ import UserInterface
 
 @MainActor
 final class RegisterViewModel: ObservableObject {
-    
     @Inject private var userManager: UserManagerInterface
     
     @Published var email: String = ""

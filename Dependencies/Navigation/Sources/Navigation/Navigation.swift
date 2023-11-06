@@ -6,7 +6,7 @@ import User
 public struct Dependencies {
     public static func inject() {
         injectShared()
-        
+
         User.Dependencies.inject()
     }
     

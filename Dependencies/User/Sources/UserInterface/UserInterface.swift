@@ -114,5 +114,5 @@ public protocol UserManagerInterface {
     
     //SSO
     func signInWithGoogle() async throws
-    func signInWithFacebook() async throws    
+    func signInWithFacebook() async throws
 }
