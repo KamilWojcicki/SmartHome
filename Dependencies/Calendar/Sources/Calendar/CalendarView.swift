@@ -54,7 +54,7 @@ struct CalendarView: View {
     @ViewBuilder
     func buildTimeLineViewRow(_ date: Date) -> some View {
         HStack(alignment: .top) {
-            Text(date.toString("h a"))
+            Text(date.toString("HH:mm "))
                 .font(.caption)
                 .frame(width: 45, alignment: .leading)
             
@@ -65,7 +65,6 @@ struct CalendarView: View {
                     .stroke(.gray.opacity(0.5), style: StrokeStyle(lineWidth: 0.5, lineCap: .butt, lineJoin: .bevel, dash: [5], dashPhase: 2))
                     .frame(height: 0.5)
                     .offset(y: 10)
-                
             } else {
                 VStack(spacing: 10) {
                     ForEach(filteredTasks) { task in
@@ -73,7 +72,6 @@ struct CalendarView: View {
                     }
                 }
             }
-            
         }
         .hAlign(.leading)
         .padding(.vertical, 15)
@@ -110,6 +108,24 @@ struct CalendarView: View {
                     Text("Hi, Kamil")
                 }
                 .hAlign(.leading)
+                
+                Button {
+                    //action
+                } label: {
+                    HStack {
+                        Image(systemName: "list.bullet.circle")
+                        Text("Tasks list")
+                            .font(.caption)
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 15)
+                    .background {
+                        Capsule()
+                            .fill(Colors.jaffa.gradient)
+                    }
+                    .tint(Colors.white)
+                }
+
                 
                 Button {
                     viewModel.addNewTask.toggle()
