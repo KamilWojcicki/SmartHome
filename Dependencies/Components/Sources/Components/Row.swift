@@ -49,7 +49,7 @@ public struct Row: View {
             Toggle(isOn: binding) {
                 buildText(text)
             }
-            .tint(Color.orange)
+            .tint(Colors.jaffa)
         case .language(let text, let options, let selectedOption):
             HStack {
                 buildText(text)
@@ -89,9 +89,6 @@ struct Row_Previews: PreviewProvider {
             Row(symbol: "moon.stars", variant: .toggle(text: "test", binding: .constant(true)))
             
             Row(symbol: "moon.stars", variant: .language(text: "test", options: options, selectedOption: .constant(options.first ?? "")))
-            
-
         }
-        
     }
 }
