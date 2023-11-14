@@ -10,6 +10,7 @@ import Components
 import Design
 import Utilities
 import CalendarInterface
+import ToDoInterface
 
 struct CalendarView: View {
     
@@ -25,7 +26,7 @@ struct CalendarView: View {
         }
         .safeAreaInset(edge: .bottom, content: {
             Colors.white.ignoresSafeArea()
-                .frame(maxHeight: 60)
+                .frame(maxHeight: 70)
         })
         .sheet(isPresented: $viewModel.addNewTask) {
             AddTaskView { task in
@@ -78,7 +79,7 @@ struct CalendarView: View {
         .padding(.vertical, 15)
     }
     @ViewBuilder
-    func buildTaskRow(_ task: TaskModel) -> some View {
+    func buildTaskRow(_ task: ToDo) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(task.taskName.uppercased())
             
@@ -154,25 +155,6 @@ struct CalendarView: View {
             }
         }
     }
-    @ViewBuilder
-    func buildFooterSpace() -> some View {
-        VStack(spacing: 0) {
-            Colors.white.ignoresSafeArea()
-            
-            Rectangle()
-                .fill(
-                    .linearGradient(
-                        colors: [
-                            Colors.white,
-                            Color.clear
-                        ],
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                )
-        }
-    }
-    
     @ViewBuilder
     func buildWeekRow() -> some View {
         HStack(spacing: 0) {

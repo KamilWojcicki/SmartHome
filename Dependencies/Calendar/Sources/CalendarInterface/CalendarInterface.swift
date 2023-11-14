@@ -7,19 +7,25 @@
 
 import Foundation
 
-public struct TaskModel: Identifiable {
-    public var id: UUID = .init()
-    public var dateAdded: Date
-    public var taskName: String
-    public var taskDescription: String
+public enum Action: String, CaseIterable {
+    case light
+    case sprinkler
+    case heater
+    case garage
+    case fan
     
-    public init(dateAdded: Date, taskName: String, taskDescription: String) {
-        self.dateAdded = dateAdded
-        self.taskName = taskName
-        self.taskDescription = taskDescription
+    public var description: String {
+        switch self {
+        case .light:
+            return "lightbulb.fill"
+        case .sprinkler:
+            return "sprinkler.and.droplets.fill"
+        case .heater:
+            return "heater.vertical.fill"
+        case .garage:
+            return "door.garage.closed"
+        case .fan:
+            return "fanblades.fill"
+        }
     }
 }
-
-public var sampleTask: [TaskModel] = [
-    .init(dateAdded: Date(timeIntervalSince1970: 1697396685), taskName: "Test Task", taskDescription: "This is test description for a test task")
-]

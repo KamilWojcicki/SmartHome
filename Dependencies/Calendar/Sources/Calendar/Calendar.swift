@@ -5,10 +5,14 @@
 import DependencyInjection
 import NavigationInterface
 import SwiftUI
+import ToDo
 
 public struct Dependencies {
     public static func inject() {
         injectShared()
+        
+        
+        ToDo.Dependencies.inject()
     }
     
     
