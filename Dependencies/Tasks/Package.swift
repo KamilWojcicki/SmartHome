@@ -20,15 +20,19 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
-        .package(path: "../Navigation")
+        .package(path: "../Navigation"),
+        .package(path: "../DependencyInjection"),
+        .package(path: "../Mqtt"),
+        .package(path: "../ToDo"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
             name: "TasksInterface",
             dependencies: [
                 .product(
-                    name: "Components",
-                    package: "Components"
+                    name: "DependencyInjection",
+                    package: "DependencyInjection"
                 )
             ]
         ),
@@ -39,6 +43,22 @@ let package = Package(
                 .product(
                     name: "Navigation",
                     package: "Navigation"
+                ),
+                .product(
+                    name: "Components",
+                    package: "Components"
+                ),
+                .product(
+                    name: "Mqtt",
+                    package: "Mqtt"
+                ),
+                .product(
+                    name: "ToDo",
+                    package: "ToDo"
+                ),
+                .product(
+                    name: "User",
+                    package: "User"
                 )
             ]
         )
