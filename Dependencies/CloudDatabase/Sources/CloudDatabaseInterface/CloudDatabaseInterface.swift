@@ -20,7 +20,6 @@ public protocol Storable: Identifiable, Codable, Equatable {
 
 public protocol Reference {
     static var collection: String { get }
-    var docRef: String? { get set }
 }
 
 public protocol CloudDatabaseManagerInterface {
@@ -37,7 +36,7 @@ public protocol CloudDatabaseManagerInterface {
     
     func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws
     
-    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool
+    //func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool
 }
 
 public enum CloudDatabaseError: Error {

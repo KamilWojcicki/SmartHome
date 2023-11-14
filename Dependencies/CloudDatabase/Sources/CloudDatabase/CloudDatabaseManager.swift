@@ -36,13 +36,11 @@ final class CloudDatabaseManager: CloudDatabaseManagerInterface {
         objectOfType type: Object.Type
     ) throws -> CollectionReference {
         let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
-        
-        guard let docRef = parentObjectDAO.docRef else {
-            throw URLError(.badURL)
-        }
+        let parentObjectId = String(describing: parentObjectDAO.id)
         
         return database
-            .document(docRef) //Users/userId/Tasks/taskId
+            .collection(ParentObject.DAO.collection)
+            .document(parentObjectId)
             .collection(Object.DAO.collection) //SubTask
     }
 }
@@ -67,11 +65,9 @@ extension CloudDatabaseManager {
         var objectDAO: Object.DAO = DAOFactory.initializeDAO(from: object)
         let objectId = String(describing: objectDAO.id)
         
-        objectDAO.docRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId).path
-        
         do {
-            try database
-                .document(objectDAO.docRef ?? "")
+            try collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(objectId)
                 .setData(from: objectDAO)
         } catch {
             throw CloudDatabaseError.unableToSave
