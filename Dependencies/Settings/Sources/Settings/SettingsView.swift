@@ -12,6 +12,7 @@ import SettingsInterface
 
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @Environment(\.dismiss) private var dismiss
     
     public init() { }
     
@@ -87,6 +88,18 @@ public struct SettingsView: View {
                 Spacer()
             }
             .padding(.horizontal)
+        }
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .tint(Colors.jaffa)
+                        .contentShape(Rectangle())
+                }
+            }
         }
         .ignoresSafeArea()
     }
