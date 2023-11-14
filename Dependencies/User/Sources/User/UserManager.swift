@@ -60,12 +60,21 @@ final class UserManager: UserManagerInterface {
     
     func checkIsFirstLogin() async throws -> Bool {
         let user = try await fetchUser()
+        self.user = user
         return user.isFirstLogin
     }
     
     func updateUserData(data: [String : Any]) async throws {
-        let user = try await fetchUser()
+        let user = try currentUser()
         try await cloudDatabaseManager.updateInMainCollection(object: user, data: data)
+        self.user = try await fetchUser()
+    }
+    
+    private func currentUser() throws -> User {
+        guard let user = user else {
+            throw URLError(.badServerResponse)
+        }
+        return user
     }
 }
 // MARK: MANAGE USER
@@ -95,11 +104,12 @@ extension UserManager {
     func signInWithGoogle() async throws {
         let authDataResult = try await authenticationManager.signInWithGoogle()
         do {
-            let _ = try await fetchUser()
+            self.user = try await fetchUser()
         } catch {
             try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
+            self.user = try await fetchUser()
         }
-        self.user = User(from: authDataResult)
+        //self.user = User(from: authDataResult)
     }
     
     func signInWithFacebook() async throws {
