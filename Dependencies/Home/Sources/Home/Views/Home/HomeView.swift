@@ -9,17 +9,30 @@ import Animation
 import DependencyInjection
 import Design
 import SwiftUI
+import MqttInterface
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
+    @Inject private var mqttManager: MqttManagerInterface
     var body: some View {
         VStack(spacing: 30) {
             
             welcomeTextSection
             
+            if mqttManager.isConnected {
+                Text("Connected to MQTT broker")
+            } else {
+                Text("Not connected")
+            }
+            
             LottieView(animationConfiguration: .iot, loopMode: .loop)
             
+            
+            
             Spacer()
+        }
+        .onAppear {
+            viewModel.connectMqtt()
         }
         .padding()
         
