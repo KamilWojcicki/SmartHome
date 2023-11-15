@@ -20,6 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
+        .package(path: "../Localizations"),
         .package(path: "../User")
     ],
     targets: [
@@ -38,6 +39,10 @@ let package = Package(
                 .product(
                     name: "User",
                     package: "User"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
                 )
             ]
         )
