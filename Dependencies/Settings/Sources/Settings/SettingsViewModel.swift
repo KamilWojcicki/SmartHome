@@ -22,4 +22,14 @@ final class SettingsViewModel: ObservableObject {
     func signOut() throws {
         try userManager.signOut()
     }
+    
+    func openSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl)
+        }
+    }
 }

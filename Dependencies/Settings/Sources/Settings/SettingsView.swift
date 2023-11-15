@@ -33,10 +33,11 @@ public struct SettingsView: View {
                 
                 Row(
                     symbol: "character.bubble.fill",
-                    variant: .language(
-                        text: "Language",
-                        options: viewModel.languageOptions,
-                        selectedOption: $viewModel.selectedOption
+                    variant: .plainText(
+                        text: "Change Language",
+                        action: {
+                            viewModel.openSettings()
+                        }
                     )
                 )
                 
