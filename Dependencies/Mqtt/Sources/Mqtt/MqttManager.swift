@@ -28,11 +28,11 @@ final class MqttManager: MqttManagerInterface {
     func connect() {
        _ = self.mqttClient.connect()
         
-//        if isConnected {
-//            print("Mqtt is connected")
-//        } else {
-//            print("Problem with connection")
-//        }
+        if isConnected {
+            print("Mqtt is connected")
+        } else {
+            print("Problem with connection")
+        }
     }
     
     func sendMessage(topic: String, message: String) {
