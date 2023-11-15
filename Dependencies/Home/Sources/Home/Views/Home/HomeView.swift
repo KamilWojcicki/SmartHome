@@ -19,12 +19,6 @@ struct HomeView: View {
             
             welcomeTextSection
             
-            if mqttManager.isConnected {
-                Text("Connected to MQTT broker")
-            } else {
-                Text("Not connected")
-            }
-            
             LottieView(animationConfiguration: .iot, loopMode: .loop)
             
             
@@ -32,7 +26,7 @@ struct HomeView: View {
             Spacer()
         }
         .onAppear {
-            viewModel.connectMqtt()
+            viewModel.startTimer()
         }
         .padding()
         
