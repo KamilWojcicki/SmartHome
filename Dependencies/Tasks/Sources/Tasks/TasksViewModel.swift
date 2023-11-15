@@ -16,17 +16,7 @@ final class TasksViewModel: ObservableObject {
     @Inject private var todoManager: ToDoManagerInterface
     @Inject private var userManager: UserManagerInterface
     @Inject private var mqttManager: MqttManagerInterface
-    @Published var tasks: [ToDo] = [] {
-        didSet {
-            Task {
-                do {
-                    try await fetchTasks()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
+    @Published var tasks: [ToDo] = []
     @Published var topic: String = ""
     init() {
         Task {
@@ -42,7 +32,7 @@ final class TasksViewModel: ObservableObject {
     private func fetchTasks() async throws {
         self.tasks = try await todoManager.readAllToDos()
         
-       // deleteTaskForDatabase()
+        deleteTaskForDatabase()
     }
     
     private func getTopic() async throws {

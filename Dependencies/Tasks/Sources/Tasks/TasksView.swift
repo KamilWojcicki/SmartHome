@@ -16,6 +16,9 @@ struct TasksView: View {
     @StateObject private var viewModel = TasksViewModel()
 
     var body: some View {
+        if viewModel.tasks.isEmpty {
+            Text("User doesn't have any tasks in schedule.")
+        }
         ScrollView {
             VStack(spacing: 20) {
                 ForEach(viewModel.tasks) { task in
