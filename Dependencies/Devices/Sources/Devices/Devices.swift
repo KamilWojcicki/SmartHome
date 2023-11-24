@@ -2,12 +2,14 @@
 // https://docs.swift.org/swift-book
 
 import DependencyInjection
+import Device
 import NavigationInterface
 import SwiftUI
 
 public struct Dependencies {
     public static func inject() {
-        
+        injectShared()
+        Device.Dependencies.inject()
     }
     
     public static func injectShared() {

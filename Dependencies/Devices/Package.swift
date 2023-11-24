@@ -22,6 +22,7 @@ let package = Package(
         .package(path: "../Components"),
         .package(path: "../Navigation"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Device"),
         .package(path: "../Mqtt"),
         .package(path: "../ToDo"),
         .package(path: "../User")
@@ -59,6 +60,10 @@ let package = Package(
                 .product(
                     name: "User",
                     package: "User"
+                ),
+                .product(
+                    name: "Device",
+                    package: "Device"
                 )
             ]
         )
