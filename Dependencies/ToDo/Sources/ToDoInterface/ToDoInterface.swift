@@ -14,7 +14,7 @@ public struct ToDo: Storable, Hashable {
     public var taskName: String
     public var taskDescription: String
     public var symbol: String
-    public let isOn: Bool
+    public let state: String
     
     public init(
         id: String = UUID().uuidString,
@@ -22,14 +22,14 @@ public struct ToDo: Storable, Hashable {
         taskName: String,
         taskDescription: String,
         symbol: String,
-        isOn: Bool = false
+        state: String
     ) {
         self.id = id
         self.dateExecuted = dateExecuted
         self.taskName = taskName
         self.taskDescription = taskDescription
         self.symbol = symbol
-        self.isOn = isOn
+        self.state = state
     }
     
     public init(from dao: ToDoDAO) {
@@ -38,7 +38,7 @@ public struct ToDo: Storable, Hashable {
         self.taskName = dao.taskName
         self.taskDescription = dao.taskDescription
         self.symbol = dao.symbol
-        self.isOn = dao.isOn
+        self.state = dao.state
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -47,11 +47,11 @@ public struct ToDo: Storable, Hashable {
         case taskName
         case taskDescription
         case symbol
-        case isOn
+        case state
     }
     
     public static var sampleTask: [ToDo] = [
-        .init(dateExecuted: Date(timeIntervalSince1970: 1697396685), taskName: "Test Task", taskDescription: "This is a test task", symbol: "", isOn: true)
+        .init(dateExecuted: Date(timeIntervalSince1970: 1697396685), taskName: "Test Task", taskDescription: "This is a test task", symbol: "", state: "0")
     ]
 }
 
@@ -65,7 +65,7 @@ public struct ToDoDAO: DAOInterface {
     public var taskName: String
     public var taskDescription: String
     public var symbol: String
-    public let isOn: Bool
+    public let state: String
     
     public init(from todo: ToDo) {
         self.id = todo.id
@@ -73,7 +73,7 @@ public struct ToDoDAO: DAOInterface {
         self.taskName = todo.taskName
         self.taskDescription = todo.taskDescription
         self.symbol = todo.symbol
-        self.isOn = todo.isOn
+        self.state = todo.state
     }
 }
 
