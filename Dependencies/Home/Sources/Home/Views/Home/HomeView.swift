@@ -6,30 +6,30 @@
 //
 
 import Animation
+import Components
 import DependencyInjection
 import Design
 import SwiftUI
-import MqttInterface
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @Inject private var mqttManager: MqttManagerInterface
     var body: some View {
         VStack(spacing: 30) {
             
-            welcomeTextSection
+                welcomeTextSection
+                
+                weatherSection
+                
+                LottieView(animationConfiguration: .iot, loopMode: .loop)
+                    .padding(.top, -80)
+                
+                Spacer()
             
-            LottieView(animationConfiguration: .iot, loopMode: .loop)
-            
-            
-            
-            Spacer()
-        }
-        .onAppear {
-            viewModel.startTimer()
         }
         .padding()
-        
+        .task {
+            await viewModel.getWeather()
+        }
     }
 }
 
@@ -52,6 +52,10 @@ extension HomeView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .lineSpacing(7)
         
+    }
+    
+    private var weatherSection: some View {
+        Tile(variant: .weather(temperature: viewModel.temperature, time: "", date: "", symbol: viewModel.symbol))
     }
     
 }

@@ -5,11 +5,13 @@ import DependencyInjection
 import Mqtt
 import NavigationInterface
 import SwiftUI
+import Weather
 
 public struct Dependencies {
     public static func inject() {
         injectShared()
         Mqtt.Dependencies.inject()
+        Weather.Dependencies.inject()
     }
     
     public static func injectShared() {

@@ -23,7 +23,8 @@ let package = Package(
         .package(path: "../Navigation"),
         .package(path: "../User"),
         .package(path: "../SliderInfo"),
-        .package(path: "../Mqtt")
+        .package(path: "../Mqtt"),
+        .package(path: "../Weather")
     ],
     targets: [
         .target(
@@ -54,6 +55,10 @@ let package = Package(
                 .product(
                     name: "Mqtt",
                     package: "Mqtt"
+                ),
+                .product(
+                    name: "Weather",
+                    package: "Weather"
                 )
             ]
         )
