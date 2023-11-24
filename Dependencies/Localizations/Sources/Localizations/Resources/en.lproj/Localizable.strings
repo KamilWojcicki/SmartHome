@@ -1,9 +1,11 @@
 
+//Onboarding
 "login" = "Hello Again!";
 "login_hello_subtitle" = "Welcome back you've been missed!";
 "email_textfield" = "Enter E-mail";
 "password_textfield" = "Enter Password";
 "recovery_password_button" = "Recovery password";
+"sign_in_button_title" = "Sign In!";
 "onboarding_continue_with" = "Or continue with";
 "field_name_email" = "email";
 "field_name_password" = "password";
@@ -19,3 +21,77 @@
 "sign_up_button_title" = "Sign Up!";
 "field_name_fullname" = "fullname";
 "field_name_confirm_password" = "confirmPassword";
+
+//Onboarding errors
+"empty_field_error" = "Field %@ is empty!";
+"empty_email_error" = "Email field is empty! Please enter an e-mail.";
+"wrong_email_error" = "There is a problem with e-mail! Check if you enter a valid e-mail.";
+"wrong_password_error" = "There is a problem with password! Check if you enter a valid password.";
+"wrong_fullname_error" = "There is a problem with fullname! Fullname must contains your name and surname separated by a space.";
+"password_not_match_error" = "Passwords do not match! Check if your passwords are the same.";
+"short_password_error" = "Password is too short! Passwords needs to be at least 10 characters long.";
+"email_in_use_error" = "Email is already in use! Please enter other valid e-mail.";
+
+//Navigation
+"user_profile_button_title" = "User Profile";
+"calendar" = "Calendar";
+"home" = "Home";
+"devices" = "Devices";
+
+//Home
+"home_welcome_title" = "Welcome back %@,";
+"home_welcome_subtitle" = "Remember about your today's tasks";
+"unknown" = "Unknown";
+
+//SliderInfo
+"first_page_title" = "Welcome to our App!";
+"first_page_description" = "We are glad to see you, click Next or SLIDE LEFT to enter the TOPIC";
+"second_page_title" = "Enter your device TOPIC";
+"second_page_description" = "TOPIC is required to property use an application. If you enter a non valid Topic you can change it later in settings";
+"third_page_title" = "Done! %@";
+"third_page_description" = "The basic configuration is done! Click Next to launch Main Screen";
+"get_started_button_title" = "Get Started";
+"next_button_title" = "Next";
+"topic_textfield" = "Enter a TOPIC";
+
+//Settings
+"dark_mode_button_title" = "Dark mode";
+"change_language_button_title" = "Change Language";
+"privacy_policy_button_title" = "Privacy Policy";
+"terms_and_conditions_button_title" = "Terms & Conditions";
+"contact_us_button_title" = "Contact Us";
+"our_team_button_title" = "Our Team";
+"sign_out_button_title" = "Sign Out";
+
+//Authentication errors
+"get_authenticated_user_error" = "There was a problem with user authenticate";
+"delete_user_error" = "There was a problem with deleting user";
+"sign_out_error" = "There was a problem with signing out";
+"sign_up_error" = "There was a problem with signing up";
+"sign_in_error" = "There was a problem with signing in";
+"update_password_error" = "There was a problem with updating user password";
+"reset_password_error" = "There was a problem with reset user password";
+"sign_in_google_error" = "Cannot sign in with google";
+"sign_in_facebook_error" = "Cannot sign in with facebook";
+"sign_in_with_credential_error" = "There was a problem with credentials";
+"unknown_error" = "Unknow error: %@";
+
+//Calendar
+"today_title" = "Today";
+"calendar_welcome_title" = "Hi, Kamil";
+"task_lists_button_title" = "Tasks list";
+"add_task_button_title" = "Add Task";
+
+//AddTask
+"create_new_task_title" = "Create new task";
+"name_view_title" = "NAME";
+"action_view_title" = "ACTION";
+"date_view_title" = "DATE";
+"description_view_title" = "DESCRIPTION";
+"description_placechlder_text" = "Write a description about your TASK";
+"create_task_button_title" = "Create Task";
+
+//Components
+"register_button_title" = "register";
+"login_button_title" = "login";
+"tile_planned_at_text" = "Planned at: %@";
