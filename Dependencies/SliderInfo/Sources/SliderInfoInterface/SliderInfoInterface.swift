@@ -7,6 +7,7 @@
 
 import Animation
 import Foundation
+//import Localizations
 import SwiftUI
 
 public struct Page: Identifiable, Equatable {
