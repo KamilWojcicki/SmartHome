@@ -13,11 +13,11 @@ final class MqttManager: MqttManagerInterface {
     
     private var mqttClient: CocoaMQTT
     var isConnected: Bool = false
-    var receivedMessages: [String : String] = [:]
+    var receivedMessages: String = ""
     
     init() {
         let clientID = "test123"
-        let host = "83.6.151.29"
+        let host = "83.6.137.243"
         let port = UInt16(1883)
         self.mqttClient = CocoaMQTT(clientID: clientID, host: host, port: port)
         self.mqttClient.username = "1234"
@@ -44,11 +44,9 @@ final class MqttManager: MqttManagerInterface {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16) {
-        if let stringData = message.string {
-            DispatchQueue.main.async {
-                self.receivedMessages[message.topic] = stringData
-            }
-        }
+        if let messageString = message.string {
+                   receivedMessages = messageString
+               }
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) { 

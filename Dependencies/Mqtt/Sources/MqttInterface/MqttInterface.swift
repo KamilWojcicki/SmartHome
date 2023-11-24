@@ -8,29 +8,9 @@
 import Foundation
 import CocoaMQTT
 
-public enum Message {
-    case turnDeviceOn
-    case turnDeviceOff
-    case addToSchedule(String)
-    case deleteFromSchedule(String)
-    
-    public var description: String {
-        switch self {
-        case .turnDeviceOn:
-            return "2,50,"
-        case .turnDeviceOff:
-            return "2,51,"
-        case .addToSchedule(let date):
-            return "1,50,\(date),"
-        case .deleteFromSchedule(let date):
-            return "1,51,\(date),"
-        }
-    }
-}
-
 public protocol MqttManagerInterface: CocoaMQTTDelegate {
     var isConnected: Bool { get set }
-    
+    var receivedMessages: String { get }
     func connect()
     func sendMessage(topic: String, message: String)
     func subscribeToTopic(_ topic: String)
