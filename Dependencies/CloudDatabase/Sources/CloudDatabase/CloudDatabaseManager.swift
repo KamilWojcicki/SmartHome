@@ -32,16 +32,22 @@ final class CloudDatabaseManager: CloudDatabaseManagerInterface {
     private lazy var database = Firestore.firestore()
     
     private func collectionReference<ParentObject: Storable, Object: Storable>(
-        parentObject: ParentObject,
+        parentObject: ParentObject? = nil,
         objectOfType type: Object.Type
     ) throws -> CollectionReference {
-        let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
-        let parentObjectId = String(describing: parentObjectDAO.id)
         
-        return database
-            .collection(ParentObject.DAO.collection)
-            .document(parentObjectId)
-            .collection(Object.DAO.collection) //SubTask
+        if let parentObject = parentObject {
+            let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
+            let parentObjectId = String(describing: parentObjectDAO.id)
+            
+            return database
+                .collection(ParentObject.DAO.collection)
+                .document(parentObjectId)
+                .collection(Object.DAO.collection) //SubTask
+        } else {
+            return database
+                .collection(Object.DAO.collection)
+        }
     }
 }
 
@@ -100,7 +106,7 @@ extension CloudDatabaseManager {
         }
     }
     
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, objectsOfType type: Object.Type) async throws -> [Object] {
+    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, objectsOfType type: Object.Type) async throws -> [Object] {
         let snapshot = try await collectionReference(parentObject: parentObject, objectOfType: type).getDocuments()
         
         return try snapshot
