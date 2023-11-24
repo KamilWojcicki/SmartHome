@@ -10,6 +10,7 @@ import Components
 import Design
 import Utilities
 import CalendarInterface
+import Tasks
 import ToDoInterface
 
 struct CalendarView: View {
@@ -32,6 +33,12 @@ struct CalendarView: View {
             AddTaskView { task in
                 viewModel.tasks.append(task)
             }
+        }
+        .sheet(isPresented: $viewModel.showTasksList) {
+            TasksView()
+        }
+        .onAppear {
+            viewModel.fetchTasks()
         }
     }
     
@@ -110,7 +117,7 @@ struct CalendarView: View {
                 .hAlign(.leading)
                 
                 Button {
-                    //action
+                    viewModel.showTasksList.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "list.bullet.circle")

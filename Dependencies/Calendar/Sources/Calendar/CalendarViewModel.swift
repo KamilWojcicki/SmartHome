@@ -18,16 +18,7 @@ final class CalendarViewModel: ObservableObject {
     @Published var currentDay: Date = .init()
     @Published var tasks: [ToDo] = []
     @Published var addNewTask: Bool = false
-    
-    init() {
-        Task {
-            do {
-                try await fetchTasks()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
+    @Published var showTasksList: Bool = false
     
     func filterTasks(for date: Date) -> [ToDo] {
         let calendar = Calendar.current
@@ -40,7 +31,18 @@ final class CalendarViewModel: ObservableObject {
         return filteredTasks
     }
     
-    private func fetchTasks() async throws {
-        self.tasks = try await todoManager.readAllToDos()
+    func fetchTasks() {
+        Task {
+            do {
+                self.tasks = try await todoManager.readAllToDos()
+                
+                _ = $tasks.sink { _ in
+                    // Powiadomienie o zmianach w TasksViewModel
+                    self.objectWillChange.send()
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }

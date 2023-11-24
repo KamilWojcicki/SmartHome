@@ -8,6 +8,7 @@
 import SwiftUI
 import CalendarInterface
 import Design
+import DeviceInterface
 import ToDoInterface
 
 struct AddTaskView: View {
@@ -39,17 +40,34 @@ struct AddTaskView: View {
                     .background(Colors.white)
                 
                 HStack {
+                    buildTitleView("DEVICE")
+                        .padding(.top, 15)
+                    
+                    Picker("", selection: $viewModel.selectedDevice) {
+                        ForEach(Device.Devices.allCases, id: \.self) { device in
+                            Text(device.rawValue).tag(device)
+                        }
+                    }
+                    .tint(Colors.white)
+                    .font(.headline)
+                    .padding(5)
+                    .frame(minWidth: 130, maxWidth: .infinity)
+                    .background(Colors.jaffa)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .offset(y: 10)
+                    
                     buildTitleView("ACTION")
                         .padding(.top, 15)
                     
                     Picker("", selection: $viewModel.selectedAction) {
-                        ForEach(Action.allCases, id: \.self) { action in
+                        ForEach(Device.State.allCases, id: \.self) { action in
                             Text(action.rawValue).tag(action)
                         }
                     }
                     .tint(Colors.white)
-                    .padding(5)
-                    .padding(.horizontal)
+                    .font(.headline)
+                    .padding(.vertical, 5)
+                    .frame(maxWidth: .infinity)
                     .background(Colors.jaffa)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .offset(y: 10)
