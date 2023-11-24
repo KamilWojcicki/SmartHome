@@ -11,15 +11,19 @@ import SwiftUI
 public struct Tile: View {
     
     public enum Variant {
-        case weather(temperature: String, time: String, date: String)
-        case device(text: String, plannedTime: String, binding: Binding<Bool>)
+        case weather(temperature: String, time: String, date: String, symbol: String)
+        case device(text: String, binding: Binding<Bool>, symbol: String)
+        case deviceSchedule(text: String, plannedTime: String, state: String, symbol: String)
     }
     
-    private let symbol: String
+    public enum State: String {
+        case zero = "0"
+        case one = "1"
+    }
+    
     private let variant: Variant
     
-    public init(symbol: String, variant: Variant) {
-        self.symbol = symbol
+    public init(variant: Variant) {
         self.variant = variant
     }
     
@@ -29,6 +33,10 @@ public struct Tile: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 150)
                 .cornerRadius(15)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Colors.jaffa, lineWidth: 3)
+                )
             
             buildTileView(for: variant)
         }
@@ -37,7 +45,7 @@ public struct Tile: View {
     @ViewBuilder
     private func buildTileView(for variant: Variant) -> some View {
         switch variant {
-        case .weather(let temperature, let time, let date):
+        case .weather(let temperature, let time, let date, let symbol):
             VStack {
                 HStack {
                     Text(temperature)
@@ -64,7 +72,47 @@ public struct Tile: View {
             }
             .withTextStyleViewModifier()
             
-        case .device(let text,let plannedTime, let binding):
+        case .device(let text, let binding, let symbol):
+            HStack {
+                VStack {
+                    Text(text)
+                        .font(.title)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(10)
+                    
+                    Spacer()
+                    
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(5)
+                
+                Line(variant: .vertical)
+                    .stroke(style: StrokeStyle(dash: [5]))
+                    .frame(width: 1, height: 150)
+                    .foregroundColor(Colors.nobel)
+                
+                VStack(spacing: 20) {
+                    Image(systemName: symbol)
+                        .foregroundStyle(binding.wrappedValue ? Colors.barberry : Colors.white)
+                    
+                    
+                    HStack {
+                        Toggle(isOn: binding) {
+                            Text(binding.wrappedValue ? "On" : "Off")
+                                .font(.callout)
+                        }
+                        .tint(Colors.jaffa)
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .frame(maxWidth: 105)
+                .font(.system(size: 60))
+                
+            }
+            .foregroundStyle(Colors.white)
+            .frame(maxWidth: .infinity, maxHeight: 150, alignment: .leading)
+            
+        case .deviceSchedule(text: let text, plannedTime: let plannedTime, state: let state, let symbol):
             HStack {
                 VStack {
                     Text(text)
@@ -79,7 +127,7 @@ public struct Tile: View {
                         .foregroundStyle(Colors.nobel)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .frame(width: 230, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(5)
                 
                 Line(variant: .vertical)
@@ -89,20 +137,14 @@ public struct Tile: View {
                 
                 VStack(spacing: 20) {
                     Image(systemName: symbol)
-                        .foregroundStyle(binding.wrappedValue ? Colors.barberry : Colors.white)
-                        
+                        .foregroundStyle(state == State.one.rawValue ? Colors.barberry : Colors.white)
+                        .font(.system(size: 60))
                     
-                    HStack {
-                        Toggle(isOn: binding) {
-                            Text(binding.wrappedValue ? "On" : "Off")
-                                .font(.callout)
-                        }
-                        .tint(Colors.jaffa)
-                    }
-                    .padding(.horizontal, 10)
+                    
+                    Text(state == State.one.rawValue ? "ON" : "OFF")
                 }
-                .frame(maxWidth: .infinity)
-                .font(.system(size: 60))
+                .padding(.horizontal, 10)
+                .frame(minWidth: 110)
                 
             }
             .foregroundStyle(Colors.white)
@@ -113,9 +155,11 @@ public struct Tile: View {
 
 #Preview {
     VStack {
-        Tile(symbol: "star", variant: .weather(temperature: "12", time: "12:00", date: "12.02.2023"))
+        Tile(variant: .weather(temperature: "12", time: "12:00", date: "12.02.2023", symbol: ""))
         
-        Tile(symbol: "star", variant: .device(text: "Turn the light on", plannedTime: "10.12.2023", binding: .constant(true)))
+        Tile(variant: .device(text: "LIGHT", binding: .constant(true), symbol: ""))
+        
+        Tile(variant: .deviceSchedule(text: "Turn the light on", plannedTime: "10.12.2023", state: "1", symbol: ""))
     }
     .padding()
     

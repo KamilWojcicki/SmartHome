@@ -32,8 +32,8 @@ public final class SocialMediaButtonViewModel: ObservableObject {
     private func signInWithFacebook() async throws {
         let _ = try await userManager.signInWithFacebook()
     }
-    #warning("method didn't finished yet")
+    
     private func signInWithApple() async throws {
-        
+        let _ = try await userManager.signInWithApple()
     }
 }
