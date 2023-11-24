@@ -25,8 +25,7 @@ let package = Package(
         .package(path: "../Home"),
         .package(path: "../Navigation"),
         .package(path: "../Onboarding"),
-        .package(path: "../Settings"),
-        .package(path: "../Tasks")
+        .package(path: "../Settings")
     ],
     targets: [
         .target(
@@ -64,10 +63,6 @@ let package = Package(
                 .product(
                     name: "Devices",
                     package: "Devices"
-                ),
-                .product(
-                    name: "Tasks",
-                    package: "Tasks"
                 )
             ]
         )
