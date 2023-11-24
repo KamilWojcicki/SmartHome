@@ -7,6 +7,7 @@
 
 import DependencyInjection
 import Foundation
+import SwiftUI
 import ToDoInterface
 import UserInterface
 import MqttInterface
@@ -29,36 +30,13 @@ final class TasksViewModel: ObservableObject {
         }
     }
     
-    private func fetchTasks() async throws {
+    func fetchTasks() async throws {
         self.tasks = try await todoManager.readAllToDos()
-        
-        deleteTaskForDatabase()
     }
     
     private func getTopic() async throws {
         let user = try await userManager.fetchUser()
         self.topic = user.topic
-    }
-    
-    func updateToDoStatus(todo: ToDo, isOn: Bool) {
-        Task {
-            do {
-                let data: [String : Any] = [
-                    ToDo.CodingKeys.isOn.rawValue : isOn
-                ]
-                try await todoManager.updateToDo(todo: todo, data: data)
-                
-                if isOn {
-                    mqttManager.sendMessage(topic: topic, message: Message.turnDeviceOn.description)
-                    print("Device is on")
-                } else {
-                    mqttManager.sendMessage(topic: topic, message: Message.turnDeviceOff.description)
-                    print("Device is off")
-                }
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
     }
     
     private func deleteTaskForDatabase() {
@@ -69,6 +47,16 @@ final class TasksViewModel: ObservableObject {
                         try await todoManager.deleteToDo(todo: task)
                     }
                 }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func deleteTask(todo: ToDo) {
+        Task {
+            do {
+                try await todoManager.deleteToDo(todo: todo)
                 try await fetchTasks()
             } catch {
                 print(error.localizedDescription)

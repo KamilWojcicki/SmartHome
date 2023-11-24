@@ -12,40 +12,47 @@ import MqttInterface
 import SwiftUI
 import Utilities
 
-struct TasksView: View {
+public struct TasksView: View {
     @StateObject private var viewModel = TasksViewModel()
-
-    var body: some View {
-        if viewModel.tasks.isEmpty {
-            Text("User doesn't have any tasks in schedule.")
-        }
+    @Environment(\.dismiss) private var dismiss
+    
+    public init() { }
+    
+    public var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                ForEach(viewModel.tasks) { task in
-                    Tile(
-                        symbol: task.symbol,
-                        variant: .device(
-                            text: task.taskName,
-                            plannedTime: task.dateExecuted.toString("HH:mm, dd.MM.yyyy"),
-                            binding:
-                              Binding(
-                                get: { task.isOn },
-                                set: { viewModel.updateToDoStatus(todo: task, isOn: $0) }
+            VStack(alignment: .leading, spacing: 20) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .tint(Colors.jaffa)
+                        .contentShape(Rectangle())
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                if viewModel.tasks.isEmpty {
+                        Text("You don't have any tasks.")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    ForEach(viewModel.tasks) { task in
+                        Tile(
+                            variant: .deviceSchedule(
+                                text: task.taskName,
+                                plannedTime: task.dateExecuted.toString("HH:mm, dd.MM.yyyy"),
+                                state: task.state,
+                                symbol: task.symbol
                             )
                         )
-                    )
+                        .contextMenu {
+                            Button("Delete") {
+                                viewModel.deleteTask(todo: task)
+                            }
+                        }
+                    }
                 }
             }
-            .padding()
+            .padding(15)
         }
-        .safeAreaInset(edge: .top, spacing: 0) {
-            Colors.white.ignoresSafeArea()
-                .frame(height: 0)
-        }
-        .safeAreaInset(edge: .bottom, content: {
-            Colors.white.ignoresSafeArea()
-                .frame(maxHeight: 60)
-        })
     }
 }
 
