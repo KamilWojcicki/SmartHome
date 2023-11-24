@@ -63,6 +63,7 @@ public protocol AuthenticationManagerInterface {
     func getCurrentUser() throws -> User
     
     //SSO
+    func signInWithApple() async throws -> AuthenticationDataResult
     func signInWithGoogle() async throws -> AuthenticationDataResult
     func signInWithFacebook() async throws -> AuthenticationDataResult
     
@@ -81,6 +82,7 @@ public enum AuthErrorHandler: LocalizedError {
     case resetPasswordError
     
     //SSO
+    case signInWithAppleError
     case signInWithGoogleError
     case signInWithFacebookError
     case signInWithCredentialError
@@ -108,6 +110,8 @@ public enum AuthErrorHandler: LocalizedError {
             return "There was a problem with reset user password"
             
         // SSO
+        case .signInWithAppleError:
+            return "Cannot sign in with apple"
         case .signInWithGoogleError:
             return "Cannot sign in with google"
         case .signInWithFacebookError:

@@ -13,6 +13,7 @@ final class AuthenticationManager: AuthenticationManagerInterface {
     private let auth = Auth.auth()
     private let signInGoogleHelper = SignInGoogleHelper()
     private let signInFacebookHelper  = SignInFacebookHelper()
+    private let signInAppleHelper = SignInAppleHelper()
     
     func isUserAuthenticated() throws -> Bool {
         guard auth.currentUser != nil else {
@@ -91,6 +92,22 @@ extension AuthenticationManager {
 
 // MARK: Sign In with SSO
 extension AuthenticationManager {
+    func signInWithApple() async throws -> AuthenticationDataResult {
+        do {
+            let result = try await signInAppleHelper.signIn()
+            
+            return try await signIn(
+                credential: OAuthProvider.appleCredential(
+                    withIDToken: result.idToken,
+                    rawNonce: result.nonce,
+                    fullName: result.fullName
+                )
+            )
+        } catch {
+            throw AuthErrorHandler.signInWithAppleError
+        }
+    }
+    
     func signInWithGoogle() async throws -> AuthenticationDataResult {
         do {
             let result = try await signInGoogleHelper.signIn()

@@ -21,4 +21,6 @@ public struct Colors {
     public static var tango = Color("#E7652D") //button
     /// black
     public static var black = Color("#000000") //black
+    /// yellow
+    public static var barberry = Color("#Ece916") //yellow
 }

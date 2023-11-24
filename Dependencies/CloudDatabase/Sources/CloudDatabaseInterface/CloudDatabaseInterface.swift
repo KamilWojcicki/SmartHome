@@ -20,7 +20,6 @@ public protocol Storable: Identifiable, Codable, Equatable {
 
 public protocol Reference {
     static var collection: String { get }
-    var docRef: String? { get set }
 }
 
 public protocol CloudDatabaseManagerInterface {
@@ -29,15 +28,22 @@ public protocol CloudDatabaseManagerInterface {
     func createInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) throws
     
     func readInMainCollection<Object: Storable>(_ documentID: String) async throws -> Object
+    
     func readInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, documentID: String) async throws -> Object
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, objectsOfType type: Object.Type) async throws -> [Object]
+    
+    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, objectsOfType type: Object.Type) async throws -> [Object]
     
     func updateInMainCollection<Object: Storable>(object: Object, data: [String: Any]) async throws
+    
     func updateInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object, data: [String: Any]) async throws
     
     func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws
-    
-    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool
+}
+
+public extension CloudDatabaseManagerInterface {
+    func readAll<Object: Storable>(objectsOfType type: Object.Type) async throws -> [Object] {
+        try await readAll(parentObject: Object?.none, objectsOfType: type)
+    }
 }
 
 public enum CloudDatabaseError: Error {

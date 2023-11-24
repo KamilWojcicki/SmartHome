@@ -19,7 +19,8 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CloudDatabase"),
-        .package(path: "../DependencyInjection")
+        .package(path: "../DependencyInjection"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
@@ -38,6 +39,10 @@ let package = Package(
                 .product(
                     name: "DependencyInjection",
                     package: "DependencyInjection"
+                ),
+                .product(
+                    name: "User",
+                    package: "User"
                 )
             ]
         )

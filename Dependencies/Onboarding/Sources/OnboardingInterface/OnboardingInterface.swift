@@ -21,7 +21,7 @@ public enum ValidationError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .emptyField(let fieldName):
-            return "Field \(fieldName) is empty!"
+            return "Field \(fieldName) is empty!" //String(format: "empty_field_error".localized, fieldName)
         case .emptyEmail:
             return "Email field is empty! Please enter an e-mail."
         case .wrongEmail:

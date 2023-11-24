@@ -8,6 +8,7 @@
 import SwiftUI
 import Settings
 import Design
+import User
 
 public struct TabBarView: View {
     @StateObject private var viewModel = TabBarViewModel()
@@ -47,11 +48,35 @@ public struct TabBarView: View {
                     } label: {
                         Image(systemName: "gear")
                             .tint(Colors.nobel)
+                            .font(.system(size: 30))
+                    }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    NavigationLink {
+                        Text("User Profile")
+                    } label: {
+                        AsyncImage(url: URL(string: viewModel.userImage)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                            } else if phase.error != nil {
+                                Image(systemName: "person.fill")
+                                    .tint(Colors.nobel)
+                                    .font(.system(size: 30))
+                            } else {
+                                ProgressView()
+                            }
+                        }
+                        .frame(width: 40, height: 40)
+                        .clipShape(.circle)
                     }
                 }
             }
         }
         .navigationBarBackButtonHidden(true)
+        .task {
+            viewModel.getUserImage()
+        }
     }
     
     private func buildTabBarView() -> some View {

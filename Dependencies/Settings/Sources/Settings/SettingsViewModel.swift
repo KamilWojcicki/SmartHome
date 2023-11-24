@@ -14,12 +14,18 @@ final class SettingsViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     
     @Published var toogle: Bool = false
-    @Published var selectedOption: String = "English"
-    let languageOptions: [String] = [
-        "English", "Polish"
-    ]
     
     func signOut() throws {
         try userManager.signOut()
+    }
+    
+    func openSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl)
+        }
     }
 }

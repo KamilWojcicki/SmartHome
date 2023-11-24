@@ -6,6 +6,7 @@
 //
 
 import Animation
+import Components
 import DependencyInjection
 import Design
 import SwiftUI
@@ -15,14 +16,20 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 30) {
             
-            welcomeTextSection
+                welcomeTextSection
+                
+                weatherSection
+                
+                LottieView(animationConfiguration: .iot, loopMode: .loop)
+                    .padding(.top, -80)
+                
+                Spacer()
             
-            LottieView(animationConfiguration: .iot, loopMode: .loop)
-            
-            Spacer()
         }
         .padding()
-        
+        .task {
+            await viewModel.getWeather()
+        }
     }
 }
 
@@ -45,6 +52,10 @@ extension HomeView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .lineSpacing(7)
         
+    }
+    
+    private var weatherSection: some View {
+        Tile(variant: .weather(temperature: viewModel.temperature, time: "", date: "", symbol: viewModel.symbol))
     }
     
 }
