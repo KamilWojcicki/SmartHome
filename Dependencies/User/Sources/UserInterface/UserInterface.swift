@@ -113,6 +113,7 @@ public protocol UserManagerInterface {
     func resetPassword(withEmail email: String) async throws
     
     //SSO
+    func signInWithApple() async throws
     func signInWithGoogle() async throws
     func signInWithFacebook() async throws
 }

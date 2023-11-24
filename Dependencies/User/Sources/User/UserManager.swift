@@ -8,6 +8,7 @@
 import AuthenticationInterface
 import CloudDatabaseInterface
 import DependencyInjection
+import DeviceInterface
 import SwiftUI
 import UserInterface
 
@@ -76,12 +77,19 @@ final class UserManager: UserManagerInterface {
         }
         return user
     }
+    
+    private func handleSignUp(authDataResult: AuthenticationDataResult) async throws {
+        try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
+        
+        addDevicesToUser()
+        self.user = try await fetchUser()
+    }
 }
 // MARK: MANAGE USER
 extension UserManager {
     func signUp(withEmail email: String, password: String, displayName: String) async throws {
         let authDataResult = try await authenticationManager.signUp(withEmail: email, password: password, displayName: displayName)
-        try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
+        try await handleSignUp(authDataResult: authDataResult)
         try await signIn(withEmail: email, password: password)
     }
     
@@ -101,24 +109,51 @@ extension UserManager {
 
 //MARK: SOCIAL MEDIA SIGN IN
 extension UserManager {
+    func signInWithApple() async throws {
+        let authDataResult = try await authenticationManager.signInWithApple()
+        do {
+            self.user = try await fetchUser()
+        } catch {
+            try await handleSignUp(authDataResult: authDataResult)
+        }
+    }
+    
     func signInWithGoogle() async throws {
         let authDataResult = try await authenticationManager.signInWithGoogle()
         do {
             self.user = try await fetchUser()
         } catch {
-            try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
-            self.user = try await fetchUser()
+            try await handleSignUp(authDataResult: authDataResult)
         }
-        //self.user = User(from: authDataResult)
     }
     
     func signInWithFacebook() async throws {
         let authDataResult = try await authenticationManager.signInWithFacebook()
         do {
-            let _ = try await fetchUser()
+            self.user = try await fetchUser()
         } catch {
-            try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
+            try await handleSignUp(authDataResult: authDataResult)
         }
-        self.user = User(from: authDataResult)
+    }
+}
+
+extension UserManager {
+    private func addDevicesToUser() {
+        Task {
+            do {
+                let user = try await fetchUser()
+                let devices = try await readAllDevices()
+                
+                for device in devices {
+                    try cloudDatabaseManager.createInSubCollection(parentObject: user, object: device)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func readAllDevices() async throws -> [Device] {
+        try await cloudDatabaseManager.readAll(objectsOfType: Device.self)
     }
 }
