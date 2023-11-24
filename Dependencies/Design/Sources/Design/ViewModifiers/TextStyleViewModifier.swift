@@ -1,6 +1,6 @@
 //
 //  TextStyleViewModifier.swift
-//  
+//
 //
 //  Created by Kamil Wójcicki on 27/09/2023.
 //
@@ -17,7 +17,7 @@ struct TextStyleViewModifier: ViewModifier {
 }
 
 extension View {
-    func withTextStyleViewModifier() -> some View {
+    public func withTextStyleViewModifier() -> some View {
         modifier(TextStyleViewModifier())
     }
 }

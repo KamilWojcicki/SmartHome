@@ -10,6 +10,8 @@ import Components
 import Design
 import Utilities
 import CalendarInterface
+import Tasks
+import ToDoInterface
 
 struct CalendarView: View {
     
@@ -25,12 +27,18 @@ struct CalendarView: View {
         }
         .safeAreaInset(edge: .bottom, content: {
             Colors.white.ignoresSafeArea()
-                .frame(maxHeight: 60)
+                .frame(maxHeight: 70)
         })
         .sheet(isPresented: $viewModel.addNewTask) {
             AddTaskView { task in
                 viewModel.tasks.append(task)
             }
+        }
+        .sheet(isPresented: $viewModel.showTasksList) {
+            TasksView()
+        }
+        .onAppear {
+            viewModel.fetchTasks()
         }
     }
     
@@ -53,7 +61,7 @@ struct CalendarView: View {
     @ViewBuilder
     func buildTimeLineViewRow(_ date: Date) -> some View {
         HStack(alignment: .top) {
-            Text(date.toString("h a"))
+            Text(date.toString("HH:mm "))
                 .font(.caption)
                 .frame(width: 45, alignment: .leading)
             
@@ -64,7 +72,6 @@ struct CalendarView: View {
                     .stroke(.gray.opacity(0.5), style: StrokeStyle(lineWidth: 0.5, lineCap: .butt, lineJoin: .bevel, dash: [5], dashPhase: 2))
                     .frame(height: 0.5)
                     .offset(y: 10)
-                
             } else {
                 VStack(spacing: 10) {
                     ForEach(filteredTasks) { task in
@@ -72,13 +79,12 @@ struct CalendarView: View {
                     }
                 }
             }
-            
         }
         .hAlign(.leading)
         .padding(.vertical, 15)
     }
     @ViewBuilder
-    func buildTaskRow(_ task: TaskModel) -> some View {
+    func buildTaskRow(_ task: ToDo) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(task.taskName.uppercased())
             
@@ -109,6 +115,24 @@ struct CalendarView: View {
                     Text("Hi, Kamil")
                 }
                 .hAlign(.leading)
+                
+                Button {
+                    viewModel.showTasksList.toggle()
+                } label: {
+                    HStack {
+                        Image(systemName: "list.bullet.circle")
+                        Text("Tasks list")
+                            .font(.caption)
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 15)
+                    .background {
+                        Capsule()
+                            .fill(Colors.jaffa.gradient)
+                    }
+                    .tint(Colors.white)
+                }
+
                 
                 Button {
                     viewModel.addNewTask.toggle()
@@ -154,25 +178,6 @@ struct CalendarView: View {
             }
         }
     }
-    @ViewBuilder
-    func buildFooterSpace() -> some View {
-        VStack(spacing: 0) {
-            Colors.white.ignoresSafeArea()
-            
-            Rectangle()
-                .fill(
-                    .linearGradient(
-                        colors: [
-                            Colors.white,
-                            Color.clear
-                        ],
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                )
-        }
-    }
-    
     @ViewBuilder
     func buildWeekRow() -> some View {
         HStack(spacing: 0) {

@@ -60,7 +60,7 @@ extension LoginView {
             TextField(textFieldLogin: $viewModel.email, placecholder: "Enter E-mail")
                 .textInputAutocapitalization(.none)
             
-            SecureField(textFieldPassword: $viewModel.password, placecholder: "Password")
+            SecureField(textFieldPassword: $viewModel.password, placecholder: "Enter Password")
                 .textInputAutocapitalization(.none)
         }
         .padding(.top, 20)

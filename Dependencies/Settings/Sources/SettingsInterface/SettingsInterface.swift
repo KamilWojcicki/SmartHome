@@ -7,11 +7,6 @@
 
 import Foundation
 
-public enum languageOption: String {
-    case pl = "Polish"
-    case eng = "English"
-}
-
 public enum AuthenticationProviderOption: String {
     case email      = "password"
     case google     = "google.com"

@@ -32,18 +32,22 @@ final class CloudDatabaseManager: CloudDatabaseManagerInterface {
     private lazy var database = Firestore.firestore()
     
     private func collectionReference<ParentObject: Storable, Object: Storable>(
-        parentObject: ParentObject,
+        parentObject: ParentObject? = nil,
         objectOfType type: Object.Type
     ) throws -> CollectionReference {
-        let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
         
-        guard let docRef = parentObjectDAO.docRef else {
-            throw URLError(.badURL)
+        if let parentObject = parentObject {
+            let parentObjectDAO: ParentObject.DAO = DAOFactory.initializeDAO(from: parentObject)
+            let parentObjectId = String(describing: parentObjectDAO.id)
+            
+            return database
+                .collection(ParentObject.DAO.collection)
+                .document(parentObjectId)
+                .collection(Object.DAO.collection) //SubTask
+        } else {
+            return database
+                .collection(Object.DAO.collection)
         }
-        
-        return database
-            .document(docRef) //Users/userId/Tasks/taskId
-            .collection(Object.DAO.collection) //SubTask
     }
 }
 
@@ -67,11 +71,9 @@ extension CloudDatabaseManager {
         var objectDAO: Object.DAO = DAOFactory.initializeDAO(from: object)
         let objectId = String(describing: objectDAO.id)
         
-        objectDAO.docRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId).path
-        
         do {
-            try database
-                .document(objectDAO.docRef ?? "")
+            try collectionReference(parentObject: parentObject, objectOfType: Object.self)
+                .document(objectId)
                 .setData(from: objectDAO)
         } catch {
             throw CloudDatabaseError.unableToSave
@@ -104,7 +106,7 @@ extension CloudDatabaseManager {
         }
     }
     
-    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, objectsOfType type: Object.Type) async throws -> [Object] {
+    func readAll<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, objectsOfType type: Object.Type) async throws -> [Object] {
         let snapshot = try await collectionReference(parentObject: parentObject, objectOfType: type).getDocuments()
         
         return try snapshot

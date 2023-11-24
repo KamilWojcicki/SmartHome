@@ -12,6 +12,7 @@ import SettingsInterface
 
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @Environment(\.dismiss) private var dismiss
     
     public init() { }
     
@@ -32,10 +33,11 @@ public struct SettingsView: View {
                 
                 Row(
                     symbol: "character.bubble.fill",
-                    variant: .language(
-                        text: "Language",
-                        options: viewModel.languageOptions,
-                        selectedOption: $viewModel.selectedOption
+                    variant: .plainText(
+                        text: "Change Language",
+                        action: {
+                            viewModel.openSettings()
+                        }
                     )
                 )
                 
@@ -87,6 +89,18 @@ public struct SettingsView: View {
                 Spacer()
             }
             .padding(.horizontal)
+        }
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .tint(Colors.jaffa)
+                        .contentShape(Rectangle())
+                }
+            }
         }
         .ignoresSafeArea()
     }

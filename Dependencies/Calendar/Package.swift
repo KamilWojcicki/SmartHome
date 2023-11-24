@@ -21,7 +21,10 @@ let package = Package(
     dependencies: [
         .package(path: "../Components"),
         .package(path: "../Navigation"),
-        .package(path: "../ToDo")
+        .package(path: "../Tasks"),
+        .package(path: "../ToDo"),
+        .package(path: "../Mqtt"),
+        .package(path: "../Device")
     ],
     targets: [
         .target(
@@ -42,8 +45,20 @@ let package = Package(
                     package: "Navigation"
                 ),
                 .product(
+                    name: "Tasks",
+                    package: "Tasks"
+                ),
+                .product(
                     name: "ToDo",
                     package: "ToDo"
+                ),
+                .product(
+                    name: "Mqtt",
+                    package: "Mqtt"
+                ),
+                .product(
+                    name: "Device",
+                    package: "Device"
                 )
             ]
         )

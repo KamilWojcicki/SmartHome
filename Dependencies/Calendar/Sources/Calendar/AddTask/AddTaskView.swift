@@ -8,10 +8,12 @@
 import SwiftUI
 import CalendarInterface
 import Design
+import DeviceInterface
+import ToDoInterface
 
 struct AddTaskView: View {
     @StateObject private var viewModel = AddTaskViewModel()
-    var onAdd: (TaskModel) -> ()
+    var onAdd: (ToDo) -> ()
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,6 +39,40 @@ struct AddTaskView: View {
                 Divider()
                     .background(Colors.white)
                 
+                HStack {
+                    buildTitleView("DEVICE")
+                        .padding(.top, 15)
+                    
+                    Picker("", selection: $viewModel.selectedDevice) {
+                        ForEach(Device.Devices.allCases, id: \.self) { device in
+                            Text(device.rawValue).tag(device)
+                        }
+                    }
+                    .tint(Colors.white)
+                    .font(.headline)
+                    .padding(5)
+                    .frame(minWidth: 130, maxWidth: .infinity)
+                    .background(Colors.jaffa)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .offset(y: 10)
+                    
+                    buildTitleView("ACTION")
+                        .padding(.top, 15)
+                    
+                    Picker("", selection: $viewModel.selectedAction) {
+                        ForEach(Device.State.allCases, id: \.self) { action in
+                            Text(action.rawValue).tag(action)
+                        }
+                    }
+                    .tint(Colors.white)
+                    .font(.headline)
+                    .padding(.vertical, 5)
+                    .frame(maxWidth: .infinity)
+                    .background(Colors.jaffa)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .offset(y: 10)
+                }
+                
                 buildTitleView("DATE")
                     .padding(.top, 15)
                 
@@ -48,7 +84,7 @@ struct AddTaskView: View {
                     )
                     
                     buildDateRow(
-                        date: "hh:mm a",
+                        date: "HH:mm",
                         image: "clock",
                         dateComponent: .hourAndMinute
                     )
@@ -74,11 +110,14 @@ struct AddTaskView: View {
                     .frame(height: 1)
                 
                 Button {
-                    let task = TaskModel(dateAdded: viewModel.taskDate, taskName: viewModel.taskName, taskDescription: viewModel.taskDescription)
-                    
-                    onAdd(task)
+                    Task {
+                        do {
+                            try await viewModel.addTask(onAdd: onAdd)
+                        } catch {
+                            print("to jest error:", error.localizedDescription)
+                        }
+                    }
                     dismiss()
-                    
                 } label: {
                     Text("Create Task")
                         .foregroundStyle(Colors.white)
