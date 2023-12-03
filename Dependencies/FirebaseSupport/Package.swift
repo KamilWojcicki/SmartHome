@@ -21,7 +21,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/firebase/firebase-ios-sdk.git",
-            exact: "10.14.0"
+            exact: "10.18.0"
         ),
         .package(
             url: "https://github.com/google/GoogleSignIn-iOS.git",
@@ -29,8 +29,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/facebook/facebook-ios-sdk.git",
-            .upToNextMajor(from: "14.0.0")
-            
+            exact: "16.2.1"
         )
     ],
     targets: [
