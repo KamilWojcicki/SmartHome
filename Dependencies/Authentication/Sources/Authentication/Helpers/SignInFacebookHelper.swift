@@ -21,7 +21,8 @@ final class SignInFacebookHelper {
     func signIn() async throws -> FacebookSignInResultModel {
 
         let manager = LoginManager()
-        let loginResult = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<FacebookSignInResultModel, Error>) in
+        
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<FacebookSignInResultModel, Error>) in
             manager.logIn(permissions: ["public_profile", "email"], from: nil) { result, error in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -33,6 +34,7 @@ final class SignInFacebookHelper {
                 }
             }
         }
-        return loginResult
     }
 }
+
+

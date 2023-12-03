@@ -128,15 +128,18 @@ extension AuthenticationManager {
     func signInWithFacebook() async throws -> AuthenticationDataResult {
         do {
             let result = try await signInFacebookHelper.signIn()
+            print(result)
             
-            return try await signIn(
+            print("test")
+            let finalResult = try await signIn(
                 credential:
                     FacebookAuthProvider
-                    .credential(
-                        withAccessToken: result.accessToken
-                    )
+                    .credential(withAccessToken: result.accessToken)
             )
+            print("finala result: \(finalResult)")
+            return finalResult
         } catch {
+            print(error.localizedDescription)
             throw AuthErrorHandler.signInWithFacebookError
         }
     }
@@ -144,6 +147,7 @@ extension AuthenticationManager {
     private func signIn(credential: AuthCredential) async throws -> AuthenticationDataResult {
         do {
             let user = try await auth.signIn(with: credential).user
+            print("user:",user)
             return AuthenticationDataResult(user: user, userInfo: user.providerData[0])
         } catch {
             throw AuthErrorHandler.signInWithCredentialError
