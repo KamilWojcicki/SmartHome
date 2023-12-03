@@ -5,8 +5,9 @@
 //  Created by Kamil Wójcicki on 20/10/2023.
 //
 
-import SwiftUI
 import Components
+import Localizations
+import SwiftUI
 
 struct PasswordRecoveryView: View {
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
@@ -29,12 +30,12 @@ struct PasswordRecoveryView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding(20)
                 
-                Text("Enter your e-mail to get a recovery password")
+                Text("recovery_password_title".localized)
                     .font(.title)
                     .multilineTextAlignment(.center)
                     .bold()
                 
-                TextField(textFieldLogin: $viewModel.email, placecholder: "Enter your email:")
+                TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
                 
                 recoveryButton
             }
@@ -71,7 +72,7 @@ extension PasswordRecoveryView {
                 }
             }
         } label: {
-            Text("Recovery now!")
+            Text("recovery_button_title".localized)
                 .withMainButtonViewModifier()
         }
     }

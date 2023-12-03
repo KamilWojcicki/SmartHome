@@ -9,6 +9,7 @@ import Animation
 import Components
 import DependencyInjection
 import Design
+import Localizations
 import SwiftUI
 
 struct HomeView: View {
@@ -41,10 +42,10 @@ extension HomeView {
     
     private var welcomeTextSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Welcome back \(Text(viewModel.displayName)),")
+            Text(String(format: "home_welcome_title".localized, viewModel.displayName))
                 .font(.system(size: 32))
                 
-            Text("Remember about your today's tasks")
+            Text("home_welcome_subtitle".localized)
                 .font(.system(size: 20))
                 
                 .foregroundColor(Colors.black.opacity(0.6))

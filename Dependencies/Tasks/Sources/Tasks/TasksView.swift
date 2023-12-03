@@ -8,6 +8,7 @@
 import Components
 import Design
 import DependencyInjection
+import Localizations
 import MqttInterface
 import SwiftUI
 import Utilities
@@ -31,7 +32,7 @@ public struct TasksView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 if viewModel.tasks.isEmpty {
-                        Text("You don't have any tasks.")
+                    Text("empty_tasks_title".localized)
                             .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     ForEach(viewModel.tasks) { task in
@@ -44,7 +45,7 @@ public struct TasksView: View {
                             )
                         )
                         .contextMenu {
-                            Button("Delete") {
+                            Button("delete_task_button_title".localized) {
                                 viewModel.deleteTask(todo: task)
                             }
                         }
@@ -52,6 +53,9 @@ public struct TasksView: View {
                 }
             }
             .padding(15)
+        }
+        .onDisappear {
+            viewModel.stopTimer()
         }
     }
 }

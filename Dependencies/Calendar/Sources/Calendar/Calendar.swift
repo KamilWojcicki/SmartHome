@@ -3,6 +3,7 @@
 
 
 import DependencyInjection
+import Localizations
 import NavigationInterface
 import SwiftUI
 import ToDo
@@ -24,7 +25,7 @@ public struct Dependencies {
 extension Tab {
     public static var calendar: Tab {
         Tab(
-            title: "Calendar",
+            title: "calendar".localized,
             image: "calendar.circle",
             activeImage: "calendar.circle.fill",
             rootView: AnyView(CalendarView())

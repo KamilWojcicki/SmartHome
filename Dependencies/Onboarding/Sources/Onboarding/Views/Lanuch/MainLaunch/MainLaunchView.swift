@@ -5,8 +5,9 @@
 //  Created by Kamil Wójcicki on 08/10/2023.
 //
 
-import SwiftUI
 import Components
+import Localizations
+import SwiftUI
 
 public struct MainLaunchView: View {
     @StateObject private var viewModel = MainLaunchViewModel()
@@ -33,7 +34,7 @@ public struct MainLaunchView: View {
                     viewModel.showAlertToggle()
                 }
             }
-            .alert(Text("Error"), isPresented: $viewModel.showAlert, actions: {
+            .alert(Text("error_title".localized), isPresented: $viewModel.showAlert, actions: {
                 
             }, message: {
                 Text(viewModel.error?.localizedDescription ?? "")

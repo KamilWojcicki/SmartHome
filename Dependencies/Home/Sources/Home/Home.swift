@@ -2,6 +2,7 @@
 // https://docs.swift.org/swift-book
 
 import DependencyInjection
+import Localizations
 import Mqtt
 import NavigationInterface
 import SwiftUI
@@ -22,7 +23,7 @@ public struct Dependencies {
 extension Tab {
     public static var home: Tab {
         return Tab(
-            title: "home",
+            title: "home".localized,
             image: "house",
             activeImage: "house.fill",
             rootView: AnyView(HomeView())

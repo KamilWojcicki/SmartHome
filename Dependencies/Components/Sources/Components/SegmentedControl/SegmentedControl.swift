@@ -5,8 +5,9 @@
 //  Created by Kamil Wójcicki on 12/10/2023.
 //
 
-import SwiftUI
 import Design
+import Localizations
+import SwiftUI
 
 public struct SegmentedControl: View {
     @StateObject private var viewModel: SegmentedControlViewModel
@@ -53,8 +54,8 @@ public struct SegmentedControl: View {
     
     private func title(for item: Item) -> String {
         switch item {
-        case .register: return "register"
-        case .login: return "login"
+        case .register: return "register_button_title".localized
+        case .login: return "login_button_title".localized
         }
     }
     public typealias Item = SegmentedControlViewModel.SelectedItem

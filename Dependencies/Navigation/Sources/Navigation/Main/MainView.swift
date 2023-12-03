@@ -10,7 +10,7 @@ import SliderInfo
 
 public struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
-    
+
     public init() { }
     
     public var body: some View {

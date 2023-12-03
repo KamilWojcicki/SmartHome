@@ -6,6 +6,7 @@
 //
 
 import Design
+import Localizations
 import SwiftUI
 import SliderInfoInterface
 
@@ -23,12 +24,12 @@ public struct SliderInfoView: View {
                 VStack {
                     Spacer()
                     
-                    PageView(page: page, textFieldText: $viewModel.topic)
+                    PageView(page: page, textFieldText: $viewModel.topic, passwordFieldText: $viewModel.password, viewModel: viewModel)
                     
                     Spacer()
                     
                     if page == viewModel.pages.last {
-                        Button("Get Started") {
+                        Button("get_started_button_title".localized) {
                             Task {
                                 do {
                                     try await viewModel.updateUser()
@@ -39,7 +40,7 @@ public struct SliderInfoView: View {
                             }
                         }
                     } else {
-                        Button("Next") {
+                        Button("next_button_title".localized) {
                             viewModel.incrementPage()
                         }
                     }

@@ -7,6 +7,7 @@
 
 import Components
 import Design
+import Localizations
 import SwiftUI
 import SettingsInterface
 
@@ -26,7 +27,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "moon.stars.fill",
                     variant: .toggle(
-                        text: "Dark mode",
+                        text: "dark_mode_button_title".localized,
                         binding: $viewModel.toogle
                     )
                 )
@@ -34,7 +35,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "character.bubble.fill",
                     variant: .plainText(
-                        text: "Change Language",
+                        text: "change_language_button_title".localized,
                         action: {
                             viewModel.openSettings()
                         }
@@ -44,7 +45,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "doc.text.fill",
                     variant: .plainText(
-                        text: "Privacy Policy",
+                        text: "privacy_policy_button_title".localized,
                         action: { }
                     )
                 )
@@ -52,7 +53,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "list.star",
                     variant: .plainText(
-                        text: "Terms & Conditions",
+                        text: "terms_and_conditions_button_title".localized,
                         action: { }
                     )
                 )
@@ -60,7 +61,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "envelope.fill",
                     variant: .plainText(
-                        text: "Contact Us",
+                        text: "contact_us_button_title".localized,
                         action: { }
                     )
                 )
@@ -68,7 +69,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "person.2.fill",
                     variant: .plainText(
-                        text: "Our Team",
+                        text: "our_team_button_title".localized,
                         action: { }
                     )
                 )
@@ -76,7 +77,7 @@ public struct SettingsView: View {
                 Row(
                     symbol: "power",
                     variant: .plainText(
-                        text: "Sign Out",
+                        text: "sign_out_button_title".localized,
                         action: {
                             do {
                                 try viewModel.signOut()

@@ -3,6 +3,7 @@
 
 import DependencyInjection
 import Device
+import Localizations
 import NavigationInterface
 import SwiftUI
 
@@ -20,7 +21,7 @@ public struct Dependencies {
 extension Tab {
     public static var devices: Tab {
         Tab(
-            title: "Devices",
+            title: "devices".localized,
             image: "tv.circle",
             activeImage: "tv.circle.fill",
             rootView: AnyView(DeviceView())

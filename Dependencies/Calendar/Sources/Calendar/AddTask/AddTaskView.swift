@@ -9,6 +9,7 @@ import SwiftUI
 import CalendarInterface
 import Design
 import DeviceInterface
+import Localizations
 import ToDoInterface
 
 struct AddTaskView: View {
@@ -26,13 +27,13 @@ struct AddTaskView: View {
                         .contentShape(Rectangle())
                 }
                 
-                Text("Create new task")
+                Text("create_new_task_title".localized)
                     .foregroundStyle(Colors.white)
                     .padding(.vertical, 15)
                 
-                buildTitleView("NAME")
+                buildTitleView("name_view_title".localized)
                 
-                TextField("Create new task", text: $viewModel.taskName)
+                TextField("create_new_task_title".localized, text: $viewModel.taskName)
                     .tint(Colors.white)
                     .padding(.top, 2)
                 
@@ -40,40 +41,43 @@ struct AddTaskView: View {
                     .background(Colors.white)
                 
                 HStack {
-                    buildTitleView("DEVICE")
-                        .padding(.top, 15)
-                    
-                    Picker("", selection: $viewModel.selectedDevice) {
-                        ForEach(Device.Devices.allCases, id: \.self) { device in
-                            Text(device.rawValue).tag(device)
+                    VStack {
+                        buildTitleView("device_view_title".localized)
+                            .padding(.top, 15)
+                        
+                        Picker("", selection: $viewModel.selectedDevice) {
+                            ForEach(viewModel.availableDevices, id: \.self) { device in
+                                Text(device.description).tag(device)
+                            }
                         }
+                        .tint(Colors.white)
+                        .font(.headline)
+                        .padding(5)
+                        .frame(minWidth: 130, maxWidth: .infinity)
+                        .background(Colors.jaffa)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .offset(y: 10)
                     }
-                    .tint(Colors.white)
-                    .font(.headline)
-                    .padding(5)
-                    .frame(minWidth: 130, maxWidth: .infinity)
-                    .background(Colors.jaffa)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .offset(y: 10)
-                    
-                    buildTitleView("ACTION")
-                        .padding(.top, 15)
-                    
-                    Picker("", selection: $viewModel.selectedAction) {
-                        ForEach(Device.State.allCases, id: \.self) { action in
-                            Text(action.rawValue).tag(action)
+                    VStack {
+                        buildTitleView("action_view_title".localized)
+                            .padding(.top, 15)
+                        
+                        Picker("", selection: $viewModel.selectedAction) {
+                            ForEach(Device.State.allCases, id: \.self) { action in
+                                Text(action.description).tag(action)
+                            }
                         }
+                        .tint(Colors.white)
+                        .font(.headline)
+                        .padding(.vertical, 5)
+                        .frame(maxWidth: .infinity)
+                        .background(Colors.jaffa)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .offset(y: 10)
                     }
-                    .tint(Colors.white)
-                    .font(.headline)
-                    .padding(.vertical, 5)
-                    .frame(maxWidth: .infinity)
-                    .background(Colors.jaffa)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .offset(y: 10)
                 }
                 
-                buildTitleView("DATE")
+                buildTitleView("date_view_title".localized)
                     .padding(.top, 15)
                 
                 HStack(alignment: .bottom, spacing: 12) {
@@ -100,9 +104,9 @@ struct AddTaskView: View {
             }
             
             VStack(alignment: .leading, spacing: 10) {
-                buildTitleView("DESCRIPTION", Colors.black.opacity(0.4))
+                buildTitleView("description_view_title".localized, Colors.black.opacity(0.4))
                 
-                TextField("Write a description about your TASK", text: $viewModel.taskDescription)
+                TextField("description_placechlder_text".localized, text: $viewModel.taskDescription)
                     .padding(.top, 2)
                 
                 Rectangle()
@@ -114,12 +118,12 @@ struct AddTaskView: View {
                         do {
                             try await viewModel.addTask(onAdd: onAdd)
                         } catch {
-                            print("to jest error:", error.localizedDescription)
+                            print(error.localizedDescription)
                         }
                     }
                     dismiss()
                 } label: {
-                    Text("Create Task")
+                    Text("create_task_button_title".localized)
                         .foregroundStyle(Colors.white)
                         .padding(.vertical, 15)
                         .hAlign(.center)
@@ -153,7 +157,11 @@ struct AddTaskView: View {
                 .font(.title3)
                 .foregroundStyle(Colors.white)
                 .overlay {
-                    DatePicker("", selection: $viewModel.taskDate, displayedComponents: [dateComponent]
+                    DatePicker(
+                        "",
+                        selection: $viewModel.taskDate,
+                        in: Date.now...,
+                        displayedComponents: [dateComponent]
                     )
                     .blendMode(.destinationOver)
                 }

@@ -14,7 +14,6 @@ import MqttInterface
 
 @MainActor
 final class DeviceViewModel: ObservableObject {
-    @Inject private var deviceManager: DeviceManagerInterface
     @Inject private var userManager: UserManagerInterface
     @Inject private var mqttManager: MqttManagerInterface
     @Published var devices: [Device] = []
@@ -27,13 +26,12 @@ final class DeviceViewModel: ObservableObject {
     init() {
         fetchDevices()
         getTopic()
-        startTimer()
     }
     
     private func fetchDevices() {
         Task {
             do {
-                self.devices = try await deviceManager.readAllUserDevices()
+                self.devices = try await userManager.readAllUserDevices()
             } catch {
                 print(error.localizedDescription)
             }
@@ -51,6 +49,20 @@ final class DeviceViewModel: ObservableObject {
             }
         }
     }
+    private func updateStatusInRealTime(device: Device, state: Bool) {
+        Task {
+            do {
+                let data: [String : Any] = [
+                    Device.CodingKeys.state.rawValue : state
+                ]
+                try await userManager.updateUserDevice(device: device, data: data)
+                
+                fetchDevices()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     func updateDeviceStatus(device: Device, state: Bool, messageOn: String, messageOff: String) {
         Task {
@@ -58,16 +70,14 @@ final class DeviceViewModel: ObservableObject {
                 let data: [String : Any] = [
                     Device.CodingKeys.state.rawValue : state
                 ]
-                try await deviceManager.updateUserDevice(device: device, data: data)
+                try await userManager.updateUserDevice(device: device, data: data)
                 
                 fetchDevices()
                 
                 if state {
                     mqttManager.sendMessage(topic: topic, message: messageOn)
-                    print(messageOn)
                 } else {
                     mqttManager.sendMessage(topic: topic, message: messageOff)
-                    print(messageOff)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -75,8 +85,12 @@ final class DeviceViewModel: ObservableObject {
         }
     }
     
-    private func startTimer() {
-        cancellable = Timer.publish(every: 10.0, on: .main, in: .common)
+    func connectMqtt() {
+        mqttManager.connect()
+    }
+    
+    func startTimer() {
+        cancellable = Timer.publish(every: 5.0, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
                 self.message = self.mqttManager.receivedMessages
@@ -88,12 +102,15 @@ final class DeviceViewModel: ObservableObject {
             }
     }
     
+    func stopTimer() {
+        cancellable?.cancel()
+    }
+    
     private func updateRealTimeState() {
         for (index, device) in devices.enumerated() {
             if index < pinValues.count {
                 let pinValue = pinValues[index]
-                print(pinValue)
-                updateDeviceStatus(device: device, state: pinValue, messageOn: "", messageOff: "")
+                updateStatusInRealTime(device: device, state: pinValue)
             }
         }
     }

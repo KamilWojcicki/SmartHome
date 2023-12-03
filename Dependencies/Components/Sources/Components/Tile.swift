@@ -6,6 +6,7 @@
 //
 
 import Design
+import Localizations
 import SwiftUI
 
 public struct Tile: View {
@@ -75,7 +76,7 @@ public struct Tile: View {
         case .device(let text, let binding, let symbol):
             HStack {
                 VStack {
-                    Text(text)
+                    Text(text.localized)
                         .font(.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(10)
@@ -98,14 +99,14 @@ public struct Tile: View {
                     
                     HStack {
                         Toggle(isOn: binding) {
-                            Text(binding.wrappedValue ? "On" : "Off")
+                            Text(binding.wrappedValue ? "on".localized : "off".localized)
                                 .font(.callout)
                         }
                         .tint(Colors.jaffa)
                     }
                     .padding(.horizontal, 10)
                 }
-                .frame(maxWidth: 105)
+                .frame(maxWidth: 145)
                 .font(.system(size: 60))
                 
             }
@@ -122,7 +123,7 @@ public struct Tile: View {
                     
                     Spacer()
                     
-                    Text("Planned at: \(plannedTime)")
+                    Text(String(format: "tile_planned_at_text".localized, plannedTime))
                         .font(.footnote)
                         .foregroundStyle(Colors.nobel)
                         .frame(maxWidth: .infinity, alignment: .trailing)
@@ -141,7 +142,7 @@ public struct Tile: View {
                         .font(.system(size: 60))
                     
                     
-                    Text(state == State.one.rawValue ? "ON" : "OFF")
+                    Text(state == State.one.rawValue ? "on".localized : "off".localized)
                 }
                 .padding(.horizontal, 10)
                 .frame(minWidth: 110)

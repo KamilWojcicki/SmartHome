@@ -5,9 +5,10 @@
 //  Created by Kamil Wójcicki on 12/10/2023.
 //
 
+import Design
+import Localizations
 import SwiftUI
 import Settings
-import Design
 import User
 
 public struct TabBarView: View {
@@ -53,7 +54,7 @@ public struct TabBarView: View {
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
-                        Text("User Profile")
+                        Text("user_profile_button_title".localized)
                     } label: {
                         AsyncImage(url: URL(string: viewModel.userImage)) { phase in
                             if let image = phase.image {
@@ -77,6 +78,8 @@ public struct TabBarView: View {
         .task {
             viewModel.getUserImage()
         }
+        .tabViewStyle(.page)
+        .indexViewStyle(.page(backgroundDisplayMode: .never))
     }
     
     private func buildTabBarView() -> some View {

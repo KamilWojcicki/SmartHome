@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Components
+import Localizations
 
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
@@ -45,11 +46,11 @@ extension LoginView {
     
     private var header: some View {
         VStack(spacing: 15) {
-            Text("Hello Again!")
+            Text("login".localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("Welcome back you've been missed!")
+            Text("login_hello_subtitle".localized)
                 .font(.title)
                 .multilineTextAlignment(.center)
         }
@@ -57,10 +58,10 @@ extension LoginView {
     
     private var logintextFields: some View {
         VStack(spacing: 20) {
-            TextField(textFieldLogin: $viewModel.email, placecholder: "Enter E-mail")
+            TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
                 .textInputAutocapitalization(.none)
             
-            SecureField(textFieldPassword: $viewModel.password, placecholder: "Enter Password")
+            SecureField(textFieldPassword: $viewModel.password, placecholder: "password_textfield".localized)
                 .textInputAutocapitalization(.none)
         }
         .padding(.top, 20)
@@ -71,7 +72,7 @@ extension LoginView {
         Button {
             launchViewModel.showRecoveryViewToggle()
         } label: {
-            Text("Recovery password")
+            Text("recovery_password_button".localized)
                 .font(.footnote)
                 .bold()
                 .tint(Color.black)
@@ -90,7 +91,7 @@ extension LoginView {
                 }
             }
         } label: {
-            Text("Sign In!")
+            Text("sign_in_button_title".localized)
                 .withMainButtonViewModifier()
         }
     }
@@ -99,9 +100,10 @@ extension LoginView {
         HStack {
             CustomLine(startPoint: .leading, endPoint: .trailing)
             
-            Text("Or continue with")
+            Text("onboarding_continue_with".localized)
                 .font(.footnote)
                 .padding(.horizontal)
+                .multilineTextAlignment(.center)
             
             CustomLine(startPoint: .trailing, endPoint: .leading)
         }

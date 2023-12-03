@@ -4,8 +4,7 @@
 <dict>
 	<key>CFBundleLocalizations</key>
 	<array>
-		<string>en</string>
-        <string>pl</string>
+		<string>P</string>
 	</array>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<string>YES</string>

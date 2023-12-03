@@ -20,10 +20,11 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
-        .package(path: "../Navigation"),
-        .package(path: "../User"),
-        .package(path: "../SliderInfo"),
+        .package(path: "../Localizations"),
         .package(path: "../Mqtt"),
+        .package(path: "../Navigation"),
+        .package(path: "../SliderInfo"),
+        .package(path: "../User"),
         .package(path: "../Weather")
     ],
     targets: [
@@ -41,20 +42,24 @@ let package = Package(
             dependencies: [
                 "HomeInterface",
                 .product(
-                    name: "Navigation",
-                    package: "Navigation"
+                    name: "Localizations",
+                    package: "Localizations"
                 ),
                 .product(
-                    name: "User",
-                    package: "User"
+                    name: "Mqtt",
+                    package: "Mqtt"
+                ),
+                .product(
+                    name: "Navigation",
+                    package: "Navigation"
                 ),
                 .product(
                     name: "SliderInfo",
                     package: "SliderInfo"
                 ),
                 .product(
-                    name: "Mqtt",
-                    package: "Mqtt"
+                    name: "User",
+                    package: "User"
                 ),
                 .product(
                     name: "Weather",

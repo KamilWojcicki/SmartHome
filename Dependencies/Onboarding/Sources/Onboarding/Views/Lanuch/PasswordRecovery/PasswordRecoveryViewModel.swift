@@ -7,6 +7,7 @@
 
 import DependencyInjection
 import Foundation
+import Localizations
 import UserInterface
 
 @MainActor
@@ -21,7 +22,7 @@ final class PasswordRecoveryViewModel: ObservableObject {
     }
     
     private func validation() throws {
-        try Validation.validateField(email, fieldName: "email")
+        try Validation.validateField(email, fieldName: "field_name_email".localized)
         try Validation.validateEmail(email: email)
     }
 }

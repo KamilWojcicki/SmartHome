@@ -5,8 +5,9 @@
 //  Created by Kamil Wójcicki on 15/11/2023.
 //
 
-import Foundation
 import CloudDatabaseInterface
+import Foundation
+import Localizations
 
 public struct Device: Storable, Hashable {
     public let id: String
@@ -15,6 +16,7 @@ public struct Device: Storable, Hashable {
     public let symbol: String
     public let turnDeviceOnMessage: String
     public let turnDeviceOffMessage: String
+    public let isDeviceAdd: Bool
     
     public init(
         id: String = UUID().uuidString,
@@ -22,7 +24,8 @@ public struct Device: Storable, Hashable {
         state: Bool = false,
         symbol: String,
         turnDeviceOnMessage: String,
-        turnDeviceOffMessage: String
+        turnDeviceOffMessage: String,
+        isDeviceAdd: Bool = false
     ) {
         self.id = id
         self.deviceName = deviceName
@@ -30,6 +33,7 @@ public struct Device: Storable, Hashable {
         self.symbol = symbol
         self.turnDeviceOnMessage = turnDeviceOnMessage
         self.turnDeviceOffMessage = turnDeviceOffMessage
+        self.isDeviceAdd = isDeviceAdd
     }
     
     public init(from dao: DeviceDAO) {
@@ -39,6 +43,7 @@ public struct Device: Storable, Hashable {
         self.symbol = dao.symbol
         self.turnDeviceOnMessage = dao.turnDeviceOnMessage
         self.turnDeviceOffMessage = dao.turnDeviceOffMessage
+        self.isDeviceAdd = dao.isDeviceAdd
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -48,6 +53,30 @@ public struct Device: Storable, Hashable {
         case symbol
         case turnDeviceOnMessage
         case turnDeviceOffMessage
+        case isDeviceAdd
+    }
+    
+    public enum State: String, CaseIterable {
+        case off
+        case on
+        
+        public var description: String {
+            switch self {
+            case .off:
+                "off".localized
+            case .on:
+                "on".localized
+            }
+        }
+        
+        public var state: String {
+            switch self {
+            case .off:
+                "0"
+            case .on:
+                "1"
+            }
+        }
     }
     
     public enum Devices: String, CaseIterable {
@@ -58,6 +87,21 @@ public struct Device: Storable, Hashable {
         case fan
         
         public var description: String {
+            switch self {
+            case .light:
+                "light".localized
+            case .sprinkler:
+                "sprinkler".localized
+            case .heater:
+                "heater".localized
+            case .garage:
+                "garage".localized
+            case .fan:
+                "fan".localized
+            }
+        }
+        
+        public var symbol: String {
             switch self {
             case .light:
                 "lightbulb.fill"
@@ -152,20 +196,6 @@ public struct Device: Storable, Hashable {
             }
         }
     }
-    
-    public enum State: String, CaseIterable {
-        case off
-        case on
-        
-        public var description: String {
-            switch self {
-            case .off:
-                return "0"
-            case .on:
-                return "1"
-            }
-        }
-    }
 }
 
 public struct DeviceDAO: DAOInterface {
@@ -179,6 +209,7 @@ public struct DeviceDAO: DAOInterface {
     public let symbol: String
     public let turnDeviceOnMessage: String
     public let turnDeviceOffMessage: String
+    public let isDeviceAdd: Bool
     
     public init(from device: Device) {
         self.id = device.id
@@ -187,11 +218,11 @@ public struct DeviceDAO: DAOInterface {
         self.symbol = device.symbol
         self.turnDeviceOnMessage = device.turnDeviceOnMessage
         self.turnDeviceOffMessage = device.turnDeviceOffMessage
+        self.isDeviceAdd = device.isDeviceAdd
     }
 }
 
 public protocol DeviceManagerInterface {
-    func readAllUserDevices() async throws -> [Device]
-    func updateUserDevice(device: Device, data: [String : Any]) async throws
+    func readAllDevices() async throws -> [Device]
 }
 

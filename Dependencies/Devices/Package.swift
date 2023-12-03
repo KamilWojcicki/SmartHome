@@ -20,10 +20,11 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
-        .package(path: "../Navigation"),
         .package(path: "../DependencyInjection"),
         .package(path: "../Device"),
+        .package(path: "../Localizations"),
         .package(path: "../Mqtt"),
+        .package(path: "../Navigation"),
         .package(path: "../ToDo"),
         .package(path: "../User")
     ],
@@ -42,16 +43,24 @@ let package = Package(
             dependencies: [
                 "DevicesInterface",
                 .product(
-                    name: "Navigation",
-                    package: "Navigation"
-                ),
-                .product(
                     name: "Components",
                     package: "Components"
                 ),
                 .product(
+                    name: "Device",
+                    package: "Device"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                ),
+                .product(
                     name: "Mqtt",
                     package: "Mqtt"
+                ),
+                .product(
+                    name: "Navigation",
+                    package: "Navigation"
                 ),
                 .product(
                     name: "ToDo",
@@ -60,10 +69,6 @@ let package = Package(
                 .product(
                     name: "User",
                     package: "User"
-                ),
-                .product(
-                    name: "Device",
-                    package: "Device"
                 )
             ]
         )

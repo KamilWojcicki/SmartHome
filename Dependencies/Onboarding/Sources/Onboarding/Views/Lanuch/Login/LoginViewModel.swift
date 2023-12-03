@@ -6,6 +6,7 @@
 //
 
 import DependencyInjection
+import Localizations
 import SwiftUI
 import UserInterface
 
@@ -21,8 +22,8 @@ final class LoginViewModel: ObservableObject {
     }
     
     private func validateField() throws {
-        try Validation.validateField(email, fieldName: "email")
+        try Validation.validateField(email, fieldName: "field_name_email".localized)
         try Validation.validateEmail(email: email)
-        try Validation.validateField(password, fieldName: "password")
+        try Validation.validateField(password, fieldName: "field_name_password".localized)
     }
 }

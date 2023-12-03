@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import Localizations
 
 public struct AuthenticationDataResult {
     public let uid: String
@@ -93,33 +94,33 @@ public enum AuthErrorHandler: LocalizedError {
         switch self {
         //Shared
         case .getAuthenticatedUserError:
-            return "There was a problem with user authenticate"
+            return "get_authenticated_user_error".localized
         case .deleteUserError:
-            return "There was a problem with deleting user"
+            return "delete_user_error".localized
         case .signOutError:
-            return "There was a problem with signing out"
+            return "sign_out_error".localized
   
         // Manage
         case .signUpError:
-            return "There was a problem with signing up"
+            return "sign_up_error".localized
         case .signInError:
-            return "There was a problem with signing in"
+            return "sign_in_error".localized
         case .updatePasswordError:
-            return "There was a problem with updating user password"
+            return "update_password_error".localized
         case .resetPasswordError:
-            return "There was a problem with reset user password"
+            return "reset_password_error".localized
             
         // SSO
         case .signInWithAppleError:
-            return "Cannot sign in with apple"
+            return "sign_in_apple_error".localized
         case .signInWithGoogleError:
-            return "Cannot sign in with google"
+            return "sign_in_google_error".localized
         case .signInWithFacebookError:
-            return "Cannot sign in with facebook"
+            return "sign_in_facebook_error".localized
         case .signInWithCredentialError:
-            return "There was a problem with credentials"
+            return "sign_in_with_credential_error".localized
         case .unknownError(let error):
-            return "Unknow error: \(error.localizedDescription)"
+            return String(format: "unknown_error".localized, error.localizedDescription)
         }
     }
 }

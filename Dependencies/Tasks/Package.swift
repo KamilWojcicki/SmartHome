@@ -21,6 +21,7 @@ let package = Package(
     dependencies: [
         .package(path: "../Components"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Localizations"),
         .package(path: "../Mqtt"),
         .package(path: "../ToDo"),
         .package(path: "../User")
@@ -42,6 +43,10 @@ let package = Package(
                 .product(
                     name: "Components",
                     package: "Components"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
                 ),
                 .product(
                     name: "Mqtt",

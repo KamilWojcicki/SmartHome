@@ -7,6 +7,7 @@
 
 import Components
 import Design
+import Localizations
 import SwiftUI
 
 struct DeviceView: View {
@@ -14,7 +15,7 @@ struct DeviceView: View {
     
     var body: some View {
         if viewModel.devices.isEmpty {
-            Text("You don't have any devices.")
+            Text("empty_devices_title".localized)
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -44,6 +45,13 @@ struct DeviceView: View {
             .safeAreaInset(edge: .bottom) {
                 Colors.white.ignoresSafeArea()
                     .frame(maxHeight: 60)
+            }
+            .onAppear {
+                viewModel.connectMqtt()
+                viewModel.startTimer()
+            }
+            .onDisappear {
+                viewModel.stopTimer()
             }
         }
     }

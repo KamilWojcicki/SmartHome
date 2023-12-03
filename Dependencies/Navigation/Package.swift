@@ -20,6 +20,7 @@ let package = Package(
     dependencies: [
         .package(path: "../Design"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Localizations"),
         .package(path: "../Settings"),
         .package(path: "../SliderInfo")
     ],
@@ -44,6 +45,10 @@ let package = Package(
                 .product(
                     name: "SliderInfo",
                     package: "SliderInfo"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
                 ),
                 "NavigationInterface"
             ]

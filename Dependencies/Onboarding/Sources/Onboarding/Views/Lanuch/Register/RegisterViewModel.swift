@@ -7,6 +7,7 @@
 
 import Foundation
 import DependencyInjection
+import Localizations
 import UserInterface
 
 @MainActor
@@ -24,12 +25,12 @@ final class RegisterViewModel: ObservableObject {
     }
     
     private func validateField() throws {
-        try Validation.validateField(email, fieldName: "email")
+        try Validation.validateField(email, fieldName: "field_name_email".localized)
         try Validation.validateEmail(email: email)
-        try Validation.validateField(fullname, fieldName: "fullname")
+        try Validation.validateField(fullname, fieldName: "field_name_fullname".localized)
         try Validation.validateFullname(fullname: fullname)
-        try Validation.validateField(password, fieldName: "password")
-        try Validation.validateField(confirmPassword, fieldName: "confirmPassword")
+        try Validation.validateField(password, fieldName: "field_name_password".localized)
+        try Validation.validateField(confirmPassword, fieldName: "field_name_confirm_password".localized)
         try Validation.validatePassword(password: password, confirmPassword: confirmPassword)
     }
 }

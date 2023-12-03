@@ -5,8 +5,9 @@
 //  Created by Kamil Wójcicki on 08/10/2023.
 //
 
-import SwiftUI
 import Components
+import Localizations
+import SwiftUI
 
 struct RegisterView: View {
     @StateObject private var viewModel = RegisterViewModel()
@@ -36,11 +37,12 @@ extension RegisterView {
     
     private var header: some View {
         VStack(spacing: 15) {
-            Text("Not a member?")
+            Text("register_welcome_title".localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .multilineTextAlignment(.center)
             
-            Text("Register now and HAVE FUN!")
+            Text("register_welcome_subtitle".localized)
                 .font(.title)
                 .multilineTextAlignment(.center)
             
@@ -50,13 +52,13 @@ extension RegisterView {
     
     private var registerTextFields: some View {
         VStack(spacing: 20) {
-            TextField(textFieldLogin: $viewModel.email, placecholder: "Enter new E-mail")
+            TextField(textFieldLogin: $viewModel.email, placecholder: "register_email_placecholder".localized)
             
-            TextField(textFieldLogin: $viewModel.fullname, placecholder: "Enter your full name")
+            TextField(textFieldLogin: $viewModel.fullname, placecholder: "register_fullname_placecholder".localized)
             
-            SecureField(textFieldPassword: $viewModel.password, placecholder: "Enter Password")
+            SecureField(textFieldPassword: $viewModel.password, placecholder: "register_password_placecholder".localized)
             
-            SecureField(textFieldPassword: $viewModel.confirmPassword, placecholder: "Confirm Password")
+            SecureField(textFieldPassword: $viewModel.confirmPassword, placecholder: "register_confirm_password_placecholder".localized)
         }
         .padding(.top, 20)
     }
@@ -72,7 +74,7 @@ extension RegisterView {
                 }
             }
         } label: {
-            Text("Sign Up!")
+            Text("sign_up_button_title".localized)
                 .withMainButtonViewModifier()
         }
     }

@@ -20,6 +20,7 @@ let package = Package(
     dependencies: [
         .package(path: "../FirebaseSupport"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Localizations"),
         .package(path: "../Utilities")
     ],
     targets: [
@@ -39,6 +40,10 @@ let package = Package(
                 .product(
                     name: "DependencyInjection",
                     package: "DependencyInjection"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
                 ),
                 .product(
                     name: "Utilities",

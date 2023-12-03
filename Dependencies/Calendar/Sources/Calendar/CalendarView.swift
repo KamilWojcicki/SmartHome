@@ -5,13 +5,14 @@
 //  Created by Kamil Wójcicki on 13/10/2023.
 //
 
-import SwiftUI
+import CalendarInterface
 import Components
 import Design
-import Utilities
-import CalendarInterface
+import Localizations
+import SwiftUI
 import Tasks
 import ToDoInterface
+import Utilities
 
 struct CalendarView: View {
     
@@ -39,6 +40,9 @@ struct CalendarView: View {
         }
         .onAppear {
             viewModel.fetchTasks()
+        }
+        .onDisappear {
+            viewModel.stopTimer()
         }
     }
     
@@ -110,9 +114,9 @@ struct CalendarView: View {
         VStack {
             HStack {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Today")
+                    Text("today_title".localized)
                     
-                    Text("Hi, Kamil")
+                    Text(String(format: "calendar_welcome_title".localized, viewModel.displayName))
                 }
                 .hAlign(.leading)
                 
@@ -121,7 +125,7 @@ struct CalendarView: View {
                 } label: {
                     HStack {
                         Image(systemName: "list.bullet.circle")
-                        Text("Tasks list")
+                        Text("task_lists_button_title".localized)
                             .font(.caption)
                     }
                     .padding(.vertical, 10)
@@ -139,7 +143,7 @@ struct CalendarView: View {
                 } label: {
                     HStack {
                         Image(systemName: "plus")
-                        Text("Add Task")
+                        Text("add_task_button_title".localized)
                             .font(.caption)
                     }
                     .padding(.vertical, 10)

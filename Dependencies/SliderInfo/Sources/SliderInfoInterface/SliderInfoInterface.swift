@@ -7,7 +7,7 @@
 
 import Animation
 import Foundation
-//import Localizations
+import Localizations
 import SwiftUI
 
 public struct Page: Identifiable, Equatable {
@@ -17,6 +17,7 @@ public struct Page: Identifiable, Equatable {
     public var animation: LottieView
     public var tag: Int
     public var showTopicField: Bool?
+    public var showDeviceList: Bool?
     
     public static func == (lhs: Page, rhs: Page) -> Bool {
         lhs.id == rhs.id
@@ -26,8 +27,8 @@ public struct Page: Identifiable, Equatable {
     
     public static var pages: [Page] = [
         Page(
-            name: "Welcome to our App!",
-            description: "We are glad to see you, click Next or SLIDE LEFT to enter the TOPIC",
+            name: "first_page_title".localized,
+            description: "first_page_description".localized,
             animation: LottieView(
                 animationConfiguration: .helloWorld,
                 loopMode: .loop
@@ -35,8 +36,8 @@ public struct Page: Identifiable, Equatable {
             tag: 0
         ),
         Page(
-            name: "Enter your device TOPIC",
-            description: "TOPIC is required to property use an application. If you enter a non valid Topic you can change it later in settings",
+            name: "second_page_title".localized,
+            description: "second_page_description".localized,
             animation: LottieView(
                 animationConfiguration: .topic,
                 loopMode: .loop
@@ -45,13 +46,23 @@ public struct Page: Identifiable, Equatable {
             showTopicField: true
         ),
         Page(
-            name: "Done! 🥳",
-            description: "The basic configuration is done! Click Next to launch Main Screen",
+            name: "third_page_title".localized,
+            description: "third_page_description".localized,
+            animation: LottieView(
+                animationConfiguration: .fingerPick,
+                loopMode: .loop
+            ),
+            tag: 2,
+            showDeviceList: true
+        ),
+        Page(
+            name: "fourth_page_title".localized,
+            description: "fourth_page_description".localized,
             animation: LottieView(
                 animationConfiguration: .checkmark,
                 loopMode: .playOnce
             ),
-            tag: 2
+            tag: 3
         )
     ]
 }

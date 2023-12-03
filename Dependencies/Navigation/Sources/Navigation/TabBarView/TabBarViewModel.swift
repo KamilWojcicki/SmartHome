@@ -7,6 +7,7 @@
 
 import DependencyInjection
 import Foundation
+import Localizations
 import NavigationInterface
 import SwiftUI
 import UserInterface
@@ -21,7 +22,7 @@ final class TabBarViewModel: ObservableObject {
     
     init() {
         self.tabs = tabCoordinator.tabs
-        self.selectedTab = "home"
+        self.selectedTab = "home".localized
     }
     
     func tapped(tab: String) {
