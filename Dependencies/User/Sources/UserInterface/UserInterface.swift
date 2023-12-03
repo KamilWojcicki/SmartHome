@@ -7,6 +7,7 @@
 
 import AuthenticationInterface
 import CloudDatabaseInterface
+import DeviceInterface
 import FirebaseAuth
 import Foundation
 
@@ -17,6 +18,7 @@ public struct User: Storable, Hashable {
     public let displayName: String?
     public let photoURL: String?
     public let topic: String
+    public let mqttPassword: String
     public let isFirstLogin: Bool
     
     public init(
@@ -26,6 +28,7 @@ public struct User: Storable, Hashable {
         displayName: String?,
         photoURL: String?,
         topic: String,
+        mqttPassword: String,
         isFirstLogin: Bool = true
     ) {
         self.id = id
@@ -34,6 +37,7 @@ public struct User: Storable, Hashable {
         self.displayName = displayName
         self.photoURL = photoURL
         self.topic = topic
+        self.mqttPassword = mqttPassword
         self.isFirstLogin = isFirstLogin
     }
     
@@ -47,6 +51,7 @@ public struct User: Storable, Hashable {
         self.displayName = authDataResult.displayName
         self.photoURL = authDataResult.photoURL
         self.topic = ""
+        self.mqttPassword = ""
         self.isFirstLogin = isFirstLogin
     }
     
@@ -57,6 +62,7 @@ public struct User: Storable, Hashable {
         self.displayName = dao.displayName
         self.photoURL = dao.photoURL
         self.topic = dao.topic
+        self.mqttPassword = dao.mqttPassword
         self.isFirstLogin = dao.isFirstLogin
     }
     
@@ -67,6 +73,7 @@ public struct User: Storable, Hashable {
         case displayName
         case photoURL
         case topic
+        case mqttPassword
         case isFirstLogin
     }
 }
@@ -82,6 +89,7 @@ public struct UserDAO: DAOInterface {
     public let displayName: String?
     public let photoURL: String?
     public let topic: String
+    public let mqttPassword: String
     public let isFirstLogin: Bool
     
     public init(from user: User) {
@@ -91,6 +99,7 @@ public struct UserDAO: DAOInterface {
         self.displayName = user.displayName
         self.photoURL = user.photoURL
         self.topic = user.topic
+        self.mqttPassword = user.mqttPassword
         self.isFirstLogin = user.isFirstLogin
     }
 }
@@ -105,6 +114,10 @@ public protocol UserManagerInterface {
     func checkIsFirstLogin() async throws -> Bool
     func updateUserData(data: [String: Any]) async throws
     func fetchUser() async throws -> User
+    func readAllUserDevices() async throws -> [Device]
+    func updateUserDevice(device: Device, data: [String : Any]) async throws
+    //test
+    func addDevicesToUser(devices: [Device])
     
     //Manage User
     func signUp(withEmail email: String, password: String, displayName: String) async throws

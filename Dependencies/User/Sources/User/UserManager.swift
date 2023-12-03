@@ -81,7 +81,7 @@ final class UserManager: UserManagerInterface {
     private func handleSignUp(authDataResult: AuthenticationDataResult) async throws {
         try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
         
-        addDevicesToUser()
+        //addDevicesToUser()
         self.user = try await fetchUser()
     }
 }
@@ -155,5 +155,32 @@ extension UserManager {
     
     private func readAllDevices() async throws -> [Device] {
         try await cloudDatabaseManager.readAll(objectsOfType: Device.self)
+    }
+    
+    func readAllUserDevices() async throws -> [Device] {
+        let user = try await fetchUser()
+        return try await cloudDatabaseManager.readAll(parentObject: user, objectsOfType: Device.self)
+    }
+    
+    func updateUserDevice(device: Device, data: [String : Any]) async throws {
+        let user = try await fetchUser()
+        try await cloudDatabaseManager.updateInSubCollection(parentObject: user, object: device, data: data)
+    }
+}
+
+extension UserManager {
+    func addDevicesToUser(devices: [Device]) {
+        Task {
+            do {
+                let user = try await fetchUser()
+                
+                for device in devices {
+                    print(device)
+                    try cloudDatabaseManager.createInSubCollection(parentObject: user, object: device)
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
