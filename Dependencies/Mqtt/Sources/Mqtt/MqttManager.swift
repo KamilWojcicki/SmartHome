@@ -6,23 +6,35 @@
 //
 
 import CocoaMQTT
+import DependencyInjection
 import Foundation
 import MqttInterface
+import UserInterface
 
 final class MqttManager: MqttManagerInterface {
-    
+    @Inject private var userManager: UserManagerInterface
     private var mqttClient: CocoaMQTT
     var isConnected: Bool = false
     var receivedMessages: String = ""
-    
+    var topic: String = ""
+    var password: String = ""
     init() {
         let clientID = "test123"
         let host = "83.6.137.243"
         let port = UInt16(1883)
         self.mqttClient = CocoaMQTT(clientID: clientID, host: host, port: port)
-        self.mqttClient.username = "1234"
-        self.mqttClient.password = "essa"
-        self.mqttClient.delegate = self
+        Task {
+            try? await getMqttCredentialFromUser()
+        }
+        mqttClient.delegate = self
+        print("topic from mqttManager: \(String(describing: mqttClient.username))")
+        print("password from mqttManager: \(String(describing: mqttClient.password))")
+    }
+    
+    private func getMqttCredentialFromUser() async throws {
+        let user = try await userManager.fetchUser()
+        mqttClient.username = topic
+        mqttClient.password = password
     }
     
     func connect() {
@@ -52,7 +64,7 @@ final class MqttManager: MqttManagerInterface {
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) { 
         if ack == .accept {
             isConnected = true
-            subscribeToTopic("1234")
+            subscribeToTopic(topic)
         } else {
             isConnected = false
         }
