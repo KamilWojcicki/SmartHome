@@ -20,11 +20,12 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../Components"),
+        .package(path: "../Device"),
+        .package(path: "../Localizations"),
+        .package(path: "../Mqtt"),
         .package(path: "../Navigation"),
         .package(path: "../Tasks"),
-        .package(path: "../ToDo"),
-        .package(path: "../Mqtt"),
-        .package(path: "../Device")
+        .package(path: "../ToDo")
     ],
     targets: [
         .target(
@@ -41,6 +42,18 @@ let package = Package(
             dependencies: [
                 "CalendarInterface",
                 .product(
+                    name: "Device",
+                    package: "Device"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                ),
+                .product(
+                    name: "Mqtt",
+                    package: "Mqtt"
+                ),
+                .product(
                     name: "Navigation",
                     package: "Navigation"
                 ),
@@ -51,14 +64,6 @@ let package = Package(
                 .product(
                     name: "ToDo",
                     package: "ToDo"
-                ),
-                .product(
-                    name: "Mqtt",
-                    package: "Mqtt"
-                ),
-                .product(
-                    name: "Device",
-                    package: "Device"
                 )
             ]
         )

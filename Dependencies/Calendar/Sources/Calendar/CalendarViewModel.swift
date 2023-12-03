@@ -6,6 +6,7 @@
 //
 
 import CalendarInterface
+import Combine
 import DependencyInjection
 import Foundation
 import ToDoInterface
@@ -19,6 +20,12 @@ final class CalendarViewModel: ObservableObject {
     @Published var tasks: [ToDo] = []
     @Published var addNewTask: Bool = false
     @Published var showTasksList: Bool = false
+    @Published private(set) var displayName: String = ""
+    @Published private var cancellable: AnyCancellable?
+    
+    init() {
+        getDisplayName()
+    }
     
     func filterTasks(for date: Date) -> [ToDo] {
         let calendar = Calendar.current
@@ -32,17 +39,37 @@ final class CalendarViewModel: ObservableObject {
     }
     
     func fetchTasks() {
+        cancellable = Timer.publish(every: 2.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+                Task {
+                    do {
+                        self.tasks = try await self.todoManager.readAllToDos()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+    }
+    
+    private func getDisplayName() {
         Task {
             do {
-                self.tasks = try await todoManager.readAllToDos()
-                
-                _ = $tasks.sink { _ in
-                    // Powiadomienie o zmianach w TasksViewModel
-                    self.objectWillChange.send()
+                let user = try await userManager.fetchUser()
+                if let displayName = user.displayName {
+                    let displayNameComponents = displayName.split(separator: " ")
+                    let name = displayNameComponents.first ?? "Unknown"
+                    self.displayName = String(name)
+                } else {
+                    self.displayName = "unknown".localized
                 }
             } catch {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func stopTimer() {
+        cancellable?.cancel()
     }
 }

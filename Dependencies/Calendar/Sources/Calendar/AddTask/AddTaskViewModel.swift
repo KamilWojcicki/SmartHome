@@ -22,15 +22,16 @@ final class AddTaskViewModel: ObservableObject {
     @Published var taskName: String = ""
     @Published var taskDescription: String = ""
     @Published var taskDate: Date = .init()
-    @Published var selectedDevice: Device.Devices = .light
-    @Published var selectedAction: Device.State = .off
+    @Published var selectedDevice: Device.Devices = .fan
+    @Published var selectedAction: Device.State = .on
     @Published var topic: String = ""
+    @Published var availableDevices: [Device.Devices] = []
     
     init() {
         Task {
             do {
                 try await getTopic()
-                print(topic)
+                try await getUserDevices()
             } catch {
                 print(error.localizedDescription)
             }
@@ -39,7 +40,7 @@ final class AddTaskViewModel: ObservableObject {
     
     func addTask(onAdd: (ToDo) -> ()) async throws {
         let user = try await userManager.fetchUser()
-        let task = ToDo(dateExecuted: taskDate, taskName: taskName, taskDescription: taskDescription, symbol: selectedDevice.description, state: selectedAction.description)
+        let task = ToDo(dateExecuted: taskDate, taskName: taskName, taskDescription: taskDescription, symbol: selectedDevice.symbol, state: selectedAction.state)
         try await todoManager.createToDo(todo: task)
         onAdd(task)
         if selectedAction == .on {
@@ -52,5 +53,10 @@ final class AddTaskViewModel: ObservableObject {
     private func getTopic() async throws {
         let user = try await userManager.fetchUser()
         self.topic = user.topic
+    }
+    
+    private func getUserDevices() async throws {
+        let userDevices = try await userManager.readAllUserDevices()
+        availableDevices = userDevices.map { Device.Devices(rawValue: $0.id) }.compactMap { $0 }
     }
 }
