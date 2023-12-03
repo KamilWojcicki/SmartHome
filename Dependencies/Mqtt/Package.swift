@@ -22,7 +22,8 @@ let package = Package(
             url: "https://github.com/emqx/CocoaMQTT.git",
             exact: "2.1.5"
         ),
-        .package(path: "../DependencyInjection")
+        .package(path: "../DependencyInjection"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
@@ -41,7 +42,11 @@ let package = Package(
         .target(
             name: "Mqtt",
             dependencies: [
-                "MqttInterface"
+                "MqttInterface",
+                .product(
+                    name: "User",
+                    package: "User"
+                )
             ]
         )
     ]

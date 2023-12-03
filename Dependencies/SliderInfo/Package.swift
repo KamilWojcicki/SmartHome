@@ -21,7 +21,11 @@ let package = Package(
         .package(path: "../Animation"),
         .package(path: "../Design"),
         .package(path: "../DependencyInjection"),
-        .package(path: "../User")
+        .package(path: "../Device"),
+        .package(path: "../Localizations"),
+        .package(path: "../Mqtt"),
+        .package(path: "../User"),
+        
     ],
     targets: [
         .target(
@@ -48,6 +52,18 @@ let package = Package(
                 .product(
                     name: "Design",
                     package: "Design"
+                ),
+                .product(
+                    name: "Device",
+                    package: "Device"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                ),
+                .product(
+                    name: "Mqtt",
+                    package: "Mqtt"
                 )
             ]
         )
