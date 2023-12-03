@@ -77,5 +77,16 @@ extension Configuration {
             bundle: .module
         )
     )
+    
+    public static let fingerPick: Self = .init(
+        lightMode: .init(
+            filename: "FingerPick",
+            bundle: .module
+        ),
+        darkMode: .init(
+            filename: "FingerPick",
+            bundle: .module
+        )
+    )
 }
 
