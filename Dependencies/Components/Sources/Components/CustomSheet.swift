@@ -6,17 +6,20 @@
 //
 
 import SwiftUI
+import Design
 
-public struct CustomSheet<Content: View>: View {
-    @Binding var showRecoveryView: Bool
-    var size: CGSize
-    var action: () -> Void
-    var content: () -> Content
+public struct CustomSheet<Item: Hashable, Content: View>: View {
+    private let size: CGSize
+    private var item: Binding<Item?>
+    private var content: (Item) -> Content
     
-    public init(showRecoveryView: Binding<Bool>, size: CGSize, action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
-        self._showRecoveryView = showRecoveryView
+    public init(
+        size: CGSize,
+        item: Binding<Item?>,
+        @ViewBuilder content: @escaping (Item) -> Content
+    ) {
         self.size = size
-        self.action = action
+        self.item = item
         self.content = content
     }
     
@@ -24,18 +27,25 @@ public struct CustomSheet<Content: View>: View {
         ZStack(alignment: .bottom) {
             background
             
-            VStack(spacing: 40) {
+            VStack(spacing: 30) {
                 VStack {
                     Button {
-                        action()
+                        withAnimation {
+                            item.wrappedValue = nil
+                        }
                     } label: {
                         Image(systemName: "xmark")
+                            .tint(Colors.jaffa)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                .frame(height: 10)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
                 
-                content()
+                if let item = item.wrappedValue {
+                    content(item)
+                }
             }
             .padding(.horizontal)
             .frame(width: size.width, height: size.height * 0.6)
@@ -44,7 +54,7 @@ public struct CustomSheet<Content: View>: View {
                     .fill(Color.white)
                     .edgesIgnoringSafeArea(.bottom)
             }
-            .offset(y: showRecoveryView ? size.height * 0 : size.height * 1)
+            .offset(y: (item.wrappedValue != nil) ? size.height * 0 : size.height * 1)
         }
     }
 }
@@ -53,10 +63,7 @@ extension CustomSheet {
         Rectangle()
             .fill(.ultraThinMaterial)
             .ignoresSafeArea()
-            .opacity(showRecoveryView ? 1 : 0)
+            .opacity((item.wrappedValue != nil) ? 1 : 0)
     }
 }
 
-#Preview {
-    CustomSheet(showRecoveryView: .constant(true), size: .zero, action: {},  content: {})
-}
