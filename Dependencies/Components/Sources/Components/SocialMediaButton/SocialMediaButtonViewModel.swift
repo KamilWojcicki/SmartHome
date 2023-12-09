@@ -11,8 +11,6 @@ import UserInterface
 
 public final class SocialMediaButtonViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
-
-    @Published var error: Error?
     
     public func buttonTapped(_ type: SocialMediaButton.buttonType) async throws {
         switch type {
