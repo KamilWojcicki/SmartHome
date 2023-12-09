@@ -7,6 +7,7 @@
 
 import DependencyInjection
 import Foundation
+import SettingsInterface
 import SwiftUI
 import UserInterface
 
@@ -14,6 +15,7 @@ final class SettingsViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     
     @Published var toogle: Bool = false
+    @Published var activeSheet: ActiveSheet?
     
     func signOut() throws {
         try userManager.signOut()
@@ -26,6 +28,12 @@ final class SettingsViewModel: ObservableObject {
         
         if UIApplication.shared.canOpenURL(settingsUrl) {
             UIApplication.shared.open(settingsUrl)
+        }
+    }
+    
+    func showSheet(activeSheet: ActiveSheet) {
+        withAnimation {
+            self.activeSheet = activeSheet
         }
     }
 }
