@@ -9,12 +9,26 @@
 import SwiftUI
 
 public struct ErrorHandlingViewModifier: ViewModifier {
-    @StateObject private var viewModel = ErrorHandlingViewModel()
+    let errorMessage: String
+    @Binding var errorMessageToggle: Bool
     
     public func body(content: Content) -> some View {
         ZStack {
             content
         }
-        .alert(viewModel.errorMessage, isPresented: $viewModel.showErrorMessage) { }
+        .alert(Text("error_title".localized), isPresented: $errorMessageToggle) { } message: {
+            Text(errorMessage)
+        }
+    }
+}
+
+extension View {
+    public func withErrorHandler(errorMessage: String, errorMessageToggle: Binding<Bool>) -> some View {
+        modifier(
+            ErrorHandlingViewModifier(
+                errorMessage: errorMessage,
+                errorMessageToggle: errorMessageToggle
+            )
+        )
     }
 }
