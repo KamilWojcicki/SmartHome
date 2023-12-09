@@ -9,7 +9,11 @@ import Foundation
 
 extension String {
     func toBoolArray() -> [Bool] {
-        let pins = Array(self.dropFirst())
-        return pins.map { $0 == "1" }
+        if self.first == "3" {
+            let pins = Array(self.dropFirst())
+            return pins.map { $0 == "1" }
+        } else {
+            return []
+        }
     }
 }

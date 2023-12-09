@@ -18,10 +18,9 @@ final class DeviceViewModel: ObservableObject {
     @Inject private var mqttManager: MqttManagerInterface
     @Published var devices: [Device] = []
     @Published var pinValues: [Bool] = []
-    @Published var deviceState: Bool = false
     @Published var topic: String = ""
-    @Published private var cancellable: AnyCancellable?
     @Published var message: String = ""
+    @Published private var cancellable: AnyCancellable?
     
     init() {
         fetchDevices()
@@ -96,7 +95,6 @@ final class DeviceViewModel: ObservableObject {
                 self.message = self.mqttManager.receivedMessages
                 let pinsArray = self.message.toBoolArray()
                 self.pinValues = pinsArray
-                print(self.pinValues)
                 self.updateRealTimeState()
                 self.fetchDevices()
             }
@@ -107,9 +105,10 @@ final class DeviceViewModel: ObservableObject {
     }
     
     private func updateRealTimeState() {
-        for (index, device) in devices.enumerated() {
-            if index < pinValues.count {
-                let pinValue = pinValues[index]
+        for (i, device) in devices.enumerated() {
+            if i < pinValues.count {
+                let devicePin = device.pin - 1
+                let pinValue = pinValues[devicePin]
                 updateStatusInRealTime(device: device, state: pinValue)
             }
         }
