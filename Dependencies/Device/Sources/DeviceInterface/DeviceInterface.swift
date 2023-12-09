@@ -17,6 +17,7 @@ public struct Device: Storable, Hashable {
     public let turnDeviceOnMessage: String
     public let turnDeviceOffMessage: String
     public let isDeviceAdd: Bool
+    public let pin: Int
     
     public init(
         id: String = UUID().uuidString,
@@ -25,7 +26,8 @@ public struct Device: Storable, Hashable {
         symbol: String,
         turnDeviceOnMessage: String,
         turnDeviceOffMessage: String,
-        isDeviceAdd: Bool = false
+        isDeviceAdd: Bool = false,
+        pin: Int
     ) {
         self.id = id
         self.deviceName = deviceName
@@ -34,6 +36,7 @@ public struct Device: Storable, Hashable {
         self.turnDeviceOnMessage = turnDeviceOnMessage
         self.turnDeviceOffMessage = turnDeviceOffMessage
         self.isDeviceAdd = isDeviceAdd
+        self.pin = pin
     }
     
     public init(from dao: DeviceDAO) {
@@ -44,6 +47,7 @@ public struct Device: Storable, Hashable {
         self.turnDeviceOnMessage = dao.turnDeviceOnMessage
         self.turnDeviceOffMessage = dao.turnDeviceOffMessage
         self.isDeviceAdd = dao.isDeviceAdd
+        self.pin = dao.pin
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -54,6 +58,7 @@ public struct Device: Storable, Hashable {
         case turnDeviceOnMessage
         case turnDeviceOffMessage
         case isDeviceAdd
+        case pin
     }
     
     public enum State: String, CaseIterable {
@@ -210,6 +215,7 @@ public struct DeviceDAO: DAOInterface {
     public let turnDeviceOnMessage: String
     public let turnDeviceOffMessage: String
     public let isDeviceAdd: Bool
+    public let pin: Int
     
     public init(from device: Device) {
         self.id = device.id
@@ -219,6 +225,7 @@ public struct DeviceDAO: DAOInterface {
         self.turnDeviceOnMessage = device.turnDeviceOnMessage
         self.turnDeviceOffMessage = device.turnDeviceOffMessage
         self.isDeviceAdd = device.isDeviceAdd
+        self.pin = device.pin
     }
 }
 
