@@ -80,8 +80,6 @@ final class UserManager: UserManagerInterface {
     
     private func handleSignUp(authDataResult: AuthenticationDataResult) async throws {
         try cloudDatabaseManager.createInMainCollection(object: User(from: authDataResult))
-        
-        //addDevicesToUser()
         self.user = try await fetchUser()
     }
 }
