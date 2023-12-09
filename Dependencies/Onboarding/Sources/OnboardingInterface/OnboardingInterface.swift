@@ -8,6 +8,10 @@
 import Foundation
 import Localizations
 
+public enum ActiveSheet {
+    case passwordRecovery
+}
+
 public enum ValidationError: Error, LocalizedError {
     case emptyField(String)
     case emptyEmail

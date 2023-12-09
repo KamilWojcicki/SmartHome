@@ -13,50 +13,22 @@ struct PasswordRecoveryView: View {
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     @StateObject private var viewModel = PasswordRecoveryViewModel()
     
-    let size: CGSize
-    
     var body: some View {
-        ZStack(alignment: .bottom) {
-            background
-            
-            VStack(spacing: 40) {
-                VStack {
-                    Button {
-                        launchViewModel.showRecoveryViewToggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(20)
-                
-                Text("recovery_password_title".localized)
-                    .font(.title)
-                    .multilineTextAlignment(.center)
-                    .bold()
-                
-                TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
-                
-                recoveryButton
-            }
-            .padding(.horizontal)
-            .frame(width: size.width, height: size.height * 0.6)
-            .background {
-                RoundedRectangle(cornerRadius: 50)
-                    .fill(Color.white)
-                    .edgesIgnoringSafeArea(.bottom)
-            }
-            .offset(y: launchViewModel.showRecoveryView ? size.height * 0 : size.height * 1)
-        }
+        buildContent()
     }
 }
 
 extension PasswordRecoveryView {
-    private var background: some View {
-        Rectangle()
-            .fill(.ultraThinMaterial)
-            .ignoresSafeArea()
-            .opacity(launchViewModel.showRecoveryView ? 1 : 0)
+    @ViewBuilder
+    private func buildContent() -> some View {
+        Text("recovery_password_title".localized)
+            .font(.title)
+            .multilineTextAlignment(.center)
+            .bold()
+        
+        TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
+        
+        recoveryButton
     }
     
     private var recoveryButton: some View {
@@ -66,7 +38,7 @@ extension PasswordRecoveryView {
                     try await viewModel.resetPassword()
                     print("password reset!")
                     
-                    launchViewModel.showRecoveryViewToggle()
+                    launchViewModel.dismissRecoveryView()
                 } catch {
                     self.launchViewModel.handleError(error)
                 }

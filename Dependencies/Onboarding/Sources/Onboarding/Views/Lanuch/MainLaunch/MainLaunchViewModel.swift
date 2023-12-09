@@ -6,18 +6,25 @@
 //
 
 import Foundation
+import OnboardingInterface
 import SwiftUI
 
 @MainActor
 final class MainLaunchViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var error: Error?
-    @Published var errorMessage: String?
-    @Published var showRecoveryView: Bool = false
+    @Published var activeSheet: ActiveSheet?
     
-    func showRecoveryViewToggle() {
-        withAnimation {
-            showRecoveryView.toggle()
+    func dismissRecoveryView() {
+        withAnimation(.bouncy) {
+            activeSheet = nil
+        }
+    }
+    
+    func showRecoveryView(activeSheet: ActiveSheet) {
+        withAnimation(.bouncy) {
+            self.activeSheet = activeSheet
+                
         }
     }
     

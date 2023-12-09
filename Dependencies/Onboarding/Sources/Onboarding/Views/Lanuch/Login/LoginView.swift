@@ -70,7 +70,7 @@ extension LoginView {
     private var recoveryButton: some View {
         
         Button {
-            launchViewModel.showRecoveryViewToggle()
+            launchViewModel.showRecoveryView(activeSheet: .passwordRecovery)
         } label: {
             Text("recovery_password_button".localized)
                 .font(.footnote)

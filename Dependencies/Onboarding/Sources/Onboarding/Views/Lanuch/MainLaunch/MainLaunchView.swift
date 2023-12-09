@@ -24,9 +24,14 @@ public struct MainLaunchView: View {
                 }
                 .padding(30)
                 
-                if viewModel.showRecoveryView {
-                    PasswordRecoveryView(size: reader.size)
-                }
+                CustomSheet(
+                    size: reader.size,
+                    item: $viewModel.activeSheet) { sheet in
+                        switch sheet {
+                        case .passwordRecovery:
+                            PasswordRecoveryView()
+                        }
+                    }
             }
             .onReceive(viewModel.$error) { error in
                 if error != nil {
@@ -34,11 +39,10 @@ public struct MainLaunchView: View {
                     viewModel.showAlertToggle()
                 }
             }
-            .alert(Text("error_title".localized), isPresented: $viewModel.showAlert, actions: {
-                
-            }, message: {
-                Text(viewModel.error?.localizedDescription ?? "")
-            })
+            .withErrorHandler(
+                errorMessage: viewModel.error?.localizedDescription ?? "",
+                errorMessageToggle: $viewModel.showAlert
+            )
             .environmentObject(viewModel)
         }
     }
