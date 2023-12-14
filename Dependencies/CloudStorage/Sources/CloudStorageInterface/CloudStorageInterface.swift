@@ -6,7 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol CloudStorageInterface {
-    func saveImage(data: Data) async throws -> (path: String, name: String)
+    func saveImage(data: Data, userId: String) async throws -> String
+    func saveImage(image: UIImage, userId: String) async throws -> String
+    func getUrlForImage(path :String) async throws -> URL
+    func getImage(userId: String, path: String) async throws -> UIImage
 }
