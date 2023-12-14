@@ -59,7 +59,7 @@ public protocol AuthenticationManagerInterface {
     //Manage User
     func signUp(withEmail email: String, password: String, displayName: String) async throws -> AuthenticationDataResult
     func signIn(withEmail email: String, password: String) async throws -> AuthenticationDataResult
-    func updatePassword(email: String, password: String, newPassword: String) async throws
+    func updatePassword(newPassword: String) async throws
     func resetPassword(withEmail email: String) async throws
     func getCurrentUser() throws -> User
     

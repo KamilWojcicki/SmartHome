@@ -35,7 +35,7 @@ final class TabBarViewModel: ObservableObject {
         Task {
             do {
                 let user =  try await userManager.fetchUser()
-                self.userImage = user.photoURL ?? "person.fill"
+                self.userImage = user.profileImagePath ?? "person.fill"
             } catch {
                 print(error.localizedDescription)
             }

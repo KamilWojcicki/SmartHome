@@ -83,31 +83,29 @@ extension SettingsView {
     
     @ViewBuilder
     private func buildOurTeamContent() -> some View {
-        ScrollView {
-            VStack {
-                Text(ActiveSheet.ourTeam.description)   
-            }
-        }
+        SheetContent(
+            variant: .onlyText(
+                text: ActiveSheet.ourTeam.description
+            )
+        )
     }
     
     @ViewBuilder
     private func buildPrivacyPolicyContent() -> some View {
-        ScrollView {
-            VStack {
-                Text(ActiveSheet.privacyPolicy.description)
-                    .font(.headline)
-            }
-        }
+        SheetContent(
+            variant: .onlyText(
+                text: ActiveSheet.privacyPolicy.description
+            )
+        )
     }
     
     @ViewBuilder
     private func buildTermsAndConditionsContent() -> some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                Text(ActiveSheet.termsAndConditions.description)
-                    .font(.headline)
-            }
-        }
+        SheetContent(
+            variant: .onlyText(
+                text: ActiveSheet.termsAndConditions.description
+            )
+        )
     }
     
     private var image: some View {

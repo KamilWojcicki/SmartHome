@@ -18,21 +18,36 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../DependencyInjection")
+        .package(path: "../CloudStorage"),
+        .package(path: "../Components"),
+        .package(path: "../DependencyInjection"),
+        .package(path: "../User")
     ],
     targets: [
         .target(
             name: "UserProfileInterface",
             dependencies: [
                 .product(
+                    name: "CloudStorage",
+                    package: "CloudStorage"
+                ),
+                .product(
                     name: "DependencyInjection",
                     package: "DependencyInjection"
+                ),
+                .product(
+                    name: "User",
+                    package: "User"
                 )
             ]
         ),
         .target(
             name: "UserProfile",
             dependencies: [
+                .product(
+                    name: "Components",
+                    package: "Components"
+                ),
                 "UserProfileInterface"
             ]
         )

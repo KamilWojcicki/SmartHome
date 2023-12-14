@@ -145,7 +145,7 @@ extension CloudDatabaseManager {
     }
     
     //DELETE
-    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws {
+    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, object: Object) async throws {
         let documentID = String(describing: object.id)
         
         do {

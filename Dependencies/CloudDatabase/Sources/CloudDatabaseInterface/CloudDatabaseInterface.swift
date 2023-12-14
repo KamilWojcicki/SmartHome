@@ -14,8 +14,7 @@ public protocol DAOInterface: Identifiable, Codable, Equatable, Reference {
 
 public protocol Storable: Identifiable, Codable, Equatable {
     associatedtype DAO: DAOInterface
-    
-    init(from: DAO)
+         init(from: DAO)
 }
 
 public protocol Reference {
@@ -37,12 +36,16 @@ public protocol CloudDatabaseManagerInterface {
     
     func updateInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object, data: [String: Any]) async throws
     
-    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws
+    func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws
 }
 
 public extension CloudDatabaseManagerInterface {
     func readAll<Object: Storable>(objectsOfType type: Object.Type) async throws -> [Object] {
         try await readAll(parentObject: Object?.none, objectsOfType: type)
+    }
+    
+    func delete<Object: Storable>(object: Object) async throws {
+        try await delete(parentObject: Object?.none, object: object)
     }
 }
 
