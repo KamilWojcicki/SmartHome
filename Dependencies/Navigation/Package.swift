@@ -22,13 +22,21 @@ let package = Package(
         .package(path: "../DependencyInjection"),
         .package(path: "../Localizations"),
         .package(path: "../Settings"),
-        .package(path: "../SliderInfo")
+        .package(path: "../SliderInfo"),
+        .package(path: "../UserProfile")
     ],
     targets: [
         .target(
             name: "NavigationInterface",
             dependencies: [
-                .product(name: "DependencyInjection", package: "DependencyInjection")
+                .product(
+                    name: "DependencyInjection",
+                    package: "DependencyInjection"
+                ),
+                .product(
+                    name: "UserProfile",
+                    package: "UserProfile"
+                )
             ]
         ),
         .target(
@@ -39,16 +47,16 @@ let package = Package(
                     package: "Design"
                 ),
                 .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                ),
+                .product(
                     name: "Settings",
                     package: "Settings"
                 ),
                 .product(
                     name: "SliderInfo",
                     package: "SliderInfo"
-                ),
-                .product(
-                    name: "Localizations",
-                    package: "Localizations"
                 ),
                 "NavigationInterface"
             ]
