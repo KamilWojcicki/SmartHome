@@ -66,11 +66,11 @@ extension AuthenticationManager {
         }
     }
     
-    func updatePassword(email: String, password: String, newPassword: String) async throws {
+    func updatePassword(newPassword: String) async throws {
         let user = try getCurrentUser()
         
         do {
-            try await user.updatePassword(to: password)
+            try await user.updatePassword(to: newPassword)
         } catch {
             throw AuthErrorHandler.updatePasswordError
         }
