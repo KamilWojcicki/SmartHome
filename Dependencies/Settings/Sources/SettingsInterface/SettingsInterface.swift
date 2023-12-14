@@ -7,13 +7,6 @@
 
 import Foundation
 
-public enum AuthenticationProviderOption: String {
-    case email      = "password"
-    case google     = "google.com"
-    case apple      = "apple.com"
-    case facebook   = "facebook.com"
-}
-
 public enum ActiveSheet {
     case privacyPolicy
     case termsAndConditions

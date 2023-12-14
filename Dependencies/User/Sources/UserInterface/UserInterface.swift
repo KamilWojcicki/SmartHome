@@ -20,6 +20,7 @@ public struct User: Storable, Hashable {
     public let topic: String
     public let mqttPassword: String
     public let isFirstLogin: Bool
+    public let profileImagePath: String?
     
     public init(
         id: String = UUID().uuidString,
@@ -29,7 +30,8 @@ public struct User: Storable, Hashable {
         photoURL: String?,
         topic: String,
         mqttPassword: String,
-        isFirstLogin: Bool = true
+        isFirstLogin: Bool = true,
+        profileImagePath: String? = nil
     ) {
         self.id = id
         self.providerId = providerId
@@ -39,6 +41,7 @@ public struct User: Storable, Hashable {
         self.topic = topic
         self.mqttPassword = mqttPassword
         self.isFirstLogin = isFirstLogin
+        self.profileImagePath = profileImagePath
     }
     
     public init(
@@ -53,6 +56,7 @@ public struct User: Storable, Hashable {
         self.topic = ""
         self.mqttPassword = ""
         self.isFirstLogin = isFirstLogin
+        self.profileImagePath = nil
     }
     
     public init(from dao: UserDAO) {
@@ -64,6 +68,7 @@ public struct User: Storable, Hashable {
         self.topic = dao.topic
         self.mqttPassword = dao.mqttPassword
         self.isFirstLogin = dao.isFirstLogin
+        self.profileImagePath = dao.profileImagePath
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -75,6 +80,7 @@ public struct User: Storable, Hashable {
         case topic
         case mqttPassword
         case isFirstLogin
+        case profileImagePath
     }
 }
 
@@ -91,6 +97,7 @@ public struct UserDAO: DAOInterface {
     public let topic: String
     public let mqttPassword: String
     public let isFirstLogin: Bool
+    public let profileImagePath: String?
     
     public init(from user: User) {
         self.id = user.id
@@ -101,6 +108,7 @@ public struct UserDAO: DAOInterface {
         self.topic = user.topic
         self.mqttPassword = user.mqttPassword
         self.isFirstLogin = user.isFirstLogin
+        self.profileImagePath = user.profileImagePath
     }
 }
 
@@ -114,15 +122,17 @@ public protocol UserManagerInterface {
     func checkIsFirstLogin() async throws -> Bool
     func updateUserData(data: [String: Any]) async throws
     func fetchUser() async throws -> User
+    
+    //Manage User Devices
+    func addDevicesToUser(devices: [Device])
     func readAllUserDevices() async throws -> [Device]
     func updateUserDevice(device: Device, data: [String : Any]) async throws
-    //test
-    func addDevicesToUser(devices: [Device])
+    func deleteAllUserData(user: User) async throws
     
     //Manage User
     func signUp(withEmail email: String, password: String, displayName: String) async throws
     func signIn(withEmail email: String, password: String) async throws
-    func updatePassword(email: String, password: String, newPassword: String) async throws
+    func updatePassword(newPassword: String) async throws
     func resetPassword(withEmail email: String) async throws
     
     //SSO

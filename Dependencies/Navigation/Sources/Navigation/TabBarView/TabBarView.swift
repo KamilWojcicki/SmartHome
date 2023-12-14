@@ -10,6 +10,7 @@ import Localizations
 import SwiftUI
 import Settings
 import User
+import UserProfile
 
 public struct TabBarView: View {
     @StateObject private var viewModel = TabBarViewModel()
@@ -54,7 +55,7 @@ public struct TabBarView: View {
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink {
-                        Text("user_profile_button_title".localized)
+                        UserProfileView()
                     } label: {
                         AsyncImage(url: URL(string: viewModel.userImage)) { phase in
                             if let image = phase.image {

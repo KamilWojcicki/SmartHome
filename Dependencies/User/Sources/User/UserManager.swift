@@ -96,8 +96,8 @@ extension UserManager {
         self.user = User(from: authDataResult)
     }
     
-    func updatePassword(email: String, password: String, newPassword: String) async throws {
-        try await authenticationManager.updatePassword(email: email, password: password, newPassword: newPassword)
+    func updatePassword(newPassword: String) async throws {
+        try await authenticationManager.updatePassword(newPassword: newPassword)
     }
     
     func resetPassword(withEmail email: String) async throws {
@@ -180,5 +180,9 @@ extension UserManager {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func deleteAllUserData(user: User) async throws {
+        try await cloudDatabaseManager.delete(object: user)
     }
 }

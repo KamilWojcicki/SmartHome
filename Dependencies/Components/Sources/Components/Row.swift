@@ -13,6 +13,7 @@ public struct Row: View {
     public enum Variant {
         case plainText(text: String, action: () -> Void)
         case toggle(text: String, binding: Binding<Bool>)
+        case text(bindingText: Binding<String>)
     }
     
     private let symbol: String
@@ -49,6 +50,8 @@ public struct Row: View {
                 buildText(text)
             }
             .tint(Colors.jaffa)
+        case .text(let bindingText):
+            buildText(bindingText.wrappedValue)
         }
     }
     
