@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+public enum ActiveSheet {
+    case changeDisplayName
+    case changePassword
+    case changeMqttKey
+    case changeMqttPassword
+}
+
+public enum Variant {
+    case textfield
+    case securefield
+}
