@@ -15,10 +15,20 @@ let package = Package(
         )
     ],
     dependencies: [
-        
+        .package(path: "../Localizations")
     ],
     targets: [
         .target(
-            name: "Utilities")
+            name: "Utilities",
+            dependencies: [
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                )
+            ],
+            resources: [
+                .process("Resources/")
+            ]
+        )
     ]
 )
