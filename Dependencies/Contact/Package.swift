@@ -1,17 +1,20 @@
 // swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
-    name: "Utilities",
+    name: "Contact",
     platforms: [
         .iOS(.v16)
     ],
     products: [
         .library(
-            name: "Utilities",
-            targets: ["Utilities"]
+            name: "Contact",
+            targets: ["Contact"]
+        ),
+        .library(
+            name: "ContactInterface",
+            targets: ["ContactInterface"]
         )
     ],
     dependencies: [
@@ -19,15 +22,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Utilities",
+            name: "ContactInterface",
             dependencies: [
                 .product(
                     name: "Localizations",
                     package: "Localizations"
                 )
-            ],
-            resources: [
-                .process("Resources/")
+            ]
+        ),
+        .target(
+            name: "Contact",
+            dependencies: [
+                "ContactInterface"
             ]
         )
     ]

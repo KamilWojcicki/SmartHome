@@ -26,7 +26,12 @@ let package = Package(
     targets: [
         .target(
             name: "OnboardingInterface",
-            dependencies: []
+            dependencies: [
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
+                )
+            ]
         ),
         .target(
             name: "Onboarding",
@@ -39,10 +44,6 @@ let package = Package(
                 .product(
                     name: "User",
                     package: "User"
-                ),
-                .product(
-                    name: "Localizations",
-                    package: "Localizations"
                 )
             ]
         )

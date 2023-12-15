@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AIApplication+Extension.swift
 //  
 //
 //  Created by Kamil Wójcicki on 07/10/2023.
