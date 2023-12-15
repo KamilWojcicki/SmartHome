@@ -6,6 +6,7 @@
 //
 
 import Components
+import Contact
 import Design
 import Localizations
 import SwiftUI
@@ -58,7 +59,12 @@ public struct SettingsView: View {
                 
                 buildSheet(size: reader.size)
             }
+            
         }
+        .mailComposer(
+            isPresented: $viewModel.isMailComposerPresented,
+            mailData: viewModel.mailData
+        )
     }
 }
 
@@ -170,7 +176,9 @@ extension SettingsView {
             symbol: "envelope.fill",
             variant: .plainText(
                 text: "contact_us_button_title".localized,
-                action: { }
+                action: {
+                    viewModel.showMailComposer()
+                }
             )
         )
     }
