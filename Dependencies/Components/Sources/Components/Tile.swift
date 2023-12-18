@@ -94,7 +94,7 @@ public struct Tile: View {
                 
                 VStack(spacing: 20) {
                     Image(systemName: symbol)
-                        .foregroundStyle(binding.wrappedValue ? Colors.barberry : Colors.white)
+                        .foregroundStyle(binding.wrappedValue ? Colors.barberry : Colors.whiteOnly)
                     
                     
                     HStack {
@@ -110,7 +110,7 @@ public struct Tile: View {
                 .font(.system(size: 60))
                 
             }
-            .foregroundStyle(Colors.white)
+            .foregroundStyle(Colors.whiteOnly)
             .frame(maxWidth: .infinity, maxHeight: 150, alignment: .leading)
             
         case .deviceSchedule(text: let text, plannedTime: let plannedTime, state: let state, let symbol):
@@ -138,7 +138,7 @@ public struct Tile: View {
                 
                 VStack(spacing: 20) {
                     Image(systemName: symbol)
-                        .foregroundStyle(state == State.one.rawValue ? Colors.barberry : Colors.white)
+                        .foregroundStyle(state == State.one.rawValue ? Colors.barberry : Colors.whiteOnly)
                         .font(.system(size: 60))
                     
                     
@@ -148,7 +148,7 @@ public struct Tile: View {
                 .frame(minWidth: 110)
                 
             }
-            .foregroundStyle(Colors.white)
+            .foregroundStyle(Colors.whiteOnly)
             .frame(maxWidth: .infinity, maxHeight: 150, alignment: .leading)
         }
     }
