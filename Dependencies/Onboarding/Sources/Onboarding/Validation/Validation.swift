@@ -6,12 +6,19 @@
 //
 
 import Foundation
+import Localizations
 import OnboardingInterface
 
 struct Validation {
     static func validateField(_ fieldValue: String, fieldName: String) throws {
         guard !fieldValue.isEmpty else {
             throw ValidationError.emptyField(fieldName)
+        }
+        
+        if fieldName == "field_name_password".localized {
+            guard isPasswordValid(fieldValue) else {
+                throw ValidationError.passwordIsNotValid
+            }
         }
     }
     
@@ -23,7 +30,7 @@ struct Validation {
     
     static func validatePassword(password: String, confirmPassword: String) throws {
         guard isPasswordValid(password) else {
-            throw ValidationError.wrongPassword
+            throw ValidationError.passwordIsNotValid
         }
         
         guard (password == confirmPassword) else {

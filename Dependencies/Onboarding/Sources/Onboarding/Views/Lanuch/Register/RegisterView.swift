@@ -64,18 +64,17 @@ extension RegisterView {
     }
     
     private var signUpButton: some View {
-        Button {
-            Task {
-                do {
-                    try await viewModel.signUp()
-                    print("User added successfully!")
-                } catch {
-                    self.launchViewModel.handleError(error)
+        Text("sign_up_button_title".localized)
+            .withMainButtonViewModifier()
+            .onTapGesture {
+                Task {
+                    do {
+                        try await viewModel.signUp()
+                        print("User added successfully!")
+                    } catch {
+                        self.launchViewModel.handleError(error)
+                    }
                 }
             }
-        } label: {
-            Text("sign_up_button_title".localized)
-                .withMainButtonViewModifier()
-        }
     }
 }

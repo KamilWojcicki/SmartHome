@@ -19,7 +19,7 @@ public enum ValidationError: Error, LocalizedError {
     case wrongPassword
     case wrongFullname
     case passwordNotMatch
-    case shortPassword
+    case passwordIsNotValid
     case emailInUse
     case unknown(Error)
     
@@ -37,8 +37,8 @@ public enum ValidationError: Error, LocalizedError {
             return "wrong_fullname_error".localized
         case .passwordNotMatch:
             return "password_not_match_error".localized
-        case .shortPassword:
-            return "short_password_error".localized
+        case .passwordIsNotValid:
+            return "password_is_not_valid_error".localized
         case .emailInUse:
             return "email_in_use_error".localized
         case .unknown(let error):
