@@ -26,7 +26,7 @@
 "wrong_password_error" = "There is a problem with password! Check if you enter a valid password.";
 "wrong_fullname_error" = "There is a problem with fullname! Fullname must contains your name and surname separated by a space.";
 "password_not_match_error" = "Passwords do not match! Check if your passwords are the same.";
-"short_password_error" = "Password is too short! Passwords needs to be at least 10 characters long.";
+"password_is_not_valid_error" = "Wrong Password! Password needs to be at least 10 characters long, include minimum 1 Capital character, 1 number, and 1 special sign.";
 "email_in_use_error" = "Email is already in use! Please enter other valid e-mail.";
 "user_profile_button_title" = "User Profile";
 "calendar" = "Calendar";

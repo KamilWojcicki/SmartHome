@@ -51,7 +51,7 @@ public struct CustomSheet<Item: Hashable, Content: View>: View {
             .frame(width: size.width, height: size.height * 0.6)
             .background {
                 RoundedRectangle(cornerRadius: 50)
-                    .fill(Color.white)
+                    .fill(Colors.white)
                     .edgesIgnoringSafeArea(.bottom)
             }
             .offset(y: (item.wrappedValue != nil) ? size.height * 0 : size.height * 1)

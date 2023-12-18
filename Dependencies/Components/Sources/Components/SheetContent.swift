@@ -46,6 +46,7 @@ extension SheetContent {
             VStack {
                 Text(text)
                     .font(.headline)
+                    .foregroundStyle(Colors.black)
             }
         }
     }
@@ -54,6 +55,7 @@ extension SheetContent {
     private func buildViewWithField(with field: Field, labelButtonText: String, action: @escaping () async throws -> Void) -> some View {
         Text("Change Display Name")
             .font(.title)
+            .foregroundStyle(Colors.black)
             .multilineTextAlignment(.center)
             .bold()
         

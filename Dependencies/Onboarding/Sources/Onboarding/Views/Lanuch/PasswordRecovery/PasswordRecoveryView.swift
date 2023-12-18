@@ -6,6 +6,7 @@
 //
 
 import Components
+import Design
 import Localizations
 import SwiftUI
 
@@ -22,6 +23,7 @@ extension PasswordRecoveryView {
     @ViewBuilder
     private func buildContent() -> some View {
         Text("recovery_password_title".localized)
+            .foregroundStyle(Colors.blackOnly)
             .font(.title)
             .multilineTextAlignment(.center)
             .bold()
@@ -32,20 +34,19 @@ extension PasswordRecoveryView {
     }
     
     private var recoveryButton: some View {
-        Button {
-            Task {
-                do {
-                    try await viewModel.resetPassword()
-                    print("password reset!")
-                    
-                    launchViewModel.dismissRecoveryView()
-                } catch {
-                    self.launchViewModel.handleError(error)
+        Text("recovery_button_title".localized)
+            .withMainButtonViewModifier()
+            .onTapGesture {
+                Task {
+                    do {
+                        try await viewModel.resetPassword()
+                        print("password reset!")
+                        
+                        launchViewModel.dismissRecoveryView()
+                    } catch {
+                        self.launchViewModel.handleError(error)
+                    }
                 }
             }
-        } label: {
-            Text("recovery_button_title".localized)
-                .withMainButtonViewModifier()
-        }
     }
 }

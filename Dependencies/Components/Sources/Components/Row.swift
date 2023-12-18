@@ -27,7 +27,7 @@ public struct Row: View {
     public var body: some View {
         HStack(spacing: 10) {
             Image(systemName: symbol)
-                .foregroundColor(Colors.white)
+                .foregroundColor(Colors.whiteOnly)
                 .font(.title2)
             
             buildRowView(for: variant)
@@ -46,7 +46,7 @@ public struct Row: View {
             buildText(text)
                 .onTapGesture(perform: action)
         case .toggle(let text, let binding):
-            Toggle(isOn: binding) {
+            Toggle(isOn: binding.animation()) {
                 buildText(text)
             }
             .tint(Colors.jaffa)
@@ -58,7 +58,7 @@ public struct Row: View {
     private func buildText(_ text: String) -> some View {
         Text(text)
             .font(.title2)
-            .foregroundColor(Colors.white)
+            .foregroundColor(Colors.whiteOnly)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

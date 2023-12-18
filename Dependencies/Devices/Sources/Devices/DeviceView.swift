@@ -39,11 +39,11 @@ struct DeviceView: View {
                 .padding(15)
             }
             .safeAreaInset(edge: .top, spacing: 0) {
-                Colors.white.ignoresSafeArea()
+                Colors.safeAreaInset.ignoresSafeArea()
                     .frame(height: 0)
             }
             .safeAreaInset(edge: .bottom) {
-                Colors.white.ignoresSafeArea()
+                Colors.safeAreaInset.ignoresSafeArea()
                     .frame(maxHeight: 60)
             }
             .onAppear {

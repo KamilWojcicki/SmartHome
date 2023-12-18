@@ -68,32 +68,29 @@ extension LoginView {
     }
     
     private var recoveryButton: some View {
-        
-        Button {
-            launchViewModel.showRecoveryView(activeSheet: .passwordRecovery)
-        } label: {
-            Text("recovery_password_button".localized)
-                .font(.footnote)
-                .bold()
-                .tint(Color.black)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }
+        Text("recovery_password_button".localized)
+            .font(.footnote)
+            .bold()
+            .tint(Color.primary)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .onTapGesture {
+                launchViewModel.showRecoveryView(activeSheet: .passwordRecovery)
+            }
     }
     
     private var signInButton: some View {
-        Button {
-            Task {
-                do {
-                    try await viewModel.signIn()
-                    print("Login successfully!")
-                } catch {
-                    self.launchViewModel.handleError(error)
+        Text("sign_in_button_title".localized)
+            .withMainButtonViewModifier()
+            .onTapGesture {
+                Task {
+                    do {
+                        try await viewModel.signIn()
+                        print("Login successfully!")
+                    } catch {
+                        self.launchViewModel.handleError(error)
+                    }
                 }
             }
-        } label: {
-            Text("sign_in_button_title".localized)
-                .withMainButtonViewModifier()
-        }
     }
     
     private var textWithLines: some View {
