@@ -25,6 +25,7 @@ struct RegisterView: View {
                 Spacer()
             }
             .padding(.horizontal, 30)
+            .ignoresSafeArea(.keyboard)
         }
     }
 }
@@ -53,12 +54,16 @@ extension RegisterView {
     private var registerTextFields: some View {
         VStack(spacing: 20) {
             TextField(textFieldLogin: $viewModel.email, placecholder: "register_email_placecholder".localized)
+                .keyboardType(.emailAddress)
             
             TextField(textFieldLogin: $viewModel.fullname, placecholder: "register_fullname_placecholder".localized)
+                .keyboardType(.default)
             
             SecureField(textFieldPassword: $viewModel.password, placecholder: "register_password_placecholder".localized)
+                .keyboardType(.default)
             
             SecureField(textFieldPassword: $viewModel.confirmPassword, placecholder: "register_confirm_password_placecholder".localized)
+                .keyboardType(.asciiCapable)
         }
         .padding(.top, 20)
     }

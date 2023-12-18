@@ -34,6 +34,7 @@ struct LoginView: View {
                 
             }
             .padding(.horizontal, 30)
+            .ignoresSafeArea(.keyboard)
         }
     }
 }
@@ -60,9 +61,12 @@ extension LoginView {
         VStack(spacing: 20) {
             TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
                 .textInputAutocapitalization(.none)
+                .keyboardType(.emailAddress)
             
             SecureField(textFieldPassword: $viewModel.password, placecholder: "password_textfield".localized)
                 .textInputAutocapitalization(.none)
+                .keyboardType(.default)
+                
         }
         .padding(.top, 20)
     }

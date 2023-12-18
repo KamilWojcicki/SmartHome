@@ -49,4 +49,35 @@ extension PasswordRecoveryView {
                 }
             }
     }
+    
+    @ViewBuilder
+    private func buildSheet(size: CGSize) -> some View {
+        CustomSheet(
+            size: size,
+            item: $viewModel.activeSheet) { sheet in
+                switch sheet {
+                case .passwordRecovery:
+                    buildPasswordRecoveryContent()
+                }
+            }
+    }
+    
+    @ViewBuilder
+    private func buildPasswordRecoveryContent() -> some View {
+        SheetContent(
+            variant: .withField(
+                field: .text(
+                    textFieldText: $viewModel.email,
+                    placecholder: "email_textfield".localized
+                ),
+                labelButtonText: "recovery_button_title".localized,
+                action: {
+                    try await viewModel.resetPassword()
+                    print("password reset!")
+                    
+                    launchViewModel.dismissRecoveryView()
+                }
+            )
+        )
+    }
 }

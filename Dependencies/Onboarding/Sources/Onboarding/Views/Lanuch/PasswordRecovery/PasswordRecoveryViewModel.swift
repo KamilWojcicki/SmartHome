@@ -8,12 +8,14 @@
 import DependencyInjection
 import Foundation
 import Localizations
+import OnboardingInterface
 import UserInterface
 
 @MainActor
 final class PasswordRecoveryViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     @Published var email: String = ""
+    @Published var activeSheet: ActiveSheet?
     
     func resetPassword() async throws {
         try validation()
