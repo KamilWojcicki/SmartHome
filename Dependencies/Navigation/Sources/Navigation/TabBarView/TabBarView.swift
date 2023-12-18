@@ -40,7 +40,7 @@ public struct TabBarView: View {
                             .ignoresSafeArea(edges: .bottom)
                     )
                     .cornerRadius(10)
-                    .shadow(color: Colors.black.opacity(0.3), radius: 10, x: 0, y: 5)
+                    .shadow(color: Colors.black.opacity(0.3), radius: 5, x: 0, y: 5)
                     .padding(.horizontal)
             }
             .toolbar {
@@ -98,14 +98,14 @@ public struct TabBarView: View {
                     Text(tab.title.capitalized)
                         .font(.system(size: 10, weight: .semibold, design: .rounded))
                 }
-                .foregroundColor(isSelectedTab ? Colors.jaffa : Colors.white)
+                .foregroundColor(isSelectedTab ? Colors.jaffa : Colors.whiteOnly)
                 .padding(.vertical, 10)
                 .frame(maxWidth: .infinity)
                 .background(
                     ZStack {
                         if isSelectedTab {
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(Colors.white)
+                                .fill(Colors.whiteOnly)
                                 .matchedGeometryEffect(id: "background_rectangle", in: namespace)
                         }
                     }
