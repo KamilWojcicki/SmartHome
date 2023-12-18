@@ -15,6 +15,7 @@ import SettingsInterface
 public struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     public init() { }
     
@@ -126,7 +127,7 @@ extension SettingsView {
             symbol: "moon.stars.fill",
             variant: .toggle(
                 text: "dark_mode_button_title".localized,
-                binding: $viewModel.toogle
+                binding: $isDarkMode
             )
         )
     }
