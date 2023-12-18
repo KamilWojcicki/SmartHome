@@ -20,7 +20,8 @@ public struct MainButtonViewModifier: ViewModifier {
             )
             .cornerRadius(10)
             .padding(.vertical, 30)
-            .shadow(color: Colors.jaffa.opacity(0.3), radius: 20, y: 20)
+            .shadow(color: Colors.jaffa.opacity(0.8), radius: 5)
+            
     }
 }
 
