@@ -26,7 +26,7 @@
 "wrong_password_error" = "Wystąpił problem z hasłem! Sprawdź czy wprowadziłeś poprawne hasło.";
 "wrong_fullname_error" = "Wystąpił problem z polem imię i nazwisko! Pole to musi zawierać twoje imię i nazwisko oddzielone spacją.";
 "password_not_match_error" = "Hasła do siebie nie pasują! Sprawdź czy twoje hasła są takie same.";
-"short_password_error" = "Hasło jest za krótkie! Hasło musi mieć przynajmniej 10 znaków.";
+"password_is_not_valid_error" = "Błędne hasło! Hasło musi zawierać minimum 10 znaków, 1 Wielką literę, 1 cyfrę i jeden znak specjalny.";
 "email_in_use_error" = "Taki e-mail został już użyty! Proszę wprowadzić inny poprawny e-mail.";
 "user_profile_button_title" = "Profil użytkownika";
 "calendar" = "Kalendarz";
