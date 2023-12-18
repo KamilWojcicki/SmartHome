@@ -27,7 +27,7 @@ struct CalendarView: View {
             buildHeaderView()
         }
         .safeAreaInset(edge: .bottom, content: {
-            Colors.white.ignoresSafeArea()
+            Colors.safeAreaInset.ignoresSafeArea()
                 .frame(maxHeight: 70)
         })
         .sheet(isPresented: $viewModel.addNewTask) {
@@ -165,13 +165,13 @@ struct CalendarView: View {
         .padding(15)
         .background {
             VStack(spacing: 0) {
-                Colors.white.ignoresSafeArea()
+                Colors.safeAreaInset.ignoresSafeArea()
                 
                 Rectangle()
                     .fill(
                         .linearGradient(
                             colors: [
-                                Colors.white,
+                                Colors.safeAreaInset,
                                 Color.clear
                             ],
                             startPoint: .top,
