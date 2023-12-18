@@ -23,22 +23,22 @@ struct AddTaskView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .tint(Colors.white)
+                        .tint(Colors.whiteOnly)
                         .contentShape(Rectangle())
                 }
                 
                 Text("create_new_task_title".localized)
-                    .foregroundStyle(Colors.white)
+                    .foregroundStyle(Colors.whiteOnly)
                     .padding(.vertical, 15)
                 
                 buildTitleView("name_view_title".localized)
                 
                 TextField("create_new_task_title".localized, text: $viewModel.taskName)
-                    .tint(Colors.white)
+                    .tint(Colors.whiteOnly)
                     .padding(.top, 2)
                 
                 Divider()
-                    .background(Colors.white)
+                    .background(Colors.whiteOnly)
                 
                 HStack {
                     VStack {
@@ -50,7 +50,7 @@ struct AddTaskView: View {
                                 Text(device.description).tag(device)
                             }
                         }
-                        .tint(Colors.white)
+                        .tint(Colors.whiteOnly)
                         .font(.headline)
                         .padding(5)
                         .frame(minWidth: 130, maxWidth: .infinity)
@@ -67,7 +67,7 @@ struct AddTaskView: View {
                                 Text(action.description).tag(action)
                             }
                         }
-                        .tint(Colors.white)
+                        .tint(Colors.whiteOnly)
                         .font(.headline)
                         .padding(.vertical, 5)
                         .frame(maxWidth: .infinity)
@@ -124,7 +124,7 @@ struct AddTaskView: View {
                     dismiss()
                 } label: {
                     Text("create_task_button_title".localized)
-                        .foregroundStyle(Colors.white)
+                        .foregroundStyle(Colors.whiteOnly)
                         .padding(.vertical, 15)
                         .hAlign(.center)
                         .background {
@@ -144,7 +144,7 @@ struct AddTaskView: View {
     }
     
     @ViewBuilder
-    func buildTitleView(_ value: String, _ color: Color = Colors.white.opacity(0.7)) -> some View {
+    func buildTitleView(_ value: String, _ color: Color = Colors.whiteOnly.opacity(0.7)) -> some View {
         Text(value)
             .foregroundStyle(color)
     }
@@ -155,7 +155,7 @@ struct AddTaskView: View {
             
             Image(systemName: image)
                 .font(.title3)
-                .foregroundStyle(Colors.white)
+                .foregroundStyle(Colors.whiteOnly)
                 .overlay {
                     DatePicker(
                         "",
@@ -169,7 +169,7 @@ struct AddTaskView: View {
         .offset(y: -5)
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(Colors.white.opacity(0.7))
+                .fill(Colors.whiteOnly.opacity(0.7))
                 .frame(height: 0.7)
                 .offset(y: 5)
         }

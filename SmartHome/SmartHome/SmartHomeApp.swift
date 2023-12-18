@@ -12,10 +12,12 @@ import Root
 @main
 struct SmartHomeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @AppStorage("isDarkMode") private var isDarkMode = false
     
     var body: some Scene {
         WindowGroup {
             RootView()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

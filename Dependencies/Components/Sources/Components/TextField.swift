@@ -5,6 +5,7 @@
 //  Created by Kamil Wójcicki on 18/09/2023.
 //
 
+import Design
 import SwiftUI
 
 public struct TextField: View {
@@ -21,9 +22,9 @@ public struct TextField: View {
         SwiftUI.TextField(placecholder, text: $textFieldLogin)
             .frame(height: 65)
             .padding(.horizontal, 25)
-            .background(Color.white.opacity(0.8))
+            .background(Colors.white.opacity(0.8))
             .cornerRadius(15)
-            .shadow(color: .black.opacity(0.2),radius: 5)
+            .shadow(color: Colors.black.opacity(0.4),radius: 5)
             .textInputAutocapitalization(.never)
     }
 }

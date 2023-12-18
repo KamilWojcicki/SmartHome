@@ -5,6 +5,7 @@
 //  Created by Kamil Wójcicki on 18/09/2023.
 //
 
+import Design
 import SwiftUI
 
 public struct SecureField: View {
@@ -27,13 +28,13 @@ public struct SecureField: View {
         
         .frame(height: 65)
         .padding(.horizontal, 25)
-        .background(Color.white.opacity(0.8))
+        .background(Colors.white.opacity(0.8))
         .cornerRadius(15)
-        .shadow(color: .black.opacity(0.2),radius: 5)
+        .shadow(color: Colors.black.opacity(0.4),radius: 5)
         .textInputAutocapitalization(.never)
         .overlay {
             Image(systemName:  showPassword ? "eye" : "eye.slash")
-                .foregroundColor(Color.gray)
+                .foregroundColor(Color.primary)
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding(.trailing, 15)
                 .onTapGesture {
