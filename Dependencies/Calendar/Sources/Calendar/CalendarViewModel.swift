@@ -24,7 +24,7 @@ final class CalendarViewModel: ObservableObject {
     @Published private var cancellable: AnyCancellable?
     
     init() {
-        getDisplayName()
+        
     }
     
     func filterTasks(for date: Date) -> [ToDo] {
@@ -39,7 +39,7 @@ final class CalendarViewModel: ObservableObject {
     }
     
     func fetchTasks() {
-        cancellable = Timer.publish(every: 2.0, on: .main, in: .common)
+        cancellable = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
                 Task {
@@ -52,7 +52,7 @@ final class CalendarViewModel: ObservableObject {
             }
     }
     
-    private func getDisplayName() {
+    func getDisplayName() async throws {
         Task {
             do {
                 let user = try await userManager.fetchUser()

@@ -29,6 +29,8 @@ struct HomeView: View {
         }
         .padding()
         .task {
+            try? await viewModel.getDisplayName()
+            try? await viewModel.getMqttCredentialFromUser()
             await viewModel.getWeather()
         }
     }

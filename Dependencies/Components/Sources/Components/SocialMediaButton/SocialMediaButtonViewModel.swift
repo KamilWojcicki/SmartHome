@@ -24,14 +24,14 @@ public final class SocialMediaButtonViewModel: ObservableObject {
     }
     
     private func signInWithGoogle() async throws {
-        let _ = try await userManager.signInWithGoogle()
+        try await userManager.signInWithGoogle()
     }
     
     private func signInWithFacebook() async throws {
-        let _ = try await userManager.signInWithFacebook()
+        try await userManager.signInWithFacebook()
     }
     
     private func signInWithApple() async throws {
-        let _ = try await userManager.signInWithApple()
+        try await userManager.signInWithApple()
     }
 }
