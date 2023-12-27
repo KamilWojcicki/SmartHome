@@ -7,10 +7,11 @@
 
 import SwiftUI
 import Design
+import Utilities
 
 public struct SheetContent: View {
     public enum Variant {
-        case withField(field: Field, labelButtonText: String, action: () async throws -> Void)
+        case withField(field: Field, text: String, labelButtonText: String, action: () -> Void)
         case onlyText(text: String)
     }
     
@@ -20,20 +21,33 @@ public struct SheetContent: View {
     }
     
     private let variant: Variant
+    private let action: () -> Void
     
-    public init(variant: Variant) {
+    public init(variant: Variant, action: @escaping () -> Void) {
         self.variant = variant
+        self.action = action
     }
     
     public var body: some View {
         buildContent(for: variant)
+            .presentationDetents([.medium])
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay {
+                Image(systemName: "xmark")
+                    .foregroundStyle(Colors.jaffa)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(10)
+                    .onTapGesture {
+                        action()
+                    }
+            }
     }
     
     @ViewBuilder
     private func buildContent(for variant: Variant) -> some View {
         switch variant {
-        case .withField(let field, let labelButtonText, let action):
-            buildViewWithField(with: field, labelButtonText: labelButtonText, action: action)
+        case .withField(let field, let text, let labelButtonText, let action):
+            buildViewWithField(with: field, text: text, labelButtonText: labelButtonText, action: action)
         case .onlyText(let text):
             buildViewWithText(text: text)
         }
@@ -43,40 +57,38 @@ extension SheetContent {
     @ViewBuilder
     private func buildViewWithText(text: String) -> some View {
         ScrollView {
-            VStack {
-                Text(text)
-                    .font(.headline)
-                    .foregroundStyle(Colors.black)
-            }
+            Text(text)
+                .font(.headline)
+                .foregroundStyle(Colors.black)
+                .padding()
+                .padding(.trailing, 15)
         }
     }
     
     @ViewBuilder
-    private func buildViewWithField(with field: Field, labelButtonText: String, action: @escaping () async throws -> Void) -> some View {
-        Text("Change Display Name")
-            .font(.title)
-            .foregroundStyle(Colors.black)
-            .multilineTextAlignment(.center)
-            .bold()
-        
-        switch field {
-        case .text(let textFieldText, let placecholder):
-            TextField(textFieldLogin: textFieldText, placecholder: placecholder)
-        case .secure(let secureFieldText, let placecholder):
-            SecureField(textFieldPassword: secureFieldText, placecholder: placecholder)
-        }
-        
-        Button {
-            Task {
-                do {
-                    try await action()
-                } catch {
-                    print(error.localizedDescription)
-                }
+    private func buildViewWithField(with field: Field, text: String, labelButtonText: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 30) {
+            Text(text)
+                .font(.title)
+                .foregroundStyle(Colors.black)
+                .multilineTextAlignment(.center)
+                .bold()
+                .padding(.bottom)
+            
+            switch field {
+            case .text(let textFieldText, let placecholder):
+                TextField(textFieldLogin: textFieldText, placecholder: placecholder)
+            case .secure(let secureFieldText, let placecholder):
+                SecureField(textFieldPassword: secureFieldText, placecholder: placecholder)
             }
-        } label: {
-            Text(labelButtonText)
-                .withMainButtonViewModifier()
+            
+            Button {
+               action()
+            } label: {
+                Text(labelButtonText)
+                    .withMainButtonViewModifier()
+            }
         }
+        .padding(.horizontal)
     }
 }

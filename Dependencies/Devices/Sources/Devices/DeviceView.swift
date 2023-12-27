@@ -19,7 +19,6 @@ struct DeviceView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text(viewModel.message)
                     ForEach(viewModel.devices) { device in
                         
                         Tile(

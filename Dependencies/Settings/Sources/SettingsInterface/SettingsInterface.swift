@@ -7,10 +7,21 @@
 
 import Foundation
 
-public enum ActiveSheet {
+public enum ActiveSheet: Identifiable {
     case privacyPolicy
     case termsAndConditions
     case ourTeam
+    
+    public var id: String {
+        switch self {
+        case .privacyPolicy:
+            "privacyPolicy"
+        case .termsAndConditions:
+            "termsAndConditions"
+        case .ourTeam:
+            "ourTeam"
+        }
+    }
     
     public var description: String {
         switch self {

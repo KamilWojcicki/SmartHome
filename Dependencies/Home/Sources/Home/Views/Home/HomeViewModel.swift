@@ -15,6 +15,7 @@ import WeatherInterface
 
 @MainActor
 final class HomeViewModel: ObservableObject {
+    
     @Inject private var userManager: UserManagerInterface
     @Inject private var mqttManager: MqttManagerInterface
     @Inject private var weatherManager: WeatherManagerInterface
@@ -23,30 +24,29 @@ final class HomeViewModel: ObservableObject {
     @Published var temperature: String = ""
     
     init() {
-        getDisplayName()
-        Task {
-            try? await getMqttCredentialFromUser()
+//        Task {
+//            do {
+//                try await getDisplayName()
+//                try? await getMqttCredentialFromUser()
+//                await getWeather()
+//            } catch {
+//                print(error.localizedDescription)
+//            }
+//        }
+    }
+
+     func getDisplayName() async throws {
+        let user = try await userManager.fetchUser()
+        if let displayName = user.displayName {
+            let displayNameComponents = displayName.split(separator: " ")
+            let name = displayNameComponents.first ?? "Unknown"
+            self.displayName = String(name)
+        } else {
+            self.displayName = "unknown".localized
         }
     }
     
-    private func getDisplayName() {
-        Task {
-            do {
-                let user = try await userManager.fetchUser()
-                if let displayName = user.displayName {
-                    let displayNameComponents = displayName.split(separator: " ")
-                    let name = displayNameComponents.first ?? "Unknown"
-                    self.displayName = String(name)
-                } else {
-                    self.displayName = "unknown".localized
-                }
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    private func getMqttCredentialFromUser() async throws {
+     func getMqttCredentialFromUser() async throws {
         let user = try await userManager.fetchUser()
         mqttManager.topic = user.topic
         print("topic: \(mqttManager.topic)")
@@ -54,7 +54,7 @@ final class HomeViewModel: ObservableObject {
         print("password: \(mqttManager.password)")
     }
     
-    func getWeather() async {
+     func getWeather() async {
         do {
             try await weatherManager.getWeather()
             symbol = weatherManager.symbol

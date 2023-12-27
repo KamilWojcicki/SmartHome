@@ -15,6 +15,8 @@ import UserInterface
 final class PasswordRecoveryViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     @Published var email: String = ""
+    @Published var error: Error?
+    @Published var showAlert: Bool = false
     @Published var activeSheet: ActiveSheet?
     
     func resetPassword() async throws {
@@ -25,5 +27,13 @@ final class PasswordRecoveryViewModel: ObservableObject {
     private func validation() throws {
         try Validation.validateField(email, fieldName: "field_name_email".localized)
         try Validation.validateEmail(email: email)
+    }
+    
+    func handleError(_ error: Error) {
+        self.error = error
+    }
+    
+    func showAlertToggle() {
+        showAlert.toggle()
     }
 }

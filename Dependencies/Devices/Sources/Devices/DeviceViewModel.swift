@@ -89,7 +89,7 @@ final class DeviceViewModel: ObservableObject {
     }
     
     func startTimer() {
-        cancellable = Timer.publish(every: 5.0, on: .main, in: .common)
+        cancellable = Timer.publish(every: 3.0, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
                 self.message = self.mqttManager.receivedMessages

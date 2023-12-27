@@ -54,6 +54,12 @@ final class SettingsViewModel: ObservableObject {
         }
     }
     
+    func dismissSheet() {
+        withAnimation {
+            self.activeSheet = nil
+        }
+    }
+    
     func showMailComposer() {
         self.isMailComposerPresented = true
     }
