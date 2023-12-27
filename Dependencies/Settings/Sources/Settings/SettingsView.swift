@@ -57,8 +57,16 @@ public struct SettingsView: View {
                     }
                 }
                 .ignoresSafeArea()
-                
-                buildSheet(size: reader.size)
+            }
+            .sheet(item: $viewModel.activeSheet) { sheet in
+                switch sheet {
+                case .ourTeam:
+                    buildOurTeamContent()
+                case .privacyPolicy:
+                    buildPrivacyPolicyContent()
+                case .termsAndConditions:
+                    buildTermsAndConditionsContent()
+                }
             }
             
         }
@@ -75,25 +83,13 @@ public struct SettingsView: View {
 
 extension SettingsView {
     @ViewBuilder
-    private func buildSheet(size: CGSize) -> some View {
-        CustomSheet(size: size, item: $viewModel.activeSheet) { sheet in
-            switch sheet {
-            case .ourTeam:
-                buildOurTeamContent()
-            case .privacyPolicy:
-                buildPrivacyPolicyContent()
-            case .termsAndConditions:
-                buildTermsAndConditionsContent()
-            }
-        }
-    }
-    
-    @ViewBuilder
     private func buildOurTeamContent() -> some View {
         SheetContent(
             variant: .onlyText(
                 text: ActiveSheet.ourTeam.description
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
     
@@ -102,7 +98,9 @@ extension SettingsView {
         SheetContent(
             variant: .onlyText(
                 text: ActiveSheet.privacyPolicy.description
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
     
@@ -111,7 +109,9 @@ extension SettingsView {
         SheetContent(
             variant: .onlyText(
                 text: ActiveSheet.termsAndConditions.description
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
     
