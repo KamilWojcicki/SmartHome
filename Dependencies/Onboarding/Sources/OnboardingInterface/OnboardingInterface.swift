@@ -8,8 +8,15 @@
 import Foundation
 import Localizations
 
-public enum ActiveSheet {
+public enum ActiveSheet: Identifiable {
     case passwordRecovery
+    
+    public var id: String {
+        switch self {
+        case .passwordRecovery:
+            UUID().uuidString
+        }
+    }
 }
 
 public enum ValidationError: Error, LocalizedError {
