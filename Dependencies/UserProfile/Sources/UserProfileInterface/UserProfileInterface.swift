@@ -7,11 +7,24 @@
 
 import Foundation
 
-public enum ActiveSheet {
+public enum ActiveSheet: Identifiable {
     case changeDisplayName
     case changePassword
     case changeMqttKey
     case changeMqttPassword
+    
+    public var id: String {
+        switch self {
+        case .changeDisplayName:
+            "changeDisplayName"
+        case .changePassword:
+            "changePassword"
+        case .changeMqttKey:
+            "changeMqttKey"
+        case .changeMqttPassword:
+            "changeMqttPassword"
+        }
+    }
 }
 
 public enum Variant {
