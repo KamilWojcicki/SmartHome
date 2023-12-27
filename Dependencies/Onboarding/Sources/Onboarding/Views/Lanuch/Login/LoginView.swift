@@ -15,26 +15,7 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            
-            VStack(spacing: 20) {
-                
-                header
-                
-                logintextFields
-                
-                recoveryButton
-                
-                signInButton
-                
-                textWithLines
-                
-                socialMediaStack
-                
-                Spacer()
-                
-            }
-            .padding(.horizontal, 30)
-            .ignoresSafeArea(.keyboard)
+            buildLoginView()
         }
     }
 }
@@ -44,6 +25,28 @@ struct LoginView: View {
 }
 
 extension LoginView {
+    
+    private func buildLoginView() -> some View {
+        VStack(spacing: 20) {
+            
+            header
+            
+            logintextFields
+            
+            recoveryButton
+            
+            signInButton
+            
+            textWithLines
+            
+            socialMediaStack
+            
+            Spacer()
+            
+        }
+        .padding(.horizontal, 30)
+        .ignoresSafeArea(.keyboard)
+    }
     
     private var header: some View {
         VStack(spacing: 15) {
@@ -66,7 +69,6 @@ extension LoginView {
             SecureField(textFieldPassword: $viewModel.password, placecholder: "password_textfield".localized)
                 .textInputAutocapitalization(.none)
                 .keyboardType(.default)
-                
         }
         .padding(.top, 20)
     }
@@ -89,7 +91,7 @@ extension LoginView {
                 Task {
                     do {
                         try await viewModel.signIn()
-                        print("Login successfully!")
+                        print("User added successfully!")
                     } catch {
                         self.launchViewModel.handleError(error)
                     }

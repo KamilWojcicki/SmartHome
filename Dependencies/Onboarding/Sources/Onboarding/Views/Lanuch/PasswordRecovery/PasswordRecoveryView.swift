@@ -9,75 +9,50 @@ import Components
 import Design
 import Localizations
 import SwiftUI
+import Utilities
 
 struct PasswordRecoveryView: View {
     @EnvironmentObject private var launchViewModel: MainLaunchViewModel
     @StateObject private var viewModel = PasswordRecoveryViewModel()
     
     var body: some View {
-        buildContent()
+            buildContent()
+                .onReceive(viewModel.$error) { error in
+                    if error != nil {
+                        print("Received error: \(error?.localizedDescription ?? "unknown error")")
+                        viewModel.showAlertToggle()
+                    }
+                }
+                .withErrorHandler(errorMessage: viewModel.error?.localizedDescription ?? "", errorMessageToggle: $viewModel.showAlert)
     }
 }
 
 extension PasswordRecoveryView {
     @ViewBuilder
     private func buildContent() -> some View {
-        Text("recovery_password_title".localized)
-            .foregroundStyle(Colors.blackOnly)
-            .font(.title)
-            .multilineTextAlignment(.center)
-            .bold()
-        
-        TextField(textFieldLogin: $viewModel.email, placecholder: "email_textfield".localized)
-        
-        recoveryButton
-    }
-    
-    private var recoveryButton: some View {
-        Text("recovery_button_title".localized)
-            .withMainButtonViewModifier()
-            .onTapGesture {
-                Task {
-                    do {
-                        try await viewModel.resetPassword()
-                        print("password reset!")
-                        
-                        launchViewModel.dismissRecoveryView()
-                    } catch {
-                        self.launchViewModel.handleError(error)
-                    }
-                }
-            }
-    }
-    
-    @ViewBuilder
-    private func buildSheet(size: CGSize) -> some View {
-        CustomSheet(
-            size: size,
-            item: $viewModel.activeSheet) { sheet in
-                switch sheet {
-                case .passwordRecovery:
-                    buildPasswordRecoveryContent()
-                }
-            }
-    }
-    
-    @ViewBuilder
-    private func buildPasswordRecoveryContent() -> some View {
         SheetContent(
             variant: .withField(
                 field: .text(
                     textFieldText: $viewModel.email,
                     placecholder: "email_textfield".localized
                 ),
+                text: "recovery_password_title".localized,
                 labelButtonText: "recovery_button_title".localized,
                 action: {
-                    try await viewModel.resetPassword()
-                    print("password reset!")
-                    
-                    launchViewModel.dismissRecoveryView()
+                    Task {
+                        do {
+                            try await viewModel.resetPassword()
+                            print("password reset!")
+                            launchViewModel.dismissRecoveryView()
+                        } catch {
+                            print(error.localizedDescription)
+                            viewModel.handleError(error)
+                        }
+                    }
                 }
-            )
+            ), action: {
+                launchViewModel.dismissRecoveryView()
+            }
         )
     }
 }

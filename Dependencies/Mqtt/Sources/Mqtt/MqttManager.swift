@@ -20,7 +20,7 @@ final class MqttManager: MqttManagerInterface {
     var password: String = ""
     init() {
         let clientID = "test123"
-        let host = "83.6.135.25"
+        let host = "83.6.131.234"
         let port = UInt16(1883)
         self.mqttClient = CocoaMQTT(clientID: clientID, host: host, port: port)
         Task {
@@ -38,9 +38,8 @@ final class MqttManager: MqttManagerInterface {
     }
     
     func connect() {
-       _ = self.mqttClient.connect()
-        
-        if isConnected {
+       let some = self.mqttClient.connect()
+        if some {
             print("Mqtt is connected")
         } else {
             print("Problem with connection")

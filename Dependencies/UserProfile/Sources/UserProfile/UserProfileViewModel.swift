@@ -118,7 +118,7 @@ public final class UserProfileViewModel: ObservableObject {
     
     func dismissSheet() {
         withAnimation {
-            self.activeSheet = nil
+            activeSheet = nil
         }
     }
 }

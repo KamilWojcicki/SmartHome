@@ -44,6 +44,9 @@ struct CalendarView: View {
         .onDisappear {
             viewModel.stopTimer()
         }
+        .task {
+            try? await viewModel.getDisplayName()
+        }
     }
     
     @ViewBuilder

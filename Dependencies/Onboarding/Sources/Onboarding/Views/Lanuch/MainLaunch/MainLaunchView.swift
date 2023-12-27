@@ -23,16 +23,14 @@ public struct MainLaunchView: View {
                     selectedSegment = item
                 }
                 .padding(30)
-                
-                CustomSheet(
-                    size: reader.size,
-                    item: $viewModel.activeSheet) { sheet in
-                        switch sheet {
-                        case .passwordRecovery:
-                            PasswordRecoveryView()
-                        }
-                    }
+                .ignoresSafeArea(.keyboard)
             }
+            .sheet(item: $viewModel.activeSheet, content: { sheet in
+                switch sheet {
+                case .passwordRecovery:
+                    PasswordRecoveryView()
+                }
+            })
             .onReceive(viewModel.$error) { error in
                 if error != nil {
                     print("Received error: \(error?.localizedDescription ?? "unknown error")")

@@ -85,11 +85,11 @@ public struct Device: Storable, Hashable {
     }
     
     public enum Devices: String, CaseIterable {
-        case light
-        case sprinkler
-        case heater
-        case garage
         case fan
+        case garage
+        case heater
+        case sprinkler
+        case light
         
         public var description: String {
             switch self {
@@ -121,43 +121,13 @@ public struct Device: Storable, Hashable {
             }
         }
         
-        public var turnOnDeviceMessage: String {
-            switch self {
-            case .light:
-                "2,20,"
-            case .sprinkler:
-                "2,30,"
-            case .heater:
-                "2,40,"
-            case .garage:
-                "2,50,"
-            case .fan:
-                "2,60,"
-            }
-        }
-        
-        public var turnOffDeviceMessage: String {
-            switch self {
-            case .light:
-                "2,21,"
-            case .sprinkler:
-                "2,31,"
-            case .heater:
-                "2,41,"
-            case .garage:
-                "2,51,"
-            case .fan:
-                "2,61,"
-            }
-        }
-        
         public var addToScheduleMessage: (String) -> String {
             switch self {
-            case .light:
+            case .fan:
                 return { time in
                     "1,20,\(time),"
                 }
-            case .sprinkler:
+            case .garage:
                 return { time in
                     "1,30,\(time),"
                 }
@@ -165,11 +135,11 @@ public struct Device: Storable, Hashable {
                 return { time in
                     "1,40,\(time),"
                 }
-            case .garage:
+            case .light:
                 return { time in
                     "1,50,\(time),"
                 }
-            case .fan:
+            case .sprinkler:
                 return { time in
                     "1,60,\(time),"
                 }
@@ -178,11 +148,11 @@ public struct Device: Storable, Hashable {
         
         public var deleteFromScheduleMessage: (String) -> String {
             switch self {
-            case .light:
+            case .fan:
                 return { time in
                     "1,21,\(time),"
                 }
-            case .sprinkler:
+            case .garage:
                 return { time in
                     "1,31,\(time),"
                 }
@@ -190,11 +160,11 @@ public struct Device: Storable, Hashable {
                 return { time in
                     "1,41,\(time),"
                 }
-            case .garage:
+            case .light:
                 return { time in
                     "1,51,\(time),"
                 }
-            case .fan:
+            case .sprinkler:
                 return { time in
                     "1,61,\(time),"
                 }

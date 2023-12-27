@@ -44,7 +44,7 @@ final class TasksViewModel: ObservableObject {
     }
     
     private func checkIfTaskIsExpired() {
-        cancellable = Timer.publish(every: 2.0, on: .main, in: .common)
+        cancellable = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
                 self.deleteTaskForDatabase()

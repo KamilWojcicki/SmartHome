@@ -64,8 +64,18 @@ public struct UserProfileView: View {
                     }
                 }
                 .padding()
-                
-                buildSheet(size: reader.size)
+            }
+            .sheet(item: $viewModel.activeSheet) { sheet in
+                switch sheet {
+                case .changePassword:
+                    buildChangePasswordContent()
+                case .changeDisplayName:
+                    buildChangeDisplayNameContent()
+                case .changeMqttKey:
+                    buildMqttKeyContent()
+                case .changeMqttPassword:
+                    builMqttPasswordContent()
+                }
             }
         }
     }
@@ -90,7 +100,6 @@ extension UserProfileView {
                         .scaledToFill()
                         .frame(width: 150, height: 150)
                         .clipShape(Circle())
-                        .id(UUID())
                 } placeholder: {
                     ProgressView()
                         .frame(width: 150, height: 150)
@@ -109,22 +118,6 @@ extension UserProfileView {
             Text("Change photo")
         }
     }
-    
-    @ViewBuilder
-    private func buildSheet(size: CGSize) -> some View {
-        CustomSheet(size: size, item: $viewModel.activeSheet) { sheet in
-            switch sheet {
-            case .changePassword:
-                buildChangePasswordContent()
-            case .changeDisplayName:
-                buildChangeDisplayNameContent()
-            case .changeMqttKey:
-                buildMqttKeyContent()
-            case .changeMqttPassword:
-                builMqttPasswordContent()
-            }
-        }
-    }
 }
 
 //Change Password Content
@@ -136,13 +129,22 @@ extension UserProfileView {
                 field: .secure(
                     secureFieldText: $viewModel.newPassword,
                     placecholder: "New Password"
-                ),
+                ), text: "Change Password",
                 labelButtonText: "Change Password",
                 action: {
-                    try await viewModel.changeUserPassword(newPassword: viewModel.newPassword)
-                    viewModel.dismissSheet()
+                    Task {
+                        do {
+                            try await viewModel.changeUserPassword(newPassword: viewModel.newPassword)
+                            viewModel.dismissSheet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
+            
         )
     }
 }
@@ -156,13 +158,21 @@ extension UserProfileView {
                 field: .text(
                     textFieldText: $viewModel.userDisplayName,
                     placecholder: "New Display Name"
-                ),
+                ), text: "Change Display Name",
                 labelButtonText: "Change Display Name",
                 action: {
-                    try await viewModel.changeUserDisplayName(displayName: viewModel.userDisplayName)
-                    viewModel.dismissSheet()
+                    Task {
+                        do {
+                            try await viewModel.changeUserDisplayName(displayName: viewModel.userDisplayName)
+                            viewModel.dismissSheet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
 }
@@ -171,18 +181,27 @@ extension UserProfileView {
 extension UserProfileView {
     @ViewBuilder
     private func buildMqttKeyContent() -> some View {
+        
         SheetContent(
             variant: .withField(
                 field: .text(
                     textFieldText: $viewModel.userMqttKey,
                     placecholder: "New Mqtt Key"
-                ),
+                ), text: "Change Mqtt Key",
                 labelButtonText: "Change Mqtt Key",
                 action: {
-                    try await viewModel.changeUserMqttKey(newKey: viewModel.userMqttKey)
-                    viewModel.dismissSheet()
+                    Task {
+                        do {
+                            try await viewModel.changeUserMqttKey(newKey: viewModel.userMqttKey)
+                            viewModel.dismissSheet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
 }
@@ -196,13 +215,21 @@ extension UserProfileView {
                 field: .secure(
                     secureFieldText: $viewModel.userMqttPassword,
                     placecholder: "New Mqtt Password"
-                ),
+                ), text: "Change Mqtt Password",
                 labelButtonText: "Change Mqtt Password",
                 action: {
-                    try await viewModel.changeUserMqttPassword(newPassword: viewModel.userMqttPassword)
-                    viewModel.dismissSheet()
+                    Task {
+                        do {
+                            try await viewModel.changeUserMqttPassword(newPassword: viewModel.userMqttPassword)
+                            viewModel.dismissSheet()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
-            )
+            ), action: {
+                viewModel.dismissSheet()
+            }
         )
     }
 }
