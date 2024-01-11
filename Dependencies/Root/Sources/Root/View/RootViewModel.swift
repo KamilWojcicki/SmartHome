@@ -28,7 +28,7 @@ final class RootViewModel: ObservableObject {
         do {
             self.isLogIn = try userManager.isUserAuthenticated()
         } catch {
-            print(error)
+            print(error.localizedDescription)
         }
     }
 }
