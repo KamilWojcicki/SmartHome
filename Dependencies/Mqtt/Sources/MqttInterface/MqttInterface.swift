@@ -13,7 +13,7 @@ public protocol MqttManagerInterface: CocoaMQTTDelegate {
     var receivedMessages: String { get }
     var topic: String { get set }
     var password: String { get set }
-    func connect()
+    func connect() async throws
     func sendMessage(topic: String, message: String)
     func subscribeToTopic(_ topic: String)
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck)
