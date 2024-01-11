@@ -5,10 +5,11 @@
 //  Created by Kamil Wójcicki on 27/10/2023.
 //
 
+import CloudDatabaseInterface
+import Combine
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Foundation
-import CloudDatabaseInterface
 
 fileprivate struct DAOFactory {
     static func initializeObject<DAO: DAOInterface, Object: Storable>(from dao: DAO) -> Object {
@@ -30,6 +31,7 @@ fileprivate struct DAOFactory {
 
 final class CloudDatabaseManager: CloudDatabaseManagerInterface {
     private lazy var database = Firestore.firestore()
+    private var listener: ListenerRegistration? = nil
     
     private func collectionReference<ParentObject: Storable, Object: Storable>(
         parentObject: ParentObject? = nil,
@@ -158,16 +160,27 @@ extension CloudDatabaseManager {
         }
     }
     
-    func handleObjectExist<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object) async throws -> Bool {
-        let objectId = String(describing: object.id)
-        let objectDocRef = try collectionReference(parentObject: parentObject, objectOfType: Object.self).document(objectId)
+    func addSnapshotListener<ParentObject: Storable, Object: Storable>(parentObject: ParentObject? = nil, object: Object.Type) throws -> AnyPublisher<[Object], Error> {
+        let (publisher, listener) = try collectionReference(parentObject: parentObject, objectOfType: Object.self).addSnapshotListener(as: Object.self)
         
-        do {
-            let document = try await objectDocRef.getDocument()
+        self.listener = listener
+        return publisher
+    }
+}
+
+public extension Query {
+    func addSnapshotListener<Object: Decodable>(as type: Object.Type) -> (AnyPublisher<[Object], Error>, ListenerRegistration) {
+        let publisher = PassthroughSubject<[Object], Error>()
+        
+        let listener = self.addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("no documents")
+                return
+            }
             
-            return document.exists ? false : true
-        } catch {
-            throw URLError(.badServerResponse)
+            let objects: [Object] = documents.compactMap({ try? $0.data(as: Object.self) })
+            publisher.send(objects)
         }
+        return (publisher.eraseToAnyPublisher(), listener)
     }
 }

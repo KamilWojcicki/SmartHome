@@ -11,6 +11,7 @@ import DependencyInjection
 import Foundation
 import ToDoInterface
 import UserInterface
+import Utilities
 
 @MainActor
 final class CalendarViewModel: ObservableObject {
@@ -21,11 +22,7 @@ final class CalendarViewModel: ObservableObject {
     @Published var addNewTask: Bool = false
     @Published var showTasksList: Bool = false
     @Published private(set) var displayName: String = ""
-    @Published private var cancellable: AnyCancellable?
-    
-    init() {
-        
-    }
+    private var cancellables = Set<AnyCancellable>()
     
     func filterTasks(for date: Date) -> [ToDo] {
         let calendar = Calendar.current
@@ -38,38 +35,33 @@ final class CalendarViewModel: ObservableObject {
         return filteredTasks
     }
     
-    func fetchTasks() {
-        cancellable = Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
-                Task {
-                    do {
-                        self.tasks = try await self.todoManager.readAllToDos()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
+    func deleteTaskIfExpired() async throws {
+        for try await _ in Every(.seconds(2)) {
+            for task in tasks {
+                if task.dateExecuted <= Date() {
+                    try await todoManager.deleteToDo(todo: task)
                 }
-            }
-    }
-    
-    func getDisplayName() async throws {
-        Task {
-            do {
-                let user = try await userManager.fetchUser()
-                if let displayName = user.displayName {
-                    let displayNameComponents = displayName.split(separator: " ")
-                    let name = displayNameComponents.first ?? "Unknown"
-                    self.displayName = String(name)
-                } else {
-                    self.displayName = "unknown".localized
-                }
-            } catch {
-                print(error.localizedDescription)
             }
         }
     }
     
-    func stopTimer() {
-        cancellable?.cancel()
+    func addListenerForTasks() async throws {
+        try await todoManager.addListenerForAllUserTasks().sink { completion in
+            
+        } receiveValue: { [weak self] tasks in
+            self?.tasks = tasks
+        }
+        .store(in: &cancellables)
+    }
+    
+    func getDisplayName() async throws {
+        let user = try await userManager.fetchUser()
+        if let displayName = user.displayName {
+            let displayNameComponents = displayName.split(separator: " ")
+            let name = displayNameComponents.first ?? "Unknown"
+            self.displayName = String(name)
+        } else {
+            self.displayName = "unknown".localized
+        }
     }
 }

@@ -22,14 +22,26 @@ final class AuthenticationManager: AuthenticationManagerInterface {
         return true
     }
     
-    func deleteAccount() async throws {
-        let user = try getCurrentUser()
-        
+    func deleteAccount(email: String, password: String) async throws {
+        var user = try await reauthenticateUser(email: email, password: password)
         do {
             try await user.delete()
         } catch {
             throw AuthErrorHandler.deleteUserError
         }
+    }
+    
+    private func reauthenticateUser(email: String, password: String) async throws -> User {
+        let user = try getCurrentUser()
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        
+        do {
+            try await user.reauthenticate(with: credential)
+        } catch {
+            throw AuthErrorHandler.reauthenticateError
+        }
+        
+        return user
     }
     
     func signOut() throws {
@@ -128,29 +140,90 @@ extension AuthenticationManager {
     func signInWithFacebook() async throws -> AuthenticationDataResult {
         do {
             let result = try await signInFacebookHelper.signIn()
-            print(result)
             
-            print("test")
-            let finalResult = try await signIn(
+            return try await signIn(
                 credential:
                     FacebookAuthProvider
-                    .credential(withAccessToken: result.accessToken)
+                    .credential(
+                        withAccessToken: result.accessToken
+                    )
             )
-            print("finala result: \(finalResult)")
-            return finalResult
         } catch {
-            print(error.localizedDescription)
             throw AuthErrorHandler.signInWithFacebookError
         }
+    }
+    
+    func deleteAccountWithSSO() async throws {
+        let user = try await reauthenticateUserSSO()
+        
+        do {
+            try await user.delete()
+        } catch {
+            throw AuthErrorHandler.deleteUserError
+        }
+    }
+    
+    private func reauthenticateUserSSO() async throws -> User {
+        let user = try getCurrentUser()
+        var credential: AuthCredential?
+        
+        switch user.getProviderID() {
+        case .apple:
+            credential = try await appleCredential()
+        case .google:
+            credential = try await googleCredential()
+        case .facebook:
+            credential = try await facebookCredential()
+        default:
+            break
+        }
+        
+        if let credential {
+            do {
+                try await user.reauthenticate(with: credential)
+            } catch {
+                throw AuthErrorHandler.reauthenticateError
+            }
+        }
+        return user
     }
     
     private func signIn(credential: AuthCredential) async throws -> AuthenticationDataResult {
         do {
             let user = try await auth.signIn(with: credential).user
-            print("user:",user)
             return AuthenticationDataResult(user: user, userInfo: user.providerData[0])
         } catch {
             throw AuthErrorHandler.signInWithCredentialError
         }
+    }
+}
+
+//MARK: Credential
+extension AuthenticationManager {
+    private func appleCredential() async throws -> AuthCredential {
+        let result = try await signInAppleHelper.signIn()
+        
+        return OAuthProvider
+            .appleCredential(
+                withIDToken: result.idToken,
+                rawNonce: result.nonce,
+                fullName: result.fullName
+            )
+    }
+    
+    private func googleCredential() async throws -> AuthCredential {
+        let result = try await signInGoogleHelper.signIn()
+        
+        return GoogleAuthProvider
+            .credential(
+                withIDToken: result.idToken,
+                accessToken: result.accessToken
+            )
+    }
+    
+    private func facebookCredential() async throws -> AuthCredential {
+        let result = try await signInFacebookHelper.signIn()
+        return FacebookAuthProvider
+            .credential(withAccessToken: result.accessToken)
     }
 }

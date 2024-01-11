@@ -8,10 +8,11 @@
 import Combine
 import DependencyInjection
 import Foundation
+import MqttInterface
 import SwiftUI
 import ToDoInterface
 import UserInterface
-import MqttInterface
+import Utilities
 
 @MainActor
 final class TasksViewModel: ObservableObject {
@@ -19,59 +20,23 @@ final class TasksViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     @Inject private var mqttManager: MqttManagerInterface
     @Published var tasks: [ToDo] = []
-    @Published var topic: String = ""
     @Published private var cancellable: AnyCancellable?
-    
-    init() {
-        Task {
-            do {
-                try await fetchTasks()
-                try await getTopic()
-                checkIfTaskIsExpired()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
     
     func fetchTasks() async throws {
         self.tasks = try await todoManager.readAllToDos()
     }
     
-    private func getTopic() async throws {
-        let user = try await userManager.fetchUser()
-        self.topic = user.topic
+    func checkIfTaskExpired() async throws {
+        for try await _ in Every(.seconds(2)) {
+            try await deleteTaskIfExpired()
+            try await fetchTasks()
+        }
     }
     
-    private func checkIfTaskIsExpired() {
-        cancellable = Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
-                self.deleteTaskForDatabase()
-                Task {
-                    do {
-                        try await self.fetchTasks()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
-            }
-    }
-    
-    func stopTimer() {
-        cancellable?.cancel()
-    }
-    
-    private func deleteTaskForDatabase() {
-        Task {
-            do {
-                for task in tasks {
-                    if task.dateExecuted <= Date() {
-                        try await todoManager.deleteToDo(todo: task)
-                    }
-                }
-            } catch {
-                print(error.localizedDescription)
+    private func deleteTaskIfExpired() async throws{
+        for task in tasks {
+            if task.dateExecuted <= Date() {
+                try await todoManager.deleteToDo(todo: task)
             }
         }
     }

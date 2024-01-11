@@ -115,9 +115,10 @@ public struct UserDAO: DAOInterface {
 public protocol UserManagerInterface {
     var signInResult: AsyncStream<Bool> { get }
     var userUpdates: AsyncThrowingStream<User?, Error> { get }
+    var changePhotoResult: AsyncStream<String> { get }
     
     func isUserAuthenticated() throws -> Bool
-    func deleteAccount() async throws
+    func deleteAccount(email: String, password: String) async throws
     func signOut() throws
     func checkIsFirstLogin() async throws -> Bool
     func updateUserData(data: [String: Any]) async throws
@@ -127,7 +128,6 @@ public protocol UserManagerInterface {
     func addDevicesToUser(devices: [Device])
     func readAllUserDevices() async throws -> [Device]
     func updateUserDevice(device: Device, data: [String : Any]) async throws
-    func deleteAllUserData(user: User) async throws
     
     //Manage User
     func signUp(withEmail email: String, password: String, displayName: String) async throws
@@ -139,4 +139,8 @@ public protocol UserManagerInterface {
     func signInWithApple() async throws
     func signInWithGoogle() async throws
     func signInWithFacebook() async throws
+    func deleteAccountSSO() async throws
+    
+    //Manage User Data
+    func updateProfileImagePath(_ newPath: String) async throws
 }

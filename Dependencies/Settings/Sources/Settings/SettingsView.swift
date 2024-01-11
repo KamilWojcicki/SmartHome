@@ -20,44 +20,42 @@ public struct SettingsView: View {
     public init() { }
     
     public var body: some View {
-        GeometryReader { reader in
-            ZStack {
-                ScrollView {
-                    VStack {
-                        image
-                        
-                        buildDarkModeRow()
-                        
-                        buildChangeLanguageRow()
-                        
-                        buildPrivacyPolicyRow()
-                        
-                        buildTermsConditionRow()
-                        
-                        buildContactRow()
-                        
-                        buildOurTeamRow()
-                        
-                        buildLogOutRow()
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal)
+        ZStack {
+            ScrollView {
+                VStack {
+                    image
+                    
+                    buildDarkModeRow()
+                    
+                    buildChangeLanguageRow()
+                    
+                    buildPrivacyPolicyRow()
+                    
+                    buildTermsConditionRow()
+                    
+                    buildContactRow()
+                    
+                    buildOurTeamRow()
+                    
+                    buildLogOutRow()
+                    
+                    Spacer()
                 }
-                .navigationBarBackButtonHidden()
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .tint(Colors.jaffa)
-                                .contentShape(Rectangle())
-                        }
-                    }
-                }
-                .ignoresSafeArea()
+                .padding(.horizontal)
             }
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .tint(Colors.jaffa)
+                            .contentShape(Rectangle())
+                    }
+                }
+            }
+            .ignoresSafeArea()
             .sheet(item: $viewModel.activeSheet) { sheet in
                 switch sheet {
                 case .ourTeam:
@@ -68,7 +66,9 @@ public struct SettingsView: View {
                     buildTermsAndConditionsContent()
                 }
             }
-            
+            .withAlert(errorTitle: "confirm_logout_tile".localized, errorMessageToggle: $viewModel.showAlert) {
+                try? viewModel.signOut()
+            }
         }
         .mailComposer(
             isPresented: $viewModel.isMailComposerPresented,
@@ -204,11 +204,7 @@ extension SettingsView {
             variant: .plainText(
                 text: "sign_out_button_title".localized,
                 action: {
-                    do {
-                        try viewModel.signOut()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
+                    viewModel.showAlert.toggle()
                 }
             )
         )

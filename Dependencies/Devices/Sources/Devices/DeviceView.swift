@@ -45,12 +45,8 @@ struct DeviceView: View {
                 Colors.safeAreaInset.ignoresSafeArea()
                     .frame(maxHeight: 60)
             }
-            .onAppear {
-                viewModel.connectMqtt()
-                viewModel.startTimer()
-            }
-            .onDisappear {
-                viewModel.stopTimer()
+            .task {
+                try? await viewModel.checkIfDeviceStateIsChange()
             }
         }
     }

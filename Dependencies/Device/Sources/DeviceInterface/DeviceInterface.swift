@@ -94,15 +94,15 @@ public struct Device: Storable, Hashable {
         public var description: String {
             switch self {
             case .light:
-                "light".localized
+                "light".localized.uppercased()
             case .sprinkler:
-                "sprinkler".localized
+                "sprinkler".localized.uppercased()
             case .heater:
-                "heater".localized
+                "heater".localized.uppercased()
             case .garage:
-                "garage".localized
+                "garage".localized.uppercased()
             case .fan:
-                "fan".localized
+                "fan".localized.uppercased()
             }
         }
         
@@ -121,7 +121,7 @@ public struct Device: Storable, Hashable {
             }
         }
         
-        public var addToScheduleMessage: (String) -> String {
+        public var addTurnOnToScheduleMessage: (String) -> String {
             switch self {
             case .fan:
                 return { time in
@@ -146,7 +146,7 @@ public struct Device: Storable, Hashable {
             }
         }
         
-        public var deleteFromScheduleMessage: (String) -> String {
+        public var addTurnOffToScheduleMessage: (String) -> String {
             switch self {
             case .fan:
                 return { time in
@@ -203,3 +203,13 @@ public protocol DeviceManagerInterface {
     func readAllDevices() async throws -> [Device]
 }
 
+public enum DeviceError: Error, LocalizedError {
+    case updateDeviceStatusError
+    
+    public var errorDescription: String? {
+        switch self {
+        case .updateDeviceStatusError:
+            return "There is a problem with updating device status"
+        }
+    }
+}

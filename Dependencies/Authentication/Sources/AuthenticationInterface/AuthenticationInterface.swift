@@ -49,11 +49,18 @@ public struct AuthenticationDataResult {
     }
 }
 
+public enum AuthenticationProviderOption: String {
+    case email      = "password"
+    case google     = "google.com"
+    case apple      = "apple.com"
+    case facebook   = "facebook.com"
+}
+
 public protocol AuthenticationManagerInterface {
     
     //Share
     func isUserAuthenticated() throws -> Bool
-    func deleteAccount() async throws
+    func deleteAccount(email: String, password: String) async throws
     func signOut() throws
     
     //Manage User
@@ -67,7 +74,7 @@ public protocol AuthenticationManagerInterface {
     func signInWithApple() async throws -> AuthenticationDataResult
     func signInWithGoogle() async throws -> AuthenticationDataResult
     func signInWithFacebook() async throws -> AuthenticationDataResult
-    
+    func deleteAccountWithSSO() async throws
 }
 
 public enum AuthErrorHandler: LocalizedError {
@@ -81,6 +88,7 @@ public enum AuthErrorHandler: LocalizedError {
     case signInError
     case updatePasswordError
     case resetPasswordError
+    case reauthenticateError
     
     //SSO
     case signInWithAppleError
@@ -121,6 +129,8 @@ public enum AuthErrorHandler: LocalizedError {
             return "sign_in_with_credential_error".localized
         case .unknownError(let error):
             return String(format: "unknown_error".localized, error.localizedDescription)
+        case .reauthenticateError:
+            return "reauthenticate_error".localized
         }
     }
 }
