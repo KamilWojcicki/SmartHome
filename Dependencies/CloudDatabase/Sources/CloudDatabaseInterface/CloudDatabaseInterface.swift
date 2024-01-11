@@ -4,6 +4,8 @@
 //  Created by Kamil Wójcicki on 27/10/2023.
 //
 
+import Combine
+import FirebaseFirestore
 import Foundation
 
 public protocol DAOInterface: Identifiable, Codable, Equatable, Reference {
@@ -37,6 +39,8 @@ public protocol CloudDatabaseManagerInterface {
     func updateInSubCollection<ParentObject: Storable, Object: Storable>(parentObject: ParentObject, object: Object, data: [String: Any]) async throws
     
     func delete<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object) async throws
+    
+    func addSnapshotListener<ParentObject: Storable, Object: Storable>(parentObject: ParentObject?, object: Object.Type) throws -> AnyPublisher<[Object], Error>
 }
 
 public extension CloudDatabaseManagerInterface {
@@ -46,6 +50,10 @@ public extension CloudDatabaseManagerInterface {
     
     func delete<Object: Storable>(object: Object) async throws {
         try await delete(parentObject: Object?.none, object: object)
+    }
+    
+    func addSnapshotListener<Object: Storable>(object: Object.Type) throws -> AnyPublisher<[Object], Error>{
+        try addSnapshotListener(parentObject: Object?.none, object: object)
     }
 }
 
