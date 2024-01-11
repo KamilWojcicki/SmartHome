@@ -5,12 +5,12 @@
 //  Created by Kamil Wójcicki on 02/10/2023.
 //
 
-import Combine
 import DependencyInjection
 import DeviceInterface
 import Foundation
-import UserInterface
 import MqttInterface
+import UserInterface
+import Utilities
 
 @MainActor
 final class DeviceViewModel: ObservableObject {
@@ -20,47 +20,28 @@ final class DeviceViewModel: ObservableObject {
     @Published var pinValues: [Bool] = []
     @Published var topic: String = ""
     @Published var message: String = ""
-    @Published private var cancellable: AnyCancellable?
     
     init() {
-        fetchDevices()
-        getTopic()
-    }
-    
-    private func fetchDevices() {
         Task {
-            do {
-                self.devices = try await userManager.readAllUserDevices()
-            } catch {
-                print(error.localizedDescription)
-            }
+            try? await getTopic()
+            try? await fetchDevices()
         }
     }
     
-    private func getTopic() {
-        Task {
-            do {
-                let user = try await userManager.fetchUser()
-                self.topic = user.topic
-                print(topic)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
+    private func fetchDevices() async throws {
+        self.devices = try await userManager.readAllUserDevices()
     }
-    private func updateStatusInRealTime(device: Device, state: Bool) {
-        Task {
-            do {
-                let data: [String : Any] = [
-                    Device.CodingKeys.state.rawValue : state
-                ]
-                try await userManager.updateUserDevice(device: device, data: data)
-                
-                fetchDevices()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
+    
+    private func getTopic() async throws {
+        let user = try await userManager.fetchUser()
+        self.topic = user.topic
+    }
+    private func updateDeviceState(device: Device, state: Bool) async throws {
+        let data: [String : Any] = [
+            Device.CodingKeys.state.rawValue : state
+        ]
+        try await userManager.updateUserDevice(device: device, data: data)
+        try await fetchDevices()
     }
     
     func updateDeviceStatus(device: Device, state: Bool, messageOn: String, messageOff: String) {
@@ -71,7 +52,7 @@ final class DeviceViewModel: ObservableObject {
                 ]
                 try await userManager.updateUserDevice(device: device, data: data)
                 
-                fetchDevices()
+                try await fetchDevices()
                 
                 if state {
                     mqttManager.sendMessage(topic: topic, message: messageOn)
@@ -79,37 +60,29 @@ final class DeviceViewModel: ObservableObject {
                     mqttManager.sendMessage(topic: topic, message: messageOff)
                 }
             } catch {
-                print(error.localizedDescription)
+                throw DeviceError.updateDeviceStatusError
             }
         }
     }
     
-    func connectMqtt() {
-        mqttManager.connect()
+    func checkIfDeviceStateIsChange() async throws {
+        for try await _ in Every(.seconds(2)) {
+            let recivedMessage = mqttManager.receivedMessages
+            print(recivedMessage)
+            let pinsArray = recivedMessage.toBoolArray()
+            self.pinValues = pinsArray
+            print(pinValues)
+            try await convertPins()
+            try await fetchDevices()
+        }
     }
     
-    func startTimer() {
-        cancellable = Timer.publish(every: 3.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
-                self.message = self.mqttManager.receivedMessages
-                let pinsArray = self.message.toBoolArray()
-                self.pinValues = pinsArray
-                self.updateRealTimeState()
-                self.fetchDevices()
-            }
-    }
-    
-    func stopTimer() {
-        cancellable?.cancel()
-    }
-    
-    private func updateRealTimeState() {
+    private func convertPins() async throws {
         for (i, device) in devices.enumerated() {
             if i < pinValues.count {
                 let devicePin = device.pin - 1
                 let pinValue = pinValues[devicePin]
-                updateStatusInRealTime(device: device, state: pinValue)
+                try await updateDeviceState(device: device, state: pinValue)
             }
         }
     }

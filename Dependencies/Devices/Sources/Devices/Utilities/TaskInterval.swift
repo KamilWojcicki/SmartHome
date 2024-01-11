@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TaskInterval.swift
 //  
 //
 //  Created by Kamil Wójcicki on 30/12/2023.
