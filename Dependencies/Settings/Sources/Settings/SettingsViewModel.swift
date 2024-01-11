@@ -16,19 +16,19 @@ import Utilities
 final class SettingsViewModel: ObservableObject {
     @Inject private var userManager: UserManagerInterface
     
-    @Published var toogle: Bool = false
     @Published var activeSheet: ActiveSheet?
     @Published var isMailComposerPresented: Bool = false
-    
+    @Published var showAlert: Bool = false
     var mailData: ContactInterface.MailData {
         .init(
-            subject: "Case",
+            subject: "mail_composer_case_tile".localized,
             recipients: ["kamilwojcickinjr@gmail.com"],
             body: """
-                 Model: \(UIDevice.current.modelName)
-                 Wersja iOS: \(UIDevice.current.systemVersion)
-                 Wersja aplikacji: \(Bundle.main.appVersion)
-                 Opisz swoje zgłoszenie poniżej
+               \(String(format: "mail_composer_model_text".localized, UIDevice.current.modelName))
+                \(String(format: "mail_composer_ios_version_text".localized, UIDevice.current.systemVersion))
+                \(String(format: "mail_composer_app_version_text".localized, Bundle.main.appVersion))
+                
+                 \("mail_composer_description_text".localized)
                  --------------------------------------
                """
         )
