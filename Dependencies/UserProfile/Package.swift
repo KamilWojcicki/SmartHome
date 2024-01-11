@@ -21,6 +21,7 @@ let package = Package(
         .package(path: "../CloudStorage"),
         .package(path: "../Components"),
         .package(path: "../DependencyInjection"),
+        .package(path: "../Localizations"),
         .package(path: "../User")
     ],
     targets: [
@@ -47,6 +48,10 @@ let package = Package(
                 .product(
                     name: "Components",
                     package: "Components"
+                ),
+                .product(
+                    name: "Localizations",
+                    package: "Localizations"
                 ),
                 "UserProfileInterface"
             ]

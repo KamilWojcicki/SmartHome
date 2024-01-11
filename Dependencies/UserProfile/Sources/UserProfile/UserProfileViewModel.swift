@@ -8,6 +8,7 @@
 import CloudStorageInterface
 import DependencyInjection
 import Foundation
+import Localizations
 import PhotosUI
 import SwiftUI
 import UserInterface
@@ -17,7 +18,13 @@ import UserProfileInterface
 public final class UserProfileViewModel: ObservableObject {
     @Inject private var cloudStorageManager: CloudStorageInterface
     @Inject private var userManager: UserManagerInterface
-    @Published var selectedPhoto: PhotosPickerItem? = nil
+    @Published var selectedPhoto: PhotosPickerItem? = nil {
+        didSet {
+            setImage(from: selectedPhoto)
+            showProgressView = true
+        }
+    }
+    @Published var showAlert: Bool = false
     @Published var image: UIImage? = nil
     @Published var imageUrl: URL? = nil
     @Published var user: User? = nil
@@ -26,18 +33,9 @@ public final class UserProfileViewModel: ObservableObject {
     @Published var userMqttKey: String = ""
     @Published var userMqttPassword: String = ""
     @Published var userDisplayName: String = ""
-    
-    public init() {
-        Task {
-            do {
-                try await getCurrentUser()
-                try await getProfileImage()
-                try await getUserInformations()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
+    @Published var showProgressView: Bool = false
+    @Published var userReauthenticateEmail: String = ""
+    @Published var userReauthenticatePassword: String = ""
     
     private func updateUserProfileImagePath(path: String) async throws {
         let data: [String : Any] = [
@@ -46,18 +44,22 @@ public final class UserProfileViewModel: ObservableObject {
         try await userManager.updateUserData(data: data)
     }
     
-    func saveProfileImage(item: PhotosPickerItem) async throws {
-        guard let user = user else { return }
-            guard let data = try await item.loadTransferable(type: Data.self) else { return }
-        guard let image = UIImage(data: data) else { return }
-            let path = try await cloudStorageManager.saveImage(image: image, userId: user.id)
-        print("path", path)
-            print("SUCCESS!")
-            let url = try await cloudStorageManager.getUrlForImage(path: path)
-            try await updateUserProfileImagePath(path: url.absoluteString)
-        guard let userProfileImagePath = user.profileImagePath else { return }
-        print("user profile image path: ", userProfileImagePath)
-        try await getProfileImage()
+    private func setImage(from selection: PhotosPickerItem?) {
+        guard let selection else { return }
+        
+        Task {
+            guard let user = user else { return }
+            if let data = try? await selection.loadTransferable(type: Data.self) {
+                if let uiImage = UIImage(data: data) {
+                    image = uiImage
+                    let path = try await cloudStorageManager.saveImage(image: uiImage, userId: user.id)
+                    let url = try await cloudStorageManager.getUrlForImage(path: path)
+                    try await userManager.updateProfileImagePath(url.absoluteString)
+                    showProgressView = false
+                    return
+                }
+            }
+        }
     }
     
     func getCurrentUser() async throws {
@@ -72,7 +74,7 @@ public final class UserProfileViewModel: ObservableObject {
     
     func getUserInformations() async throws {
         guard let user = user else { return }
-        self.userDisplayName = user.displayName ?? "Unknown"
+        self.userDisplayName = user.displayName ?? "unknown".localized
         self.userMqttKey = user.topic
         self.userMqttPassword = user.mqttPassword
     }
@@ -102,12 +104,12 @@ public final class UserProfileViewModel: ObservableObject {
         try await userManager.updateUserData(data: data)
     }
     
-    func deleteAccount() async throws {
-        guard let user = self.user else { return }
-        try await userManager.deleteAccount()
-        try await userManager.deleteAllUserData(user: user)
-        try userManager.signOut()
-        
+    func deleteAccount(email: String, password: String) async throws {
+        try await userManager.deleteAccount(email: email, password: password)
+    }
+    
+    func deleteAccountSSO() async throws {
+        try await userManager.deleteAccountSSO()
     }
     
     func showSheet(activeSheet: ActiveSheet) {
