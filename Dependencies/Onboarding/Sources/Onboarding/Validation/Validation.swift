@@ -57,7 +57,7 @@ struct Validation {
     }
     
     static private func isFullnameValid(_ fullname: String) -> Bool {
-        let regex = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{4,}(?: [A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+){0,2}$"
+        let regex = "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{1,}(?: [A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]{2,}){0,2}$"
         let fullnameTest = NSPredicate(format: "SELF MATCHES %@", regex)
         return fullnameTest.evaluate(with: fullname)
     }
