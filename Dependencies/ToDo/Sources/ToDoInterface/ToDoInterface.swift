@@ -4,11 +4,11 @@
 //
 //  Created by Kamil Wójcicki on 06/11/2023.
 //
-
-import Foundation
 import CloudDatabaseInterface
+import Combine
+import Foundation
 
-public struct ToDo: Storable, Hashable {
+public struct ToDo: Storable, Hashable, Decodable {
     public let id: String
     public let dateExecuted: Date
     public var taskName: String
@@ -83,4 +83,5 @@ public protocol ToDoManagerInterface {
     func readAllToDos() async throws -> [ToDo]
     func updateToDo(todo: ToDo, data: [String : Any]) async throws
     func deleteToDo(todo: ToDo) async throws
+    func addListenerForAllUserTasks() async throws -> AnyPublisher<[ToDo], Error>
 }

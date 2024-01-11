@@ -54,8 +54,8 @@ public struct TasksView: View {
             }
             .padding(15)
         }
-        .onDisappear {
-            viewModel.stopTimer()
+        .task {
+            try? await viewModel.fetchTasks()
         }
     }
 }
