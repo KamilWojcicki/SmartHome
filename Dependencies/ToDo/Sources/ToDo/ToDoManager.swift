@@ -5,6 +5,7 @@
 //  Created by Kamil Wójcicki on 06/11/2023.
 //
 
+import Combine
 import CloudDatabaseInterface
 import DependencyInjection
 import DeviceInterface
@@ -44,5 +45,10 @@ final class ToDoManager: ToDoManagerInterface {
     func deleteToDo(todo: ToDo) async throws {
         let user = try await userManager.fetchUser()
         try await cloudDatabaseManager.delete(parentObject: user, object: todo)
+    }
+    
+    func addListenerForAllUserTasks() async throws -> AnyPublisher<[ToDo], Error> {
+        let user = try await userManager.fetchUser()
+        return try cloudDatabaseManager.addSnapshotListener(parentObject: user, object: ToDo.self)
     }
 }

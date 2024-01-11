@@ -53,7 +53,7 @@ struct AddTaskView: View {
                         .tint(Colors.whiteOnly)
                         .font(.headline)
                         .padding(5)
-                        .frame(minWidth: 130, maxWidth: .infinity)
+                        .frame(minWidth: 100, maxWidth: .infinity)
                         .background(Colors.jaffa)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .offset(y: 10)
@@ -76,7 +76,7 @@ struct AddTaskView: View {
                         .offset(y: 10)
                     }
                 }
-                
+
                 buildTitleView("date_view_title".localized)
                     .padding(.top, 15)
                 
@@ -151,7 +151,7 @@ struct AddTaskView: View {
     @ViewBuilder
     func buildDateRow(date: String, image: String, dateComponent: DatePickerComponents) -> some View {
         HStack(spacing: 12) {
-            Text(viewModel.taskDate.toString(date))
+            Text(viewModel.taskDate.toString(date, locale: Locale(identifier: "local_format".localized)))
             
             Image(systemName: image)
                 .font(.title3)

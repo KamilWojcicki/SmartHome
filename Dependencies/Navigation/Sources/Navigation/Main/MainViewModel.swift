@@ -15,17 +15,7 @@ final class MainViewModel: ObservableObject {
     
     @Published var showSliderInfo: Bool = false
     
-    init() {
-        checkIsFirstLogin()
-    }
-    
-    private func checkIsFirstLogin() {
-        Task {
-            do {
-                self.showSliderInfo = try await userManager.checkIsFirstLogin()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
+    func checkIsFirstLogin() async throws{
+        self.showSliderInfo = try await userManager.checkIsFirstLogin()
     }
 }

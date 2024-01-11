@@ -12,6 +12,7 @@ public enum ActiveSheet: Identifiable {
     case changePassword
     case changeMqttKey
     case changeMqttPassword
+    case reauthenticateUser
     
     public var id: String {
         switch self {
@@ -23,11 +24,8 @@ public enum ActiveSheet: Identifiable {
             "changeMqttKey"
         case .changeMqttPassword:
             "changeMqttPassword"
+        case .reauthenticateUser:
+            "reauthenticateUser"
         }
     }
-}
-
-public enum Variant {
-    case textfield
-    case securefield
 }

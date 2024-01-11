@@ -21,7 +21,7 @@ final class CloudStorageManager: CloudStorageInterface {
         storage.child("Users").child(userId)
     }
     
-    func saveImage(data: Data, userId: String) async throws -> String {
+    private func saveImage(data: Data, userId: String) async throws -> String {
         let meta = StorageMetadata()
         meta.contentType = "image/jpeg"
         
@@ -46,22 +46,8 @@ final class CloudStorageManager: CloudStorageInterface {
     
     //READ
     func getUrlForImage(path: String) async throws -> URL {
-        let test = try await Storage.storage().reference(withPath: path).downloadURL()
-        print(test)
-        return test
-    }
-    
-    private func getData(userId: String, path: String) async throws -> Data {
-        try await userReference(userId: userId).child(path).data(maxSize: 3 * 1024 * 1024)
-    }
-    
-    func getImage(userId: String, path: String) async throws -> UIImage {
-        let data = try await getData(userId: userId, path: path)
-        
-        guard let image = UIImage(data: data) else {
-            throw URLError(.badServerResponse)
-        }
-        
-        return image
+        let result = try await Storage.storage().reference(withPath: path).downloadURL()
+        print(result)
+        return result
     }
 }

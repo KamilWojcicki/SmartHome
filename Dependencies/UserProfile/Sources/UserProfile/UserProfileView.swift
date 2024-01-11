@@ -17,66 +17,73 @@ public struct UserProfileView: View {
     public init() { }
     
     public var body: some View {
-        GeometryReader { reader in
-            ZStack {
-                VStack(spacing: 20) {
-                    buildUserImage()
-                        .onChange(of: viewModel.selectedPhoto) { newValue in
-                            if let newValue {
-                                Task {
-                                    do {
-                                        try await viewModel.saveProfileImage(item: newValue)
-                                    } catch {
-                                        print(error.localizedDescription)
-                                    }
-                                }
-                            }
-                        }
-                    
-                    Spacer()
-                    
-                    buildUserEmailRow()
-                    
-                    buildUserDisplayNameRow()
-                    
+        ZStack {
+            VStack(spacing: 20) {
+                buildUserImage()
+                
+                Spacer()
+                
+                buildUserEmailRow()
+                
+                buildUserDisplayNameRow()
+                
+                if viewModel.user?.providerId == "password" {
+                    buildUserPasswordRow()
+                }
+                
+                buildUserMqttKeyRow()
+                
+                buildUserMqttPasswordRow()
+                
+                buildDeleteUserRow()
+                
+                Spacer()
+            }
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .tint(Colors.jaffa)
+                            .contentShape(Rectangle())
+                    }
+                }
+            }
+            .padding()
+        }
+        .sheet(item: $viewModel.activeSheet) { sheet in
+            switch sheet {
+            case .changePassword:
+                buildChangePasswordContent()
+            case .changeDisplayName:
+                buildChangeDisplayNameContent()
+            case .changeMqttKey:
+                buildMqttKeyContent()
+            case .changeMqttPassword:
+                builMqttPasswordContent()
+            case .reauthenticateUser:
+                buildReauthenticateUserContent()
+            }
+        }
+        .withAlert(errorTitle: "confirm_delete_account_tile".localized, errorMessageToggle: $viewModel.showAlert) {
+            Task {
+                do {
                     if viewModel.user?.providerId == "password" {
-                        buildUserPasswordRow()
+                        viewModel.showSheet(activeSheet: .reauthenticateUser)
+                    } else {
+                        try await viewModel.deleteAccountSSO()
                     }
-                    
-                    buildUserMqttKeyRow()
-                    
-                    buildUserMqttPasswordRow()
-                    
-                    buildDeleteUserRow()
-                    
-                    Spacer()
-                }
-                .navigationBarBackButtonHidden()
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .tint(Colors.jaffa)
-                                .contentShape(Rectangle())
-                        }
-                    }
-                }
-                .padding()
-            }
-            .sheet(item: $viewModel.activeSheet) { sheet in
-                switch sheet {
-                case .changePassword:
-                    buildChangePasswordContent()
-                case .changeDisplayName:
-                    buildChangeDisplayNameContent()
-                case .changeMqttKey:
-                    buildMqttKeyContent()
-                case .changeMqttPassword:
-                    builMqttPasswordContent()
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
+        }
+        .task {
+            try? await viewModel.getCurrentUser()
+            try? await viewModel.getProfileImage()
+            try? await viewModel.getUserInformations()
         }
     }
 }
@@ -89,12 +96,19 @@ extension UserProfileView {
     @ViewBuilder
     private func buildUserImage() -> some View {
         VStack {
-            if viewModel.imageUrl == nil {
-                Image(systemName: "person.fill")
-                    .font(.system(size: 90))
-                    .frame(width: 150, height: 150)
-            } else {
-                AsyncImage(url: viewModel.imageUrl) { image in
+            if let image = viewModel.image {
+                if viewModel.showProgressView {
+                    ProgressView("uploading_message".localized)
+                        .frame(width: 150, height: 150)
+                } else {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 150, height: 150)
+                        .clipShape(Circle())
+                }
+            } else if let image = viewModel.imageUrl {
+                AsyncImage(url: image) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -104,18 +118,24 @@ extension UserProfileView {
                     ProgressView()
                         .frame(width: 150, height: 150)
                 }
+            } else {
+                Image(systemName: "person.fill")
+                    .font(.system(size: 90))
+                    .frame(width: 150, height: 150)
             }
         }
         .background {
             Circle()
                 .stroke(lineWidth: 3)
         }
+        
         PhotosPicker(
             selection: $viewModel.selectedPhoto,
             matching: .images,
             photoLibrary: .shared()
         ) {
-            Text("Change photo")
+            Text("change_photo_photos_picker".localized)
+                .foregroundStyle(Colors.jaffa)
         }
     }
 }
@@ -128,9 +148,9 @@ extension UserProfileView {
             variant: .withField(
                 field: .secure(
                     secureFieldText: $viewModel.newPassword,
-                    placecholder: "New Password"
-                ), text: "Change Password",
-                labelButtonText: "Change Password",
+                    placecholder: "new_password_placecholder".localized
+                ), text: "change_password_tile".localized,
+                labelButtonText: "change_password_tile".localized,
                 action: {
                     Task {
                         do {
@@ -157,9 +177,9 @@ extension UserProfileView {
             variant: .withField(
                 field: .text(
                     textFieldText: $viewModel.userDisplayName,
-                    placecholder: "New Display Name"
-                ), text: "Change Display Name",
-                labelButtonText: "Change Display Name",
+                    placecholder: "new_display_name_placecholder".localized
+                ), text: "change_display_name_tile".localized,
+                labelButtonText: "change_display_name_tile".localized,
                 action: {
                     Task {
                         do {
@@ -186,9 +206,9 @@ extension UserProfileView {
             variant: .withField(
                 field: .text(
                     textFieldText: $viewModel.userMqttKey,
-                    placecholder: "New Mqtt Key"
-                ), text: "Change Mqtt Key",
-                labelButtonText: "Change Mqtt Key",
+                    placecholder: "new_mqtt_key_placecholder".localized
+                ), text: "change_mqtt_key_tile".localized,
+                labelButtonText: "change_mqtt_key_tile".localized,
                 action: {
                     Task {
                         do {
@@ -214,9 +234,9 @@ extension UserProfileView {
             variant: .withField(
                 field: .secure(
                     secureFieldText: $viewModel.userMqttPassword,
-                    placecholder: "New Mqtt Password"
-                ), text: "Change Mqtt Password",
-                labelButtonText: "Change Mqtt Password",
+                    placecholder: "new_mqtt_password_placecholder".localized
+                ), text: "change_mqtt_password_tile".localized,
+                labelButtonText: "change_mqtt_password_tile".localized,
                 action: {
                     Task {
                         do {
@@ -234,6 +254,40 @@ extension UserProfileView {
     }
 }
 
+//Reauthenticate User
+extension UserProfileView {
+    @ViewBuilder
+    private func buildReauthenticateUserContent() -> some View {
+        SheetContent(
+            variant: .withFields(
+                fields: [
+                    .text(
+                        textFieldText: $viewModel.userReauthenticateEmail,
+                        placecholder: "Email"
+                    ),
+                    .secure(
+                        secureFieldText: $viewModel.userReauthenticatePassword,
+                        placecholder: "Password"
+                    )
+                ],
+                text: "Reauthenticate User",
+                labelButtonText: "Reauthenticate User",
+                action: {
+                    Task {
+                        do {
+                            try await viewModel.deleteAccount(email: viewModel.userReauthenticateEmail, password: viewModel.userReauthenticatePassword)
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            )
+        ) {
+            viewModel.dismissSheet()
+        }
+    }
+}
+
 //Rows
 extension UserProfileView {
     @ViewBuilder
@@ -241,7 +295,7 @@ extension UserProfileView {
         Row(
             symbol: "envelope.fill",
             variant: .plainText(
-                text: viewModel.user?.email ?? "Unknown",
+                text: viewModel.user?.email ?? "unknown".localized,
                 action: {
                     
                 }
@@ -267,7 +321,7 @@ extension UserProfileView {
         Row(
             symbol: "key.fill",
             variant: .plainText(
-                text: "Change password",
+                text: "change_password_tile".localized,
                 action: {
                     viewModel.showSheet(activeSheet: .changePassword)
                 }
@@ -280,7 +334,7 @@ extension UserProfileView {
         Row(
             symbol: "key.radiowaves.forward.fill",
             variant: .plainText(
-                text: "Change Mqtt Key",
+                text: "change_mqtt_key_tile".localized,
                 action: {
                     viewModel.showSheet(activeSheet: .changeMqttKey)
                 }
@@ -293,7 +347,7 @@ extension UserProfileView {
         Row(
             symbol: "lock.iphone",
             variant: .plainText(
-                text: "Change Mqtt Password",
+                text: "change_mqtt_password_tile".localized,
                 action: {
                     viewModel.showSheet(activeSheet: .changeMqttPassword)
                 }
@@ -306,15 +360,9 @@ extension UserProfileView {
         Row(
             symbol: "person.fill.xmark",
             variant: .plainText(
-                text: "Delete account",
+                text: "delete_Account_tile".localized,
                 action: {
-                    Task {
-                        do {
-                            try await viewModel.deleteAccount()
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
+                    viewModel.showAlert.toggle()
                 }
             )
         )

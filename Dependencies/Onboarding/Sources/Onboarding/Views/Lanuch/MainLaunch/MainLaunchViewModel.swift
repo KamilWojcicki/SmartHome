@@ -24,7 +24,6 @@ final class MainLaunchViewModel: ObservableObject {
     func showRecoveryView(activeSheet: ActiveSheet) {
         withAnimation(.bouncy) {
             self.activeSheet = activeSheet
-                
         }
     }
     

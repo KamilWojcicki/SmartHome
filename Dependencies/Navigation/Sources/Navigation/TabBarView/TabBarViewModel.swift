@@ -31,14 +31,15 @@ final class TabBarViewModel: ObservableObject {
         }
     }
     
-    func getUserImage() {
-        Task {
-            do {
-                let user =  try await userManager.fetchUser()
-                self.userImage = user.profileImagePath ?? "person.fill"
-            } catch {
-                print(error.localizedDescription)
-            }
+    func getUserImage() async throws {
+        let user =  try await userManager.fetchUser()
+        self.userImage = user.profileImagePath ?? "person.fill"
+    }
+    
+    func updateUserPhoto() async {
+        for await imagePath in userManager.changePhotoResult {
+            print("Profile image path updated: \(imagePath)")
+            self.userImage = imagePath
         }
     }
 }

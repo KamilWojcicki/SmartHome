@@ -26,10 +26,14 @@ final class WeatherManager: NSObject, WeatherManagerInterface, CLLocationManager
     }
     
     var temperature: String {
-        let temp = weather?.currentWeather.temperature
-        let convertedTemp = temp?.converted(to: .celsius).description
-        return convertedTemp ?? "-"
-    }
+            let temp = weather?.currentWeather.temperature
+            if let convertedTemp = temp?.converted(to: .celsius).value {
+                let formattedTemp = String(format: "%.1f", convertedTemp)
+                return "\(formattedTemp) °C"
+            } else {
+                return "-"
+            }
+        }
     
     override init() {
         super.init()
@@ -54,7 +58,9 @@ final class WeatherManager: NSObject, WeatherManagerInterface, CLLocationManager
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        if let location = locations.first {
+            print("Found user's location: \(location)")
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

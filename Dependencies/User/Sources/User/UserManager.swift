@@ -6,6 +6,7 @@
 //
 
 import AuthenticationInterface
+import Combine
 import CloudDatabaseInterface
 import DependencyInjection
 import DeviceInterface
@@ -30,16 +31,26 @@ final class UserManager: UserManagerInterface {
         }
     }()
     
+    lazy var changePhotoResult: AsyncStream<String> = {
+            AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
+                photoChangeHandler = { continuation.yield($0) }
+            }
+        }()
+    
     private var user: User? {
         didSet {
             userHandler?(user)
             loginEventHandler?(user != nil)
+            if let newPath = user?.profileImagePath {
+                photoChangeHandler?(newPath)
+            }
         }
     }
     
     private var userHandler: ((User?) -> Void)?
     private var errorHandler: ((Error) -> Void)?
     private var loginEventHandler: ((Bool) -> Void)?
+    private var photoChangeHandler: ((String) -> Void)?
     
     func isUserAuthenticated() throws -> Bool{
         try authenticationManager.isUserAuthenticated()
@@ -50,8 +61,9 @@ final class UserManager: UserManagerInterface {
         return try await cloudDatabaseManager.readInMainCollection(user.uid)
     }
     
-    func deleteAccount() async throws {
-        try await authenticationManager.deleteAccount()
+    func deleteAccount(email: String, password: String) async throws {
+        try await authenticationManager.deleteAccount(email: email, password: password)
+        self.user = nil
     }
     
     func signOut() throws {
@@ -103,6 +115,11 @@ extension UserManager {
     func resetPassword(withEmail email: String) async throws {
         try await authenticationManager.resetPassword(withEmail: email)
     }
+    
+    func deleteAccountSSO() async throws {
+        try await authenticationManager.deleteAccountWithSSO()
+        self.user = nil
+    }
 }
 
 //MARK: SOCIAL MEDIA SIGN IN
@@ -136,21 +153,6 @@ extension UserManager {
 }
 
 extension UserManager {
-    private func addDevicesToUser() {
-        Task {
-            do {
-                let user = try await fetchUser()
-                let devices = try await readAllDevices()
-                
-                for device in devices {
-                    try cloudDatabaseManager.createInSubCollection(parentObject: user, object: device)
-                }
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
     private func readAllDevices() async throws -> [Device] {
         try await cloudDatabaseManager.readAll(objectsOfType: Device.self)
     }
@@ -181,8 +183,16 @@ extension UserManager {
             }
         }
     }
-    
-    func deleteAllUserData(user: User) async throws {
-        try await cloudDatabaseManager.delete(object: user)
+}
+
+//MARK: UPDATE USER PHOTO
+extension UserManager {
+    func updateProfileImagePath(_ newPath: String) async throws {
+        let data: [String : Any] = [
+            User.CodingKeys.profileImagePath.rawValue : newPath
+        ]
+        
+        try await updateUserData(data: data)
+        photoChangeHandler?(newPath)
     }
 }

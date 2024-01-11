@@ -20,24 +20,22 @@ final class MqttManager: MqttManagerInterface {
     var password: String = ""
     init() {
         let clientID = "test123"
-        let host = "83.6.131.234"
+        let host = "83.6.138.73"
         let port = UInt16(1883)
         self.mqttClient = CocoaMQTT(clientID: clientID, host: host, port: port)
-        Task {
-            try? await getMqttCredentialFromUser()
-        }
         mqttClient.delegate = self
-        print("topic from mqttManager: \(String(describing: mqttClient.username))")
-        print("password from mqttManager: \(String(describing: mqttClient.password))")
     }
     
     private func getMqttCredentialFromUser() async throws {
         let user = try await userManager.fetchUser()
-        mqttClient.username = topic
-        mqttClient.password = password
+        mqttClient.username = user.topic
+        mqttClient.password = user.mqttPassword
+        print("topic from mqttManager: \(String(describing: mqttClient.username))")
+        print("password from mqttManager: \(String(describing: mqttClient.password))")
     }
     
-    func connect() {
+    func connect() async throws {
+        try await getMqttCredentialFromUser()
        let some = self.mqttClient.connect()
         if some {
             print("Mqtt is connected")
@@ -63,6 +61,10 @@ final class MqttManager: MqttManagerInterface {
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) { 
         if ack == .accept {
             isConnected = true
+            guard let topic = mqttClient.username else {
+                print("Problem with mqtt Topic")
+                return
+            }
             subscribeToTopic(topic)
         } else {
             isConnected = false

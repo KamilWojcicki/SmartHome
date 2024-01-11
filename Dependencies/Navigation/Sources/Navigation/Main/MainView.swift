@@ -21,6 +21,9 @@ public struct MainView: View {
                 TabBarView()
             }
         }
+        .task {
+            try? await viewModel.checkIsFirstLogin()
+        }
     }
 }
 

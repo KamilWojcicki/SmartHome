@@ -11,29 +11,25 @@ import Foundation
 import Localizations
 import MqttInterface
 import UserInterface
+import Utilities
 import WeatherInterface
 
 @MainActor
 final class HomeViewModel: ObservableObject {
+    enum State {
+        case loading
+        case loaded
+        case error
+    }
     
     @Inject private var userManager: UserManagerInterface
     @Inject private var mqttManager: MqttManagerInterface
     @Inject private var weatherManager: WeatherManagerInterface
+    @Published var state: State = .loading
     @Published private(set) var displayName: String = ""
     @Published var symbol: String = ""
     @Published var temperature: String = ""
-    
-    init() {
-//        Task {
-//            do {
-//                try await getDisplayName()
-//                try? await getMqttCredentialFromUser()
-//                await getWeather()
-//            } catch {
-//                print(error.localizedDescription)
-//            }
-//        }
-    }
+    @Published var currentTime: (String, String) = ("","")
 
      func getDisplayName() async throws {
         let user = try await userManager.fetchUser()
@@ -46,21 +42,33 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-     func getMqttCredentialFromUser() async throws {
-        let user = try await userManager.fetchUser()
-        mqttManager.topic = user.topic
-        print("topic: \(mqttManager.topic)")
-        mqttManager.password = user.mqttPassword
-        print("password: \(mqttManager.password)")
+    func connectMqtt() async throws {
+        try await mqttManager.connect()
+        print(mqttManager.topic)
+        print(mqttManager.password)
     }
     
-     func getWeather() async {
+     func getWeather() async throws {
         do {
             try await weatherManager.getWeather()
             symbol = weatherManager.symbol
             temperature = weatherManager.temperature
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func updateTime() async throws{
+        for try await _ in Every(.seconds(1)) {
+            let dateFormatter = DateFormatter()
+            
+            dateFormatter.dateFormat = "HH:mm:ss"
+            let timeString = dateFormatter.string(from: Date())
+
+            dateFormatter.dateFormat = "dd.MM.yyyy"
+            let dateString = dateFormatter.string(from: Date())
+
+            currentTime = (String(timeString), dateString)
         }
     }
 }

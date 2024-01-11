@@ -77,8 +77,9 @@ public struct TabBarView: View {
         }
         .navigationBarBackButtonHidden(true)
         .task {
-            viewModel.getUserImage()
+            await viewModel.updateUserPhoto()
         }
+        
         .tabViewStyle(.page)
         .indexViewStyle(.page(backgroundDisplayMode: .never))
     }
