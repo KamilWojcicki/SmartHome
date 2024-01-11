@@ -17,7 +17,7 @@ import Utilities
 struct CalendarView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
-    
+    @State private var didAppear: Bool = false
     var body: some View {
         ScrollView(.vertical) {
             buildTimeLineView()
@@ -38,14 +38,17 @@ struct CalendarView: View {
         .sheet(isPresented: $viewModel.showTasksList) {
             TasksView()
         }
-        .onAppear {
-            viewModel.fetchTasks()
-        }
-        .onDisappear {
-            viewModel.stopTimer()
-        }
         .task {
-            try? await viewModel.getDisplayName()
+            try? await viewModel.deleteTaskIfExpired()
+        }
+        .onFirstAppear {
+            Task {
+                do {
+                    try await viewModel.addListenerForTasks()
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
         }
     }
     
@@ -159,7 +162,7 @@ struct CalendarView: View {
                 }
             }
             
-            Text(Date().toString("MMM YYYY"))
+            Text(Date().toString("MMM YYYY", locale: Locale(identifier: "local_format".localized)))
                 .hAlign(.leading)
                 .padding(.top, 15)
             
@@ -191,9 +194,9 @@ struct CalendarView: View {
             ForEach(Calendar.current.currentWeek) { weekDay in
                 let status = Calendar.current.isDate(weekDay.date, inSameDayAs: viewModel.currentDay)
                 VStack(spacing: 6) {
-                    Text(weekDay.string.prefix(3))
+                    Text(weekDay.date.toString(String("EEEE".prefix(3)), locale: Locale(identifier: "local_format".localized)))
                     
-                    Text(weekDay.date.toString("dd"))
+                    Text(weekDay.date.toString("dd", locale: Locale(identifier: "local_format".localized)))
                 }
                 .foregroundStyle(status ? Colors.jaffa: Colors.black)
                 .hAlign(.center)

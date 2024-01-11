@@ -24,13 +24,11 @@ final class AddTaskViewModel: ObservableObject {
     @Published var taskDate: Date = .init()
     @Published var selectedDevice: Device.Devices = .fan
     @Published var selectedAction: Device.State = .on
-    @Published var topic: String = ""
     @Published var availableDevices: [Device.Devices] = []
     
     init() {
         Task {
             do {
-                try await getTopic()
                 try await getUserDevices()
             } catch {
                 print(error.localizedDescription)
@@ -44,15 +42,10 @@ final class AddTaskViewModel: ObservableObject {
         try await todoManager.createToDo(todo: task)
         onAdd(task)
         if selectedAction == .on {
-            mqttManager.sendMessage(topic: user.topic, message: selectedDevice.addToScheduleMessage(task.dateExecuted.toString("dd.MM.yyyy HH:mm")))
+            mqttManager.sendMessage(topic: user.topic, message: selectedDevice.addTurnOnToScheduleMessage(task.dateExecuted.toString("dd.MM.yyyy HH:mm")))
         } else {
-            mqttManager.sendMessage(topic: user.topic, message: selectedDevice.deleteFromScheduleMessage(task.dateExecuted.toString("dd.MM.yyyy HH:mm")))
+            mqttManager.sendMessage(topic: user.topic, message: selectedDevice.addTurnOffToScheduleMessage(task.dateExecuted.toString("dd.MM.yyyy HH:mm")))
         }
-    }
-    
-    private func getTopic() async throws {
-        let user = try await userManager.fetchUser()
-        self.topic = user.topic
     }
     
     private func getUserDevices() async throws {
