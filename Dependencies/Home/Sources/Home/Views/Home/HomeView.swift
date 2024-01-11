@@ -15,23 +15,41 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     var body: some View {
-        VStack(spacing: 30) {
-            
-                welcomeTextSection
-                
-                weatherSection
-                
-                LottieView(animationConfiguration: .iot, loopMode: .loop)
-                    .padding(.top, -80)
-                
-                Spacer()
-            
+        
+        ZStack {
+            switch viewModel.state {
+            case .loading:
+                ProgressView()
+            case .loaded:
+                VStack(spacing: 30) {
+                        welcomeTextSection
+                        
+                        weatherSection
+                        
+                        LottieView(animationConfiguration: .iot, loopMode: .loop)
+                            .padding(.top, -80)
+                        
+                        Spacer()
+                }
+            case .error:
+                Label("Error", systemImage: "xmark")
+            }
         }
         .padding()
         .task {
+            try? await viewModel.getWeather()
             try? await viewModel.getDisplayName()
-            try? await viewModel.getMqttCredentialFromUser()
-            await viewModel.getWeather()
+            viewModel.state = .loaded
+            try? await viewModel.updateTime()
+        }
+        .onFirstAppear {
+            Task {
+                do {
+                    try await viewModel.connectMqtt()
+                } catch {
+                    print(error.localizedDescription, "dupa")
+                }
+            }   
         }
     }
 }
@@ -58,7 +76,7 @@ extension HomeView {
     }
     
     private var weatherSection: some View {
-        Tile(variant: .weather(temperature: viewModel.temperature, time: "", date: "", symbol: viewModel.symbol))
+        Tile(variant: .weather(temperature: viewModel.temperature, time: viewModel.currentTime.0, date: viewModel.currentTime.1, symbol: viewModel.symbol))
     }
     
 }
