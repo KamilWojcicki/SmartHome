@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-public struct ErrorHandlingViewModifier: ViewModifier {
+struct ErrorHandlingViewModifier: ViewModifier {
     let errorMessage: String
     @Binding var errorMessageToggle: Bool
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         ZStack {
             content
         }

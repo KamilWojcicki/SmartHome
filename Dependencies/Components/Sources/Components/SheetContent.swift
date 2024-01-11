@@ -13,9 +13,21 @@ public struct SheetContent: View {
     public enum Variant {
         case withField(field: Field, text: String, labelButtonText: String, action: () -> Void)
         case onlyText(text: String)
+        case withFields(fields: [Field], text: String, labelButtonText: String, action: () -> Void)
     }
     
-    public enum Field {
+    public enum Field: Hashable {
+        var identifier: String {
+                return UUID().uuidString
+            }
+        public static func == (lhs: SheetContent.Field, rhs: SheetContent.Field) -> Bool {
+            return lhs.identifier == rhs.identifier
+        }
+        
+        public func hash(into hasher: inout Hasher) {
+            return hasher.combine(identifier)
+        }
+        
         case text(textFieldText: Binding<String>, placecholder: String)
         case secure(secureFieldText: Binding<String>, placecholder: String)
     }
@@ -36,7 +48,7 @@ public struct SheetContent: View {
                 Image(systemName: "xmark")
                     .foregroundStyle(Colors.jaffa)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .padding(10)
+                    .padding(15)
                     .onTapGesture {
                         action()
                     }
@@ -50,6 +62,8 @@ public struct SheetContent: View {
             buildViewWithField(with: field, text: text, labelButtonText: labelButtonText, action: action)
         case .onlyText(let text):
             buildViewWithText(text: text)
+        case .withFields(fields: let fields, text: let text, labelButtonText: let labelButtonText, action: let action):
+            buildViewWithFields(with: fields, text: text, labelButtonText: labelButtonText, action: action)
         }
     }
 }
@@ -63,6 +77,36 @@ extension SheetContent {
                 .padding()
                 .padding(.trailing, 15)
         }
+    }
+    
+    @ViewBuilder
+    private func buildViewWithFields(with fields: [Field], text: String, labelButtonText: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 30) {
+            Text(text)
+                .font(.title)
+                .foregroundStyle(Colors.black)
+                .multilineTextAlignment(.center)
+                .bold()
+                .padding(.vertical)
+            
+            ForEach(fields, id: \.self) { field in
+                switch field {
+                case .text(let textFieldText, let placecholder):
+                    TextField(textFieldLogin: textFieldText, placecholder: placecholder)
+                case .secure(let secureFieldText, let placecholder):
+                    SecureField(textFieldPassword: secureFieldText, placecholder: placecholder)
+                }
+            }
+            
+            
+            Button {
+               action()
+            } label: {
+                Text(labelButtonText)
+                    .withMainButtonViewModifier()
+            }
+        }
+        .padding()
     }
     
     @ViewBuilder
